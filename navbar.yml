@@ -1,0 +1,11 @@
+- label: 关于我
+  href: /pages/about-me.html
+  target: _self
+
+- label: +订阅
+  href: /rss.xml
+  target: _self
+
+- label: 微博
+  href: http://weibo.com/ericzhangbuaa
+  target: _blank
