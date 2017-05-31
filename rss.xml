@@ -4,7 +4,7 @@
         <title>CodingLabs</title>
         <link>http://blog.codinglabs.org</link>
         <description>keep coding, keep foolish</description>
-        <lastBuildDate>Wed, 31 May 2017 18:57:59 +0800</lastBuildDate>
+        <lastBuildDate>Wed, 31 May 2017 18:59:31 +0800</lastBuildDate>
         <language>zh-cn</language>
         
         <item> 
@@ -146,7 +146,7 @@ $$
 &lt;p&gt;可以看到，&lt;strong&gt;噪声的存在使得信息符号的价值变低了&lt;/strong&gt;。那么如何量化这个种噪声导致的损失呢？&lt;/p&gt;
 &lt;p&gt;直觉上，当我们接收到一个字符时，对原始字符越不确定，这个损失越大。香农在论文中引入了条件熵来量化这个损失。条件熵定义如下：如果接收到字符Y，则原字符X的条件概率分布函数的熵即为X对Y的条件熵。即：
 $$
-H_Y(X)=-\sum P(X=i,Y=j)log(P(X=i|Y=j))
+H_Y(X)=-\sum_{i,j} P(X=i,Y=j)log(P(X=i|Y=j))
 $$
 在这个例子中，条件熵为$-0.5\times0.99\times log(0.99)-0.5\times0.01\times log(0.01)-0.5\times0.01\times log(0.99)-0.5\times0.01\times log(0.01)\approx 0.08$&lt;/p&gt;
 &lt;p&gt;，这就是上述有噪信道单个字符损失的量化。&lt;/p&gt;
