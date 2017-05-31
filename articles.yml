@@ -1,3 +1,13 @@
+- id: simple-explain-of-amtoc
+  title: 对论文《A Mathematical Theory of Communication》的简要解读
+  postedOn: !!str 2017-05-31
+  author: 张洋
+  tags: 
+    - 信息论
+    - 香农
+    - 熵
+  abstract: 香农在1948年发表了一篇著名的论文[A Mathematical Theory of Communication](http://math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf)，作为现代信息论的奠基之作，不管是从理论角度还是对人类实际生活的贡献，再怎么强调这篇论文的重要性都不过分。虽然之前对信息论已经有所了解，但是为了向信息论鼻祖致敬，最近还是拜读了这篇论文。这篇论文自成体系，可以说是字字珠玑，读完后对整个信息论的来龙去脉有了更加深入的了解。其实这篇论文主要就是要解决如何用数学方式去度量信息的价值，虽然核心思想及方法非常简单明了，但是由于是一篇数学论文，其中对”价值“并没有进行直观描述，再加上掺杂了一些略微复杂的数学公式，所以有可能阅读起来会略有困难。我写这篇文章就是想通过一个直观的类比（通过一个猜硬币游戏），并把论文中抽象的“价值”直接具象化为“金钱”，以此帮助读者更容易理解论文要阐述的关键点，从而更好的阅读这篇论文。
+
 - id: a-malloc-tutorial
   title: 如何实现一个malloc
   postedOn: !!str 2014-08-19

@@ -96,6 +96,20 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
         <div id="article-blocks">
             
             <div class="article-block">
+                <p class="title"><a href="/articles/simple-explain-of-amtoc.html">对论文《A Mathematical Theory of Communication》的简要解读</a></p>
+                <p class="abstract">&lt;摘要&gt;: 香农在1948年发表了一篇著名的论文[A Mathematical Theory of Communication](http://math.harvard.edu/~ctm/home/text/others/shannon/entropy/entropy.pdf)，作为现代信息论的奠基之作，不管是从理论角度还是对人类实际生活的贡献，再怎么强调这篇论文的重要性都不过分。虽然之前对信息论已经有所了解，但是为了向信息论鼻祖致敬，最近还是拜读了这篇论文。这篇论文自成体系，可以说是字字珠玑，读完后对整个信息论的来龙去脉有了更加深入的了解。其实这篇论文主要就是要解决如何用数学方式去度量信息的价值，虽然核心思想及方法非常简单明了，但是由于是一篇数学论文，其中对”价值“并没有进行直观描述，再加上掺杂了一些略微复杂的数学公式，所以有可能阅读起来会略有困难。我写这篇文章就是想通过一个直观的类比（通过一个猜硬币游戏），并把论文中抽象的“价值”直接具象化为“金钱”，以此帮助读者更容易理解论文要阐述的关键点，从而更好的阅读这篇论文。</p>
+                <p class="meta">作者 张洋 | 发布于 2017-05-31 | Tags 
+                    
+                    <a class="tag" href="/tag.html#信息论">信息论</a>
+                    
+                    <a class="tag" href="/tag.html#香农">香农</a>
+                    
+                    <a class="tag" href="/tag.html#熵">熵</a>
+                    
+                </p>
+            </div>
+            
+            <div class="article-block">
                 <p class="title"><a href="/articles/a-malloc-tutorial.html">如何实现一个malloc</a></p>
                 <p class="abstract">&lt;摘要&gt;: 任何一个用过或学过C的人对malloc都不会陌生。大家都知道malloc可以分配一段连续的内存空间，并且在不再使用时可以通过free释放掉。但是，许多程序员对malloc背后的事情并不熟悉，许多人甚至把malloc当做操作系统所提供的系统调用或C的关键字。实际上，malloc只是C的标准库中提供的一个普通函数，而且实现malloc的基本思想并不复杂，任何一个对C和操作系统有些许了解的程序员都可以很容易理解。这篇文章通过实现一个简单的malloc来描述malloc背后的机制。当然与现有C的标准库实现（例如glibc）相比，我们实现的malloc并不是特别高效，但是这个实现比目前真实的malloc实现要简单很多，因此易于理解。重要的是，这个实现和真实实现在基本原理上是一致的。这篇文章将首先介绍一些所需的基本知识，如操作系统对进程的内存管理以及相关的系统调用，然后逐步实现一个简单的malloc。为了简单起见，这篇文章将只考虑x86_64体系结构，操作系统为Linux。</p>
                 <p class="meta">作者 张洋 | 发布于 2014-08-19 | Tags 
