@@ -110,7 +110,7 @@ C=\lim_{T->\infty}\frac{logN(T)}{T}
 $$
 其中$T$是时间，$N(T)$表示在$T$时间内传输的符号流可以表示的最大状态数。
 
-例如对上面例子中第一个，带入公式可得$C=\lim_{T->\infty}\frac{Tlog2}{T}=log2=1$，对第三个$C=\lim_{T->\infty}\frac{Tlog1024}{T}=10log2=10$。
+例如对上面例子中第一个，带入公式可得$C=\lim\_{T->\infty}\frac{Tlog2}{T}=log2=1$ ，对第三个$C=\lim\_{T->\infty}\frac{Tlog1024}{T}=10log2=10$。
 
 当符号的不同状态占用时间不同时，需要求解一个递推方程。
 
@@ -186,7 +186,7 @@ $$
 
 直觉上，当我们接收到一个字符时，对原始字符越不确定，这个损失越大。香农在论文中引入了条件熵来量化这个损失。条件熵定义如下：如果接收到字符Y，则原字符X的条件概率分布函数的熵即为X对Y的条件熵。即：
 $$
-H_Y(X)=-\sum P(X=i,Y=j)log(P(X=i|Y=j))
+H_Y(X)=-\sum\_{i,j} P(X=i,Y=j)log(P(X=i|Y=j))
 $$
 在这个例子中，条件熵为$-0.5\times0.99\times log(0.99)-0.5\times0.01\times log(0.01)-0.5\times0.01\times log(0.99)-0.5\times0.01\times log(0.01)\approx 0.08$
 
