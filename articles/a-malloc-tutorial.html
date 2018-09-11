@@ -69,48 +69,50 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <p>这篇文章通过实现一个简单的malloc来描述malloc背后的机制。当然与现有C的标准库实现（例如glibc）相比，我们实现的malloc并不是特别高效，但是这个实现比目前真实的malloc实现要简单很多，因此易于理解。重要的是，这个实现和真实实现在基本原理上是一致的。</p>
 <p>这篇文章将首先介绍一些所需的基本知识，如操作系统对进程的内存管理以及相关的系统调用，然后逐步实现一个简单的malloc。为了简单起见，这篇文章将只考虑x86_64体系结构，操作系统为Linux。</p>
 <!-- toc -->
+
 <ul>
-<li><a href="#1-什么是malloc">1 什么是malloc</a></li>
-<li><a href="#2-预备知识">2 预备知识</a><ul>
-<li><a href="#21-linux内存管理">2.1 Linux内存管理</a><ul>
-<li><a href="#211-虚拟内存地址与物理内存地址">2.1.1 虚拟内存地址与物理内存地址</a></li>
-<li><a href="#212-页与地址构成">2.1.2 页与地址构成</a></li>
-<li><a href="#213-内存页与磁盘页">2.1.3 内存页与磁盘页</a></li>
+<li><a href="#1-%E4%BB%80%E4%B9%88%E6%98%AFmalloc">1 什么是malloc</a></li>
+<li><a href="#2-%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86">2 预备知识</a><ul>
+<li><a href="#21-linux%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86">2.1 Linux内存管理</a><ul>
+<li><a href="#211-%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%9C%B0%E5%9D%80%E4%B8%8E%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%9C%B0%E5%9D%80">2.1.1 虚拟内存地址与物理内存地址</a></li>
+<li><a href="#212-%E9%A1%B5%E4%B8%8E%E5%9C%B0%E5%9D%80%E6%9E%84%E6%88%90">2.1.2 页与地址构成</a></li>
+<li><a href="#213-%E5%86%85%E5%AD%98%E9%A1%B5%E4%B8%8E%E7%A3%81%E7%9B%98%E9%A1%B5">2.1.3 内存页与磁盘页</a></li>
 </ul>
 </li>
-<li><a href="#22-linux进程级内存管理">2.2 Linux进程级内存管理</a><ul>
-<li><a href="#221-内存排布">2.2.1 内存排布</a></li>
-<li><a href="#222-heap内存模型">2.2.2 Heap内存模型</a></li>
-<li><a href="#223-brk与sbrk">2.2.3 brk与sbrk</a></li>
-<li><a href="#224-资源限制与rlimit">2.2.4 资源限制与rlimit</a></li>
+<li><a href="#22-linux%E8%BF%9B%E7%A8%8B%E7%BA%A7%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86">2.2 Linux进程级内存管理</a><ul>
+<li><a href="#221-%E5%86%85%E5%AD%98%E6%8E%92%E5%B8%83">2.2.1 内存排布</a></li>
+<li><a href="#222-heap%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B">2.2.2 Heap内存模型</a></li>
+<li><a href="#223-brk%E4%B8%8Esbrk">2.2.3 brk与sbrk</a></li>
+<li><a href="#224-%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6%E4%B8%8Erlimit">2.2.4 资源限制与rlimit</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#3-实现malloc">3 实现malloc</a><ul>
-<li><a href="#31-玩具实现">3.1 玩具实现</a></li>
-<li><a href="#32-正式实现">3.2 正式实现</a><ul>
-<li><a href="#321-数据结构">3.2.1 数据结构</a></li>
-<li><a href="#322-寻找合适的block">3.2.2 寻找合适的block</a></li>
-<li><a href="#323-开辟新的block">3.2.3 开辟新的block</a></li>
-<li><a href="#324-分裂block">3.2.4 分裂block</a></li>
-<li><a href="#325-malloc的实现">3.2.5 malloc的实现</a></li>
-<li><a href="#326-calloc的实现">3.2.6 calloc的实现</a></li>
-<li><a href="#327-free的实现">3.2.7 free的实现</a></li>
-<li><a href="#328-realloc的实现">3.2.8 realloc的实现</a></li>
+<li><a href="#3-%E5%AE%9E%E7%8E%B0malloc">3 实现malloc</a><ul>
+<li><a href="#31-%E7%8E%A9%E5%85%B7%E5%AE%9E%E7%8E%B0">3.1 玩具实现</a></li>
+<li><a href="#32-%E6%AD%A3%E5%BC%8F%E5%AE%9E%E7%8E%B0">3.2 正式实现</a><ul>
+<li><a href="#321-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84">3.2.1 数据结构</a></li>
+<li><a href="#322-%E5%AF%BB%E6%89%BE%E5%90%88%E9%80%82%E7%9A%84block">3.2.2 寻找合适的block</a></li>
+<li><a href="#323-%E5%BC%80%E8%BE%9F%E6%96%B0%E7%9A%84block">3.2.3 开辟新的block</a></li>
+<li><a href="#324-%E5%88%86%E8%A3%82block">3.2.4 分裂block</a></li>
+<li><a href="#325-malloc%E7%9A%84%E5%AE%9E%E7%8E%B0">3.2.5 malloc的实现</a></li>
+<li><a href="#326-calloc%E7%9A%84%E5%AE%9E%E7%8E%B0">3.2.6 calloc的实现</a></li>
+<li><a href="#327-free%E7%9A%84%E5%AE%9E%E7%8E%B0">3.2.7 free的实现</a></li>
+<li><a href="#328-realloc%E7%9A%84%E5%AE%9E%E7%8E%B0">3.2.8 realloc的实现</a></li>
 </ul>
 </li>
-<li><a href="#33-遗留问题和优化">3.3 遗留问题和优化</a></li>
+<li><a href="#33-%E9%81%97%E7%95%99%E9%97%AE%E9%A2%98%E5%92%8C%E4%BC%98%E5%8C%96">3.3 遗留问题和优化</a></li>
 </ul>
 </li>
-<li><a href="#4-其它参考">4 其它参考</a></li>
+<li><a href="#4-%E5%85%B6%E5%AE%83%E5%8F%82%E8%80%83">4 其它参考</a></li>
 </ul>
 <!-- toc stop -->
+
+
 <h1 id="1-什么是malloc">1 什么是malloc</h1>
 <p>在实现malloc之前，先要相对正式地对malloc做一个定义。</p>
 <p>根据标准C库函数的定义，malloc具有如下原型：</p>
-<pre class="prettyprint linenums lang-c">void* malloc(size_t size);
-</pre>
+<pre class="prettyprint linenums lang-c">void* malloc(size_t size);</pre>
 <p>这个函数要实现的功能是在系统中分配一段连续的可用的内存，具体有如下要求：</p>
 <ul>
 <li>malloc分配的内存大小<strong>至少</strong>为size参数所指定的字节数</li>
@@ -120,8 +122,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <li>实现malloc时应同时实现内存大小调整和内存释放函数（即realloc和free）</li>
 </ul>
 <p>对于malloc更多的说明可以在命令行中键入以下命令查看：</p>
-<pre class="prettyprint linenums lang-bash">man malloc
-</pre>
+<pre class="prettyprint linenums lang-bash">man malloc</pre>
 <h1 id="2-预备知识">2 预备知识</h1>
 <p>在实现malloc之前，需要先解释一些Linux系统内存相关的知识。</p>
 <h2 id="21-linux内存管理">2.1 Linux内存管理</h2>
@@ -164,8 +165,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <h3 id="223-brk与sbrk">2.2.3 brk与sbrk</h3>
 <p>由上文知道，要增加一个进程实际的可用堆大小，就需要将break指针向高地址移动。Linux通过brk和sbrk系统调用操作break指针。两个系统调用的原型如下：</p>
 <pre class="prettyprint linenums lang-c">int brk(void *addr);
-void *sbrk(intptr_t increment);
-</pre>
+void *sbrk(intptr_t increment);</pre>
 <p>brk将break指针直接设置为某个地址，而sbrk将break从当前位置移动increment所指定的增量。brk在执行成功时返回0，否则返回-1并设置errno为ENOMEM；sbrk成功时返回break移动之前所指向的地址，否则返回(void *)-1。</p>
 <p>一个小技巧是，如果将increment设置为0，则可以获得当前break的地址。</p>
 <p>另外需要注意的是，由于Linux是按页进行内存映射的，所以如果break被设置为没有按页大小对齐，则系统实际上会在最后映射一个完整的页，从而实际已映射的内存空间比break指向的地方要大一些。但是使用break之后的地址是很危险的（尽管也许break之后确实有一小块可用内存地址）。</p>
@@ -175,14 +175,12 @@ void *sbrk(intptr_t increment);
     struct rlimit *limit = (struct rlimit *)malloc(sizeof(struct rlimit));
     getrlimit(RLIMIT_AS, limit);
     printf(&quot;soft limit: %ld, hard limit: %ld\n&quot;, limit-&gt;rlim_cur, limit-&gt;rlim_max);
-}
-</pre>
+}</pre>
 <p>其中rlimit是一个结构体：</p>
 <pre class="prettyprint linenums lang-c">struct rlimit {
     rlim_t rlim_cur;  /* Soft limit */
     rlim_t rlim_max;  /* Hard limit (ceiling for rlim_cur) */
-};
-</pre>
+};</pre>
 <p>每种资源有软限制和硬限制，并且可以通过setrlimit对rlimit进行有条件设置。其中硬限制作为软限制的上限，非特权进程只能设置软限制，且不能超过硬限制。</p>
 <h1 id="3-实现malloc">3 实现malloc</h1>
 <h2 id="31-玩具实现">3.1 玩具实现</h2>
@@ -197,8 +195,7 @@ void *malloc(size_t size)
     if (sbrk(size) == (void *)-1)
         return NULL;
     return p;
-}
-</pre>
+}</pre>
 <p>这个malloc每次都在当前break的基础上增加size所指定的字节数，并将之前break的地址返回。这个malloc由于对所分配的内存缺乏记录，不便于内存释放，所以无法用于真实场景。</p>
 <h2 id="32-正式实现">3.2 正式实现</h2>
 <p>下面严肃点讨论malloc的实现方案。</p>
@@ -212,8 +209,7 @@ struct s_block {
     int free;     /* 是否是空闲块 */
     int padding;  /* 填充4字节，保证meta块长度为8的倍数 */
     char data[1]  /* 这是一个虚拟字段，表示数据块的第一个字节，长度不应计入meta */
-};
-</pre>
+};</pre>
 <p>由于我们只考虑64位机器，为了方便，我们在结构体最后填充一个int，使得结构体本身的长度为8的倍数，以便内存对齐。示意图如下：</p>
 <p><img src="http://blog-codinglabs-org.qiniudn.com/image/a-malloc-tutorial-06.png" alt="Block结构"></p>
 <h3 id="322-寻找合适的block">3.2.2 寻找合适的block</h3>
@@ -231,8 +227,7 @@ t_block find_block(t_block *last, size_t size) {
         b = b-&gt;next;
     }
     return b;
-}
-</pre>
+}</pre>
 <p>find_block从frist_block开始，查找第一个符合要求的block并返回block起始地址，如果找不到这返回NULL。这里在遍历时会更新一个叫last的指针，这个指针始终指向当前遍历的block。这是为了如果找不到合适的block而开辟新block使用的，具体会在接下来的一节用到。</p>
 <h3 id="323-开辟新的block">3.2.3 开辟新的block</h3>
 <p>如果现有block都不能满足size的要求，则需要在链表最后开辟一个新的block。这里关键是如何只使用sbrk创建一个struct：</p>
@@ -249,8 +244,7 @@ t_block extend_heap(t_block last, size_t s) {
         last-&gt;next = b;
     b-&gt;free = 0;
     return b;
-}
-</pre>
+}</pre>
 <h3 id="324-分裂block">3.2.4 分裂block</h3>
 <p>First fit有一个比较致命的缺点，就是可能会让很小的size占据很大的一块block，此时，为了提高payload，应该在剩余数据区足够大的情况下，将其分裂为一个新的block，示意如下：</p>
 <p><img src="http://blog-codinglabs-org.qiniudn.com/image/a-malloc-tutorial-07.png" alt="分裂block"></p>
@@ -263,8 +257,7 @@ t_block extend_heap(t_block last, size_t s) {
     new-&gt;free = 1;
     b-&gt;size = s;
     b-&gt;next = new;
-}
-</pre>
+}</pre>
 <h3 id="325-malloc的实现">3.2.5 malloc的实现</h3>
 <p>有了上面的代码，我们可以利用它们整合成一个简单但初步可用的malloc。注意首先我们要定义个block链表的头first_block，初始化为NULL；另外，我们需要剩余空间至少有BLOCK_SIZE + 8才执行分裂操作。</p>
 <p>由于我们希望malloc分配的数据区是按8字节对齐，所以在size不为8的倍数时，我们需要将size调整为大于size的最小的8的倍数：</p>
@@ -272,8 +265,7 @@ t_block extend_heap(t_block last, size_t s) {
     if(s &amp; 0x7 == 0)
         return s;
     return ((s &gt;&gt; 3) + 1) &lt;&lt; 3;
-}
-</pre>
+}</pre>
 <pre class="prettyprint linenums lang-c">#define BLOCK_SIZE 24
 void *first_block=NULL;
 
@@ -306,8 +298,7 @@ void *malloc(size_t size) {
         first_block = b;
     }
     return b-&gt;data;
-}
-</pre>
+}</pre>
 <h3 id="326-calloc的实现">3.2.6 calloc的实现</h3>
 <p>有了malloc，实现calloc只要两步：</p>
 <ol>
@@ -325,8 +316,7 @@ void *malloc(size_t size) {
             new[i] = 0;
     }
     return new;
-}
-</pre>
+}</pre>
 <h3 id="327-free的实现">3.2.7 free的实现</h3>
 <p>free的实现并不像看上去那么简单，这里我们要解决两个关键问题：</p>
 <ol>
@@ -348,8 +338,7 @@ struct s_block {
     int padding;  /* 填充4字节，保证meta块长度为8的倍数 */
     void *ptr;    /* Magic pointer，指向data */
     char data[1]  /* 这是一个虚拟字段，表示数据块的第一个字节，长度不应计入meta */
-};
-</pre>
+};</pre>
 <p>然后我们定义检查地址合法性的函数：</p>
 <pre class="prettyprint linenums lang-c">t_block get_block(void *p) {
     char *tmp;  
@@ -364,8 +353,7 @@ int valid_addr(void *p) {
         }
     }
     return 0;
-}
-</pre>
+}</pre>
 <p>当多次malloc和free后，整个内存池可能会产生很多碎片block，这些block很小，经常无法使用，甚至出现许多碎片连在一起，虽然总体能满足某此malloc要求，但是由于分割成了多个小block而无法fit，这就是碎片问题。</p>
 <p>一个简单的解决方式时当free某个block时，如果发现它相邻的block也是free的，则将block和相邻block合并。为了满足这个实现，需要将s_block改为双向链表。修改后的block结构如下：</p>
 <pre class="prettyprint linenums lang-c">typedef struct s_block *t_block;
@@ -377,8 +365,7 @@ struct s_block {
     int padding;  /* 填充4字节，保证meta块长度为8的倍数 */
     void *ptr;    /* Magic pointer，指向data */
     char data[1]  /* 这是一个虚拟字段，表示数据块的第一个字节，长度不应计入meta */
-};
-</pre>
+};</pre>
 <p>合并方法如下：</p>
 <pre class="prettyprint linenums lang-c">t_block fusion(t_block b) {
     if (b-&gt;next &amp;&amp; b-&gt;next-&gt;free) {
@@ -388,8 +375,7 @@ struct s_block {
             b-&gt;next-&gt;prev = b;
     }
     return b;
-}
-</pre>
+}</pre>
 <p>有了上述方法，free的实现思路就比较清晰了：首先检查参数地址的合法性，如果不合法则不做任何事；否则，将此block的free标为1，并且在可以的情况下与后面的block进行合并。如果当前是最后一个block，则回退break指针释放进程内存，如果当前block是最后一个block，则回退break指针并设置first_block为NULL。实现如下：</p>
 <pre class="prettyprint linenums lang-c">void free(void *p) {
     t_block b;
@@ -408,8 +394,7 @@ struct s_block {
             brk(b);
         }
     }
-}
-</pre>
+}</pre>
 <h3 id="328-realloc的实现">3.2.8 realloc的实现</h3>
 <p>为了实现realloc，我们首先要实现一个内存复制方法。如同calloc一样，为了效率，我们以8字节为单位进行复制：</p>
 <pre class="prettyprint linenums lang-c">void copy_block(t_block src, t_block dst) {
@@ -419,8 +404,7 @@ struct s_block {
     ddata = dst-&gt;ptr;
     for(i = 0; (i * 8) &lt; src-&gt;size &amp;&amp; (i * 8) &lt; dst-&gt;size; i++)
         ddata[i] = sdata[i];
-}
-</pre>
+}</pre>
 <p>然后我们开始实现realloc。一个简单（但是低效）的方法是malloc一段内存，然后将数据复制过去。但是我们可以做的更高效，具体可以考虑以下几个方面：</p>
 <ul>
 <li>如果当前block的数据区大于等于realloc所要求的size，则不做任何操作</li>
@@ -462,8 +446,7 @@ struct s_block {
         return (p);
     }
     return NULL;
-}
-</pre>
+}</pre>
 <h2 id="33-遗留问题和优化">3.3 遗留问题和优化</h2>
 <p>以上是一个较为简陋，但是初步可用的malloc实现。还有很多遗留的可能优化点，例如：</p>
 <ul>

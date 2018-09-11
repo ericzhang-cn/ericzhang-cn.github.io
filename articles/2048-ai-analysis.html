@@ -127,16 +127,21 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <p>Alpha-beta算法可以看成变种的Minimax，基本方法是从根节点开始采用深度优先的方式构造格局树，在构造每个节点时，都会读取此节点的alpha和beta两个值，其中alpha表示搜索到当前节点时已知的最好选择的下界，而beta表示从这个节点往下搜索最坏结局的上界。由于我们假设对手会将局势引入最坏结局之一，因此当beta小于alpha时，表示从此处开始不论最终结局是哪一个，其上限价值也要低于已知的最优解，也就是说已经不可能此处向下找到更好的解，所以就会剪枝。</p>
 <p>下面同样以上述示例介绍Alpha-beta剪枝算法的工作原理。我们从根节点开始，详述使用Alpha-beta的每一个步骤：</p>
 <ol>
-<li>根节点的alpha和beta分别被初始化为\(-\infty\)，和\(+\infty\)。</li>
-<li>深度优先搜索第一个孩子，不是叶子节点，所以alpha和beta继承自父节点，分别为\(-\infty\)，和\(+\infty\)</li>
-<li>搜索第三层的第一个孩子，同上。</li>
+<li><p>根节点的alpha和beta分别被初始化为\(-\infty\)，和\(+\infty\)。</p>
+</li>
+<li><p>深度优先搜索第一个孩子，不是叶子节点，所以alpha和beta继承自父节点，分别为\(-\infty\)，和\(+\infty\)</p>
+</li>
+<li><p>搜索第三层的第一个孩子，同上。</p>
+</li>
 <li><p>搜索第四层，到达叶子节点，采用评价函数得到此节点的评价值为1。</p>
 <p class="picture"><img alt="" src="/uploads/pictures/2048-ai-analysis/05.png"/></p>
 </li>
 <li><p>此叶节点的父节点为max节点，因此更新其alpha值为1，表示此节点取值的下界为1。</p>
 </li>
-<li>再看另外一个子节点，值为20，大于当前alpha值，因此将alpha值更新为20。</li>
-<li>此时第三层最左节点所有子树搜索完毕，作为max节点，更新其真实值为当前alpha值：20。</li>
+<li><p>再看另外一个子节点，值为20，大于当前alpha值，因此将alpha值更新为20。</p>
+</li>
+<li><p>此时第三层最左节点所有子树搜索完毕，作为max节点，更新其真实值为当前alpha值：20。</p>
+</li>
 <li><p>由于其父节点（第二层最左节点）为min节点，因此更新其父节点beta值为20，表示这个节点取值最多为20。</p>
 <p class="picture"><img alt="" src="/uploads/pictures/2048-ai-analysis/06.png"/></p>
 </li>
@@ -200,8 +205,7 @@ AI.prototype.eval = function() {
         + this.grid.monotonicity2() * mono2Weight
         + Math.log(emptyCells) * emptyWeight
         + this.grid.maxValue() * maxWeight;
-};
-</pre>
+};</pre>
 <p>有兴趣的同学可以调整一下权重看看有什么效果。</p>
 <h2 id="对对方选择的剪枝">对对方选择的剪枝</h2>
 <p>在这个程序中，除了采用Alpha-beta剪枝外，在min节点还采用了另一种剪枝，即只考虑对方走出让格局最差的那一步（而实际2048中计算机的选择是随机的），而不是搜索全部对方可能的走法。这是因为对方所有可能的选择为“空格数×2”，如果全部搜索的话会严重限制搜索深度。</p>
@@ -230,8 +234,7 @@ for (var value in scores) { // 2 and 4
             candidates.push( { position: cells[i], value: parseInt(value, 10) } );
         }
     }
-}
-</pre>
+}</pre>
 <h2 id="搜索深度">搜索深度</h2>
 <p>在2048-AI的实现中，并没有限制搜索的最大深度，而是限制每次“思考”的时间。这里设定了一个超时时间，默认为100ms，在这个时间内，会从1开始，搜索到所能达到的深度。相关代码：</p>
 <pre class="prettyprint linenums lang-js">// performs iterative deepening over the alpha-beta search

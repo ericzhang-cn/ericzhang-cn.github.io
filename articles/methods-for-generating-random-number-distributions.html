@@ -67,30 +67,33 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
         <div id="article-content">
             <p>生成随机数是程序设计里常见的需求。一般的编程语言都会自带一个随机数生成函数，用于生成服从均匀分布的随机数。不过有时需要生成服从其它分布的随机数，例如高斯分布或指数分布等。有些编程语言已经有比较完善的实现，例如Python的NumPy。这篇文章介绍如何通过均匀分布随机数生成函数生成符合特定概率分布的随机数，主要介绍Inverse Ttransform和Acceptance-Rejection两种基础算法以及一些相关的衍生方法。下文我们均假设已经拥有一个可以生成0到1之间均匀分布的随机数生成函数，关于如何生成均匀分布等更底层的随机数生成理论，请参考其它资料，本文不做讨论。</p>
 <!-- toc -->
+
 <ul>
-<li><a href="#基础算法">基础算法</a><ul>
+<li><a href="#%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95">基础算法</a><ul>
 <li><a href="#inverse-transform-method">Inverse Transform Method</a><ul>
-<li><a href="#itm算法描述">ITM算法描述</a></li>
-<li><a href="#itm算法说明">ITM算法说明</a></li>
-<li><a href="#itm实现示例">ITM实现示例</a></li>
+<li><a href="#itm%E7%AE%97%E6%B3%95%E6%8F%8F%E8%BF%B0">ITM算法描述</a></li>
+<li><a href="#itm%E7%AE%97%E6%B3%95%E8%AF%B4%E6%98%8E">ITM算法说明</a></li>
+<li><a href="#itm%E5%AE%9E%E7%8E%B0%E7%A4%BA%E4%BE%8B">ITM实现示例</a></li>
 </ul>
 </li>
 <li><a href="#acceptance-rejection-method">Acceptance-Rejection Method</a><ul>
-<li><a href="#arm算法描述">ARM算法描述</a></li>
-<li><a href="#arm算法说明">ARM算法说明</a></li>
-<li><a href="#arm实现示例">ARM实现示例</a></li>
+<li><a href="#arm%E7%AE%97%E6%B3%95%E6%8F%8F%E8%BF%B0">ARM算法描述</a></li>
+<li><a href="#arm%E7%AE%97%E6%B3%95%E8%AF%B4%E6%98%8E">ARM算法说明</a></li>
+<li><a href="#arm%E5%AE%9E%E7%8E%B0%E7%A4%BA%E4%BE%8B">ARM实现示例</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#衍生算法">衍生算法</a><ul>
-<li><a href="#组合算法">组合算法</a></li>
-<li><a href="#生成具有相关性的随机数">生成具有相关性的随机数</a></li>
+<li><a href="#%E8%A1%8D%E7%94%9F%E7%AE%97%E6%B3%95">衍生算法</a><ul>
+<li><a href="#%E7%BB%84%E5%90%88%E7%AE%97%E6%B3%95">组合算法</a></li>
+<li><a href="#%E7%94%9F%E6%88%90%E5%85%B7%E6%9C%89%E7%9B%B8%E5%85%B3%E6%80%A7%E7%9A%84%E9%9A%8F%E6%9C%BA%E6%95%B0">生成具有相关性的随机数</a></li>
 </ul>
 </li>
-<li><a href="#更多参考">更多参考</a></li>
+<li><a href="#%E6%9B%B4%E5%A4%9A%E5%8F%82%E8%80%83">更多参考</a></li>
 </ul>
 <!-- toc stop -->
+
+
 <h1 id="基础算法">基础算法</h1>
 <h2 id="inverse-transform-method">Inverse Transform Method</h2>
 <p>最简单的生成算法是Inverse Transform Method（下文简称ITM）。如果我们可以给出概率分布的累积分布函数（下文简称CDF）及其逆函数的解析表达式，则可以非常简单便捷的生成指定分布随机数。</p>
@@ -127,8 +130,7 @@ def exponential_rand(lam):
     if lam &lt;= 0:
         return -1
     U = random.uniform(0.0, 1.0)
-    return (-1.0 / lam) * math.log(U)
-</pre>
+    return (-1.0 / lam) * math.log(U)</pre>
 <h2 id="acceptance-rejection-method">Acceptance-Rejection Method</h2>
 <p>一般来说ITM是一种很好的算法，简单且高效，如果可以使用的话，是第一选择。但是ITM有自身的局限性，就是要求必须能给出CDF逆函数的解析表达式，有些时候要做到这点比较困难，这限制了ITM的适用范围。</p>
 <p>当无法给出CDF逆函数的解析表达式时，Acceptance-Rejection Method（下文简称ARM）是另外的选择。ARM的适用范围比ITM要大，只要给出概率密度函数（下文简称PDF）的解析表达式即可，而大多数常用分布的PDF是可以查到的。</p>
@@ -160,8 +162,7 @@ def standard_normal_rand():
         X = random.uniform(-3.0,3.0)
         Y = random.uniform(0.0, 0.5)
         if Y &lt; ss.norm.pdf(X):
-            return X
-</pre>
+            return X</pre>
 <p><strong>注意</strong>：标准正态分布的x取值范围从理论上说是\((-\infty,\infty)\)，但是当离开均值点很远后，其概率密度可忽略不计。这里只取\((-3.0,3.0)\)，实际使用时可以根据具体需要扩大这个取值范围。</p>
 <h1 id="衍生算法">衍生算法</h1>
 <h2 id="组合算法">组合算法</h2>

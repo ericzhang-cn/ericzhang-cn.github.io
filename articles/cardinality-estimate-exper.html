@@ -80,7 +80,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <p>算法实现使用我所在部门（阿里巴巴商家数据部）的开源基数估计算法库<a href="https://github.com/chaoslawful/ccard-lib">ccard-lib</a>。</p>
 <h2 id="数据准备">数据准备</h2>
 <p>哈希函数采用<a href="http://en.wikipedia.org/wiki/MurmurHash">murmurhash32</a>（HyperLogLog++采用murmurhash64）。</p>
-<p>因实验结果的可靠性仅与哈希值的分布均匀性有关，而根据之前相关研究<a href="http://programmers.stackexchange.com/questions/49550/which-hashing-algorithm-is-best-for-uniqueness-and-speed">murmurhash对于顺序型数据具有良好的均匀性</a>。因此为了简化实验，原始数据使用<em>1-1,000,000无符号64bit整型的小端序表示</em>。</p>
+<p>因实验结果的可靠性仅与哈希值的分布均匀性有关，而根据之前相关研究<a href="http://programmers.stackexchange.com/questions/49550/which-hashing-algorithm-is-best-for-uniqueness-and-speed">murmurhash对于顺序型数据具有良好的均匀性</a>。因此为了简化实验，原始数据使用1-1,000,000无符号64bit整型的小端序表示。</p>
 <p>下面将通过实验验证原始数据哈希后的均匀性。</p>
 <h2 id="实验过程">实验过程</h2>
 <ul>

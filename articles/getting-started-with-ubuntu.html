@@ -70,8 +70,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <h3 id="安装terminator">安装terminator</h3>
 <p>Ubuntu自带的终端是gnome-terminal，虽然也还不错，但是不能支持屏幕分割、选择复制等功能让我很不爽，于是我换用terminator作为终端，terminator可以支持屏幕分割，并且默认快捷键和gnome-terminal无异，熟悉gnome-terminal的话可以快速上手。</p>
 <p>Ubuntu下可以这样安装terminator：</p>
-<pre class="prettyprint linenums lang-bash">sudo apt-get install terminator
-</pre>
+<pre class="prettyprint linenums lang-bash">sudo apt-get install terminator</pre>
 <h3 id="terminator常用快捷键">terminator常用快捷键</h3>
 <ul>
 <li>Ctrl-Shift-c 拷贝</li>
@@ -86,8 +85,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <h3 id="使用terminator-solarized">使用terminator-solarized</h3>
 <p>maximum-awesome所使用的<a href="http://ethanschoonover.com/solarized">solarized</a>配色是相当不错的，所以自然希望继续使用。针对terminator的solarized配色已经有人专门做好了：<a href="https://github.com/ghuntley/terminator-solarized">terminator-solarized</a>，只要按如下操作就可以使用：</p>
 <pre class="prettyprint linenums lang-bash">mkdir -p ~/.config/terminator/
-curl https://raw.github.com/ghuntley/terminator-solarized/master/config &gt; ~/.config/terminator/config
-</pre>
+curl https://raw.github.com/ghuntley/terminator-solarized/master/config &gt; ~/.config/terminator/config</pre>
 <p>然后重新打开terminator就已经是solarized配色了。</p>
 <h3 id="对terminator更多的配置">对terminator更多的配置</h3>
 <p>接下来，可以在terminator-solarized配置文件的基础上进行更多的配置，例如背景透明、启用选择复制等。</p>
@@ -131,13 +129,11 @@ curl https://raw.github.com/ghuntley/terminator-solarized/master/config &gt; ~/.
         [[[window0]]]
             type = Window
             parent = &quot;&quot;
-[plugins]
-</pre>
+[plugins]</pre>
 <h3 id="配置dircolors">配置dircolors</h3>
 <p>完成上述配置后，你会发现用ls命令查看目录和文件时是一片灰色。这是因为默认情况下solarized各种bright方案基本都是灰色，而系统默认显示目录和文件时多用bright色，此时需要配置dircolors才能显示出彩色的文件和目录。</p>
 <p><a href="https://github.com/seebi/dircolors-solarized">dircolors-solarized</a>项目提供了适合于solarized的dircolors配色方案，只要选择合适的方案使用就可以了。例如我是用的solarized dark配色，所以可以选择适合这个配色的dircolors.ansi-dark：</p>
-<pre class="prettyprint linenums lang-bash">curl https://raw.github.com/seebi/dircolors-solarized/master/dircolors.ansi-dark &gt; ~/.dircolors
-</pre>
+<pre class="prettyprint linenums lang-bash">curl https://raw.github.com/seebi/dircolors-solarized/master/dircolors.ansi-dark &gt; ~/.dircolors</pre>
 <p>然后在~/.bashrc中加入如下配置：</p>
 <pre class="prettyprint linenums lang-bash"># enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -154,11 +150,9 @@ fi
 # some more ls aliases
 alias ll=&#39;ls -alF&#39;
 alias la=&#39;ls -A&#39;
-alias l=&#39;ls -CF&#39;
-</pre>
+alias l=&#39;ls -CF&#39;</pre>
 <p>执行</p>
-<pre class="prettyprint linenums lang-bash">source ~/.bashrc
-</pre>
+<pre class="prettyprint linenums lang-bash">source ~/.bashrc</pre>
 <p>后，再执行ls或ll就可以看到彩色的目录或文件了。</p>
 <p>配置完的terminator效果如下：</p>
 <p class="picture"><img alt="" src="/uploads/pictures/getting-started-with-ubuntu/01.png"/></p>
@@ -177,8 +171,7 @@ alias l=&#39;ls -CF&#39;
 <h3 id="自动配置工具">自动配置工具</h3>
 <p>整个配置过程过于繁琐不再赘述，我已经将配置过程写成了一个自动配置脚本并放到了github：<a href="https://github.com/ericzhang-cn/vim-conf">https://github.com/ericzhang-cn/vim-conf</a>，需要的朋友只要clone下来并运行init.sh脚本就可以自动完成整个配置：</p>
 <pre class="prettyprint linenums lang-bash">git clone https://github.com/ericzhang-cn/vim-conf.git
-cd vim-conf &amp;&amp; ./init.sh
-</pre>
+cd vim-conf &amp;&amp; ./init.sh</pre>
 <p>最终配置效果如下：</p>
 <p class="picture"><img alt="" src="/uploads/pictures/getting-started-with-ubuntu/02.png"/></p>
 
@@ -193,31 +186,26 @@ cd vim-conf &amp;&amp; ./init.sh
 <h1 id="常用工具">常用工具</h1>
 <h2 id="浏览器">浏览器</h2>
 <p>Ubuntu自带的是Firefox，我平常使用的是Chromium，这点在Ubuntu下没任何问题，可以直接安装：</p>
-<pre class="prettyprint linenums lang-bash">sudo apt-get install chromium-browser
-</pre>
+<pre class="prettyprint linenums lang-bash">sudo apt-get install chromium-browser</pre>
 <p>用Google账号登录后，书签、插件等会自动同步，非常方便。</p>
 <h2 id="搜狗输入法-amp-谷歌输入法">搜狗输入法&amp;谷歌输入法</h2>
 <p>Mac下有搜狗输入法或百度输入法。不过目前搜狗也基于fcitx做了linux版的搜狗输入法。</p>
 <p>Ubuntu自带的ibus直接卸掉，然后安装<a href="https://fcitx-im.org/wiki/Fcitx">fcitx</a>：</p>
 <pre class="prettyprint linenums lang-bash">sudo add-apt-repository ppa:fcitx-team/nightly &amp;&amp; sudo apt-get update
-sudo apt-get install fcitx-sogoupinyin
-</pre>
+sudo apt-get install fcitx-sogoupinyin</pre>
 <p>当然谷歌拼音也不错：</p>
-<pre class="prettyprint linenums lang-bash">sudo apt-get install fcitx-googlepinyin
-</pre>
+<pre class="prettyprint linenums lang-bash">sudo apt-get install fcitx-googlepinyin</pre>
 <h2 id="邮件">邮件</h2>
 <p>Mac下是使用Foxmail for Mac，linux下可以选择ThunderBird，用起来很顺手。</p>
 <h2 id="dropbox">Dropbox</h2>
 <p>Dropbox有官方linux客户端，可以到其官网下载安装。不过安装后也许会发现dropbox的icon没有出现在上面的indicator上，可以这样修复：</p>
 <pre class="prettyprint linenums lang-bash">sudo apt-get install libappindicator1
-dropbox stop &amp;&amp; dropbox start
-</pre>
+dropbox stop &amp;&amp; dropbox start</pre>
 <h2 id="evernote">Evernote</h2>
 <p>很不幸，我平常用来做笔记的evernote没有linux官方客户端，不过可以选择使用web版，或者安装第三方linux客户端everpad：</p>
 <pre class="prettyprint linenums lang-bash">sudo add-apt-repository ppa:nvbn-rm/ppa
 sudo apt-get update
-sudo apt-get install everpad
-</pre>
+sudo apt-get install everpad</pre>
 <p>当然功能和美观程度都没法和Mac下官方的客户端相比，不过日常使用还是足够了。</p>
 <h2 id="办公office">办公Office</h2>
 <p>Ubuntu自带的LibreOffice可以很好的满足需求，试用了WPS for linux，无法正常打开Office 2010的文件，故而弃用之。LibreOffice打开Office 2010的文件没有问题。</p>
@@ -226,16 +214,13 @@ sudo apt-get install everpad
 <h2 id="绘图及图像处理">绘图及图像处理</h2>
 <p>平常工程文档做图一般用<a href="http://www.yworks.com/en/products_yed_about.html">yEd</a>，是java开发的，所以在linux下可以直接使用。</p>
 <p>图像处理可以用gimp：</p>
-<pre class="prettyprint linenums lang-bash">sudo apt-get install gimp
-</pre>
+<pre class="prettyprint linenums lang-bash">sudo apt-get install gimp</pre>
 <h2 id="影音播放">影音播放</h2>
 <p>平常很少离线看视频，如果需要的话，vlc应该够了：</p>
-<pre class="prettyprint linenums lang-bash">sudo apt-get install vlc
-</pre>
+<pre class="prettyprint linenums lang-bash">sudo apt-get install vlc</pre>
 <h2 id="截图工具">截图工具</h2>
 <p>截图工具非shutter莫属：</p>
-<pre class="prettyprint linenums lang-bash">sudo apt-get install shutter
-</pre>
+<pre class="prettyprint linenums lang-bash">sudo apt-get install shutter</pre>
 <h2 id="阿里旺旺">阿里旺旺</h2>
 <p>因为工作关系，平常必须使用旺旺交流。Mac下有非常好用的官方版，linux下并没有官方旺旺，有个内部版本巨烂无比。不过之前参加活动获赠一个<a href="http://www.codeweavers.com/products/">CrossOver</a>正版授权序列号。</p>
 <p>目前CrossOver运行阿里旺旺2013非常流畅。</p>

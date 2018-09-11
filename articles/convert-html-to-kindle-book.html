@@ -73,14 +73,11 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <p>Calibre的下载地址是<a href="http://calibre-ebook.com/download">http://calibre-ebook.com/download</a>，可以根据自己的操作系统下载相应的安装程序。</p>
 <p>如果是Linux操作系统，还可以通过软件仓库安装：</p>
 <p>Archlinux：</p>
-<pre class="prettyprint linenums lang-bash">pacman -S calibre
-</pre>
+<pre class="prettyprint linenums lang-bash">pacman -S calibre</pre>
 <p>Debian/Ubuntu：</p>
-<pre class="prettyprint linenums lang-bash">apt-get install calibre
-</pre>
+<pre class="prettyprint linenums lang-bash">apt-get install calibre</pre>
 <p>RedHat/Fedora/CentOS：</p>
-<pre class="prettyprint linenums lang-bash">yum -y install calibre
-</pre>
+<pre class="prettyprint linenums lang-bash">yum -y install calibre</pre>
 <p>注意，如果你使用OSX，需要单独安装<a href="http://manual.calibre-ebook.com/cli/cli-index.html">Command Line Tool</a>。</p>
 <h1 id="抓取网页生成电子书">抓取网页生成电子书</h1>
 <p>下面以<a href="http://chimera.labs.oreilly.com/books/1230000000561">Git Pocket Guide</a>为例，说明如何通过calibre从网页生成电子书。</p>
@@ -124,8 +121,7 @@ class Git_Pocket_Guide(BasicNewsRecipe):
 
         ans = [(&#39;Git_Pocket_Guide&#39;, articles)]
 
-        return ans
-</pre>
+        return ans</pre>
 <p>下面分别解释代码中不同部分。</p>
 <h3 id="总体结构">总体结构</h3>
 <p>总体来看，一个recipes就是一个python class，只不过这个class必须继承calibre.web.feeds.recipes.BasicNewsRecipe。</p>
@@ -139,8 +135,7 @@ cover_url = &#39;http://akamaicovers.oreilly.com/images/0636920024972/lrg.jpg&#3
 
 url_prefix = &#39;http://chimera.labs.oreilly.com/books/1230000000561/&#39;
 no_stylesheets = True
-keep_only_tags = [{ &#39;class&#39;: &#39;chapter&#39; }]
-</pre>
+keep_only_tags = [{ &#39;class&#39;: &#39;chapter&#39; }]</pre>
 <ul>
 <li>title：电子书标题</li>
 <li>description：电子书描述</li>
@@ -161,8 +156,7 @@ keep_only_tags = [{ &#39;class&#39;: &#39;chapter&#39; }]
 <p>上面是最基本的recipes，想了解更多的使用方法，可以参考<a href="http://manual.calibre-ebook.com/news_recipe.html">API文档</a>。</p>
 <h2 id="生成mobi">生成mobi</h2>
 <p>编写好recipes后，在命令行下通过如下命令即可生成电子书：</p>
-<pre class="prettyprint linenums lang-bash">ebook-convert Git_Pocket_Guide.recipe Git_Pocket_Guide.mobi
-</pre>
+<pre class="prettyprint linenums lang-bash">ebook-convert Git_Pocket_Guide.recipe Git_Pocket_Guide.mobi</pre>
 <p>即可生成mobi格式的电子书。ebook-convert会根据recipes代码自行抓取相关内容并组织结构。</p>
 <h1 id="最终效果">最终效果</h1>
 <p>下面是在kindle上看到的效果。</p>

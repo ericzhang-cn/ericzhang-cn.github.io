@@ -144,17 +144,29 @@ T(k-1)=b_{k-1}
 <p>下面先考虑齐次线性递推式的求解。定理如下：</p>
 <blockquote>
 <p>设有线性齐次递推式\(T(n)=a_1T(n-1)+a_2T(n-2)+ \dots +a_{k-1}T(n-k+1)+a_kT(n-k)\)</p>
+</blockquote>
+<blockquote>
 <p>另设多项式方程\(q^k-a_1q^{k-1}- \dots -a_{k-1}q-a_k=0 \quad (q &gt; 0, a_k \neq 0)\)的根是
 \(q_1,q_2,\dots ,q_k\)，我们先讨论不存在重根的情况，也就是说k个根互不相等。</p>
+</blockquote>
+<blockquote>
 <p>则\(T(n)\)的通解为：</p>
+</blockquote>
+<blockquote>
 <p>\[T(n)=c_1q_1^n+c_2q_2^n+ \dots +c_kq_k^n\]</p>
+</blockquote>
+<blockquote>
 <p>并且对于任意的初始情况</p>
+</blockquote>
+<blockquote>
 <p>\[\begin{array}{l}
 T(0)=b_0 \\
 T(1)=b_1 \\
 \vdots \\
 T(k-1)=b_{k-1}
 \end{array}\]</p>
+</blockquote>
+<blockquote>
 <p>都存在一组解\(c_1, \dots ,c_k\)使得递推式成立</p>
 </blockquote>
 <h2 id="定理的证明">定理的证明</h2>
@@ -164,7 +176,11 @@ T(k-1)=b_{k-1}
 <blockquote>
 <p>\(T(n)=a_1T(n-1)+a_2T(n-2)+ \dots +a_{k-1}T(n-k+1)+a_kT(n-k)\)经过变换可以改写为
 \(T(n)-a_1T(n-1)-a_2T(n-2)- \dots -a_{k-1}T(n-k+1)-a_kT(n-k)=0\)</p>
+</blockquote>
+<blockquote>
 <p>假设\(T(n)=q^n\)，因为\(q&gt;0\)，所以两边除以\(q^{n-k}\)，得到\(q^k-a_1q^{k-1}- \dots -a_{k-1}q-a_k=0\)</p>
+</blockquote>
+<blockquote>
 <p>因此这个多项式和原递推式同解，因此多项式的每个根q的几何级数\(q^n\)都是原递推式的一个解。同时，根的线性组合
 \(c_1q_1^n+c_2q_2^n+ \dots +c_kq_k^n\)均满足原递推式（可以带入验证）。</p>
 </blockquote>
@@ -172,13 +188,19 @@ T(k-1)=b_{k-1}
 <p>下面要证明对于任意初始条件，均存在适当的常数\(c_1, \dots ,c_k\)。</p>
 <blockquote>
 <p>将</p>
+</blockquote>
+<blockquote>
 <p>\[\begin{array}{l}
 T(0)=b_0 \\
 T(1)=b_1 \\
 \vdots \\
 T(k-1)=b_{k-1}
 \end{array}\]</p>
+</blockquote>
+<blockquote>
 <p>带入通解公式，得到一个线性方程组</p>
+</blockquote>
+<blockquote>
 <p>\[\begin{array}{l l l}
 c_1+c_2+ \dots +c_k &amp; = &amp; b_0 \\
 c_1q_1+c_2q_2+ \dots +c_kq_k &amp; = &amp; b_1 \\
@@ -186,7 +208,11 @@ c_1q_1^2+c_2q_2^2+ \dots +c_kq_k^2 &amp; = &amp; b_2 \\
 \vdots &amp; &amp; \\
 c_1q_1^{k-1}+c_2q_2^{k-1}+ \dots +c_kq_k^{k-1} &amp; = &amp; b_{k-1} \\
 \end{array}\]</p>
+</blockquote>
+<blockquote>
 <p>此时问题转化为证明此方程组对于必然有解，下面就要用到线性代数的知识了。这个方程组的系数行列式为：</p>
+</blockquote>
+<blockquote>
 <p>\[{det}(V)=\begin{vmatrix}
 1 &amp; 1 &amp; \dots &amp; 1 \\
 q_1 &amp; q_2 &amp; \dots &amp; q_k \\
@@ -194,11 +220,21 @@ q_1^2 &amp; q_2^2 &amp; \dots &amp; q_k^2 \\
 \vdots &amp; \vdots &amp; \dots &amp; \vdots \\
 q_1^{k-1} &amp; q_2^{k-1} &amp; \dots &amp; q_k^{k-1}
 \end{vmatrix}\]</p>
+</blockquote>
+<blockquote>
 <p>这个行列式就是非常著名<a href="http://en.wikipedia.org/wiki/Vandermonde_matrix">Vandermonde行列式</a>，所以</p>
+</blockquote>
+<blockquote>
 <p>\[{det}(V)=\prod_{1 \leq i &lt; j \leq k}{(q_i-q_j)}\]</p>
+</blockquote>
+<blockquote>
 <p>上面我们假设了多项式各个根均互异，因此行列式的值不等于0，这意味着系数矩阵的秩为k。有线性代数知识可知，这表明
 对于任意初始值\(b_0, \dots, b_{k-1}\)，方程组均有唯一解。</p>
+</blockquote>
+<blockquote>
 <p>证毕。</p>
+</blockquote>
+<blockquote>
 <p>顺便说一下，上面的多项式叫特征多项式。其根叫特征根。</p>
 </blockquote>
 <h1 id="通用解法">通用解法</h1>
