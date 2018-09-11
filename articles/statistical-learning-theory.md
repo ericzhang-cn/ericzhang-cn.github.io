@@ -48,12 +48,12 @@ $$
 取$f(x)=x^2+\mu$，则：
 $$
 \begin{align}
-E(L(x,y,f)) &= E((x^2+\epsilon-x^2-\mu)^2) \\\\
-&= E((\epsilon-\mu)^2) \\\\
-&= E(\epsilon^2+\mu^2-2\mu\epsilon) \\\\
-&= E(\epsilon^2)+E(\mu^2)-2E(\mu)E(\epsilon) \\\\
-&= E^2(\epsilon)+Var(\epsilon) + \mu^2 - 2\mu^2 \\\\
-&= \mu^2+\sigma^2+\mu^2-2\mu^2 \\\\
+E(L(x,y,f)) &= E((x^2+\epsilon-x^2-\mu)^2) \\
+&= E((\epsilon-\mu)^2) \\
+&= E(\epsilon^2+\mu^2-2\mu\epsilon) \\
+&= E(\epsilon^2)+E(\mu^2)-2E(\mu)E(\epsilon) \\
+&= E^2(\epsilon)+Var(\epsilon) + \mu^2 - 2\mu^2 \\
+&= \mu^2+\sigma^2+\mu^2-2\mu^2 \\
 &= \sigma^2
 \end{align}
 $$
