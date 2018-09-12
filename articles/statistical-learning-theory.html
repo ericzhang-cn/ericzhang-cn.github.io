@@ -71,27 +71,30 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <p>这篇文章目标是对于统计学习理论进行一个概述，在这个概述中，将始终保持简洁及易读，并尽量将SLT基础部分的系统脉络梳理清楚，给出SLT的一些基础但十分重要的结论。</p>
 <p>虽然不希望数学公式成为各位阅读本文的障碍，但是想要完全抛弃数学语言，又可以明确阐述SLT是不可能的，因此文章中会不可避免存在一些相对严格的数学描述、公式及证明。读者只要具有本科工科的数学水平，即可以无障碍阅读此文。</p>
 <!-- toc -->
+
 <ul>
-<li><a href="#1-统计学习的定义及框架">1 统计学习的定义及框架</a><ul>
-<li><a href="#11-目标">1.1 目标</a></li>
-<li><a href="#12-最优解示例">1.2 最优解示例</a></li>
-<li><a href="#13-通用最优解">1.3 通用最优解</a><ul>
-<li><a href="#131-回归问题的最优解">1.3.1 回归问题的最优解</a></li>
-<li><a href="#132-二分类问题的最优解">1.3.2 二分类问题的最优解</a></li>
+<li><a href="#1-%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%AE%9A%E4%B9%89%E5%8F%8A%E6%A1%86%E6%9E%B6">1 统计学习的定义及框架</a><ul>
+<li><a href="#11-%E7%9B%AE%E6%A0%87">1.1 目标</a></li>
+<li><a href="#12-%E6%9C%80%E4%BC%98%E8%A7%A3%E7%A4%BA%E4%BE%8B">1.2 最优解示例</a></li>
+<li><a href="#13-%E9%80%9A%E7%94%A8%E6%9C%80%E4%BC%98%E8%A7%A3">1.3 通用最优解</a><ul>
+<li><a href="#131-%E5%9B%9E%E5%BD%92%E9%97%AE%E9%A2%98%E7%9A%84%E6%9C%80%E4%BC%98%E8%A7%A3">1.3.1 回归问题的最优解</a></li>
+<li><a href="#132-%E4%BA%8C%E5%88%86%E7%B1%BB%E9%97%AE%E9%A2%98%E7%9A%84%E6%9C%80%E4%BC%98%E8%A7%A3">1.3.2 二分类问题的最优解</a></li>
 </ul>
 </li>
-<li><a href="#14-统计学习">1.4 统计学习</a></li>
+<li><a href="#14-%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0">1.4 统计学习</a></li>
 </ul>
 </li>
-<li><a href="#2-一致性">2 一致性</a><ul>
-<li><a href="#21-对假设空间的思考">2.1 对假设空间的思考</a></li>
-<li><a href="#22-偏差-方差均衡">2.2 偏差-方差均衡</a></li>
-<li><a href="#23-一致性">2.3 一致性</a></li>
+<li><a href="#2-%E4%B8%80%E8%87%B4%E6%80%A7">2 一致性</a><ul>
+<li><a href="#21-%E5%AF%B9%E5%81%87%E8%AE%BE%E7%A9%BA%E9%97%B4%E7%9A%84%E6%80%9D%E8%80%83">2.1 对假设空间的思考</a></li>
+<li><a href="#22-%E5%81%8F%E5%B7%AE-%E6%96%B9%E5%B7%AE%E5%9D%87%E8%A1%A1">2.2 偏差-方差均衡</a></li>
+<li><a href="#23-%E4%B8%80%E8%87%B4%E6%80%A7">2.3 一致性</a></li>
 </ul>
 </li>
-<li><a href="#3-全局一致算法">3 全局一致算法</a></li>
+<li><a href="#3-%E5%85%A8%E5%B1%80%E4%B8%80%E8%87%B4%E7%AE%97%E6%B3%95">3 全局一致算法</a></li>
 </ul>
 <!-- toc stop -->
+
+
 <h1 id="1-统计学习的定义及框架">1 统计学习的定义及框架</h1>
 <h2 id="11-目标">1.1 目标</h2>
 <p>我们先来相对严格的描述，统计学习的目标是什么。</p>
@@ -126,13 +129,13 @@ $$
 取$f(x)=x^2+\mu$，则：
 $$
 \begin{align}
-E(L(x,y,f)) &amp;= E((x^2+\epsilon-x^2-\mu)^2) \\
-&amp;= E((\epsilon-\mu)^2) \\
-&amp;= E(\epsilon^2+\mu^2-2\mu\epsilon) \\
-&amp;= E(\epsilon^2)+E(\mu^2)-2E(\mu)E(\epsilon) \\
-&amp;= E^2(\epsilon)+Var(\epsilon) + \mu^2 - 2\mu^2 \\
-&amp;= \mu^2+\sigma^2+\mu^2-2\mu^2 \\
-&amp;= \sigma^2
+E(L(x,y,f)) &= E((x^2+\epsilon-x^2-\mu)^2) \\
+&= E((\epsilon-\mu)^2) \\
+&= E(\epsilon^2+\mu^2-2\mu\epsilon) \\
+&= E(\epsilon^2)+E(\mu^2)-2E(\mu)E(\epsilon) \\
+&= E^2(\epsilon)+Var(\epsilon) + \mu^2 - 2\mu^2 \\
+&= \mu^2+\sigma^2+\mu^2-2\mu^2 \\
+&= \sigma^2
 \end{align}
 $$
 可以证明这是$E(L(x,y,f))$的最小值，所以$f(x)=x^2+\mu$是此时的最优解。</p>
