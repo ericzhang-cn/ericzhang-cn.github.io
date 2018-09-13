@@ -105,7 +105,15 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 </li>
 </ul>
 </li>
-<li><a href="#5-%E5%81%87%E8%AE%BE%E7%A9%BA%E9%97%B4%E5%BA%A6%E9%87%8F">5 假设空间度量</a></li>
+<li><a href="#5-%E5%81%87%E8%AE%BE%E7%A9%BA%E9%97%B4%E5%BA%A6%E9%87%8F">5 假设空间度量</a><ul>
+<li><a href="#51-%E6%9C%89%E9%99%90%E5%81%87%E8%AE%BE%E7%A9%BA%E9%97%B4">5.1 有限假设空间</a></li>
+<li><a href="#52-%E6%97%A0%E9%99%90%E5%81%87%E8%AE%BE%E7%A9%BA%E9%97%B4">5.2 无限假设空间</a><ul>
+<li><a href="#521-symmetrization">5.2.1 Symmetrization</a></li>
+<li><a href="#522-shattering-coefficient">5.2.2 Shattering Coefficient</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 <!-- toc stop -->
 
@@ -387,6 +395,44 @@ $$
 <p>如果随着$n\rightarrow\infty$，$P(\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|\ge\epsilon)\rightarrow 0$，我们说假设空间$F$是一致收敛（Uniform convergence）的。</p>
 <p>由上，我们得出重要结论：<strong>如果假设空间$F$一致收敛，则ERM学习在$F$上是一致的</strong>。</p>
 <h1 id="5-假设空间度量">5 假设空间度量</h1>
+<p>从上面分析我们可以知道，若要使用ERM，则必须保证假设空间$F$一致收敛，否则无法保证ERM的一致性。那么现在我们面对的问题就变成了，如何选择或从数学上证明一个假设空间是一致收敛的呢？</p>
+<h2 id="51-有限假设空间">5.1 有限假设空间</h2>
+<p>我们先讨论假设空间有限的情况。设$F=\{f_1,f_2,...,f_m\}$是一个具有$m$个假设函数的有限假设空间。这：
+$$
+P(\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|\ge \epsilon)\le\sum_{i=1}^mP(|R(f_i)-R_{emp}(f_i)|\ge \epsilon)
+$$
+以上式子的意义是，由于$F$中任意一个假设的经验风险与实际风险的误差大于$\epsilon$就会导致$F$的误差上限大于$\epsilon$，所以右侧是比左侧更可能的发生的事件，所以右侧的概率大于左侧。</p>
+<p>我们现在不加证明给出一个定理：Chernoff bound：</p>
+<hr>
+<p><strong>Chernoff bound</strong></p>
+<p>如果$\xi$是一个随机变量，且取值范围为$[0,1]$，则对于$\xi$的iid样本集$\{\xi_1,\xi_2,...,\xi_n\}$，有下面不等式：
+$$
+P(|\frac{1}{n}\sum_{i=1}^n\xi_i-E(\xi)|\ge\epsilon)\le2\exp(-2n\epsilon^2)
+$$</p>
+<hr>
+<p>Chernoff bound相比大数定律给出了一个定量的上界。由Chernoff bound可以得出：
+$$
+P(\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|\ge \epsilon)\le\sum_{i=1}^mP(|R(f_i)-R_{emp}(f_i)|\ge \epsilon) \le 2m\ exp(-2n\epsilon^2)
+$$
+和明显，当$n\rightarrow\infty$时，右侧收敛到0，这蕴含着$F$一致收敛，因此：<strong>有限的假设空间上，ERM是一致的</strong>。</p>
+<h2 id="52-无限假设空间">5.2 无限假设空间</h2>
+<p>一般来说，我们现实中很少会使用有限假设空间，因此，我们需要继续分析假设空间无限的情况，有什么方法可以保证其一致收敛。</p>
+<h3 id="521-symmetrization">5.2.1 Symmetrization</h3>
+<p>在继续分析之前，我们先来处理一个十分讨厌的问题。如果仔细看上面的分析就会发现，我们一直带着一个很烦人的东西$R(f)$，为什么这东西烦人呢，因为由于实际中我们无法知道联合概率分布，所以自然也无法计算出真实风险$R(f)$，所以如果继续带着这么一个无法观测的东西，总觉得是颗雷。所以我们先把这东西用什么可以观测的量代替掉。</p>
+<p>这个还真可以做到，需要通过一个叫Symmetrization的技巧。简单来说，Symmetrization的意思是，如果我们除了$D_n$，还有一组独立于$D_n$且同样大小的iid抽样$D_n&#39;$，我们定义其上的经验风险是$R_{emp}&#39;(f)$，则有如下定理：</p>
+<p>若$m\epsilon^2\gt 2$，则：
+$$
+P(\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|\gt\epsilon)\le2P(\mathop{sup}_{f\in F}|R_{emp}(f)-R_{emp}&#39;(f)|\gt\epsilon/2)
+$$
+由于证明比较繁琐，我们不去证明这个不等式。但是我们可以看出上式的价值，就是我们不再依赖不可观测的$R(f)$了，而只依赖可以观测的经验风险。所以如果我们能找出什么条件使得$\mathop{sup}_{f\in F}{|R_{emp}(f)-R_{emp}&#39;(f)|}$依概率收敛，则大功告成。现在我们进行这一步。</p>
+<h3 id="522-shattering-coefficient">5.2.2 Shattering Coefficient</h3>
+<p>为什么只依赖经验风险是非常重要的呢，因为我们需要注意这样一个非常重要的事实：<strong>即使$F$是无限的，但是对于特定的$n$，经验风险的取值是有限的</strong>。</p>
+<p>什么意思呢，考虑一个二分类问题，给出一个有n个样本的样本集，不论你的$F$中有多少函数，最终输出最多只能有$2^n$种可能（每个样本输出要么0，要么1），所以，如果只考虑经验风险，任何$F$在面对n个样本时，在ERM评价下其等价于一个<strong>最多</strong>有$2^n$个假设函数的有限假设空间。</p>
+<p>我们量化一下这个度量，对于假设空间$F$，我们定义一个函数：
+$$
+\mathcal{N}(F,n)=\text{当样本数为n时，F所能产生的不同分类结果的数量}
+$$
+这个函数我们称为$F$的shattering coefficient，下面举例子直观说明一下它的含义。</p>
 <p>TBD</p>
 
         </div>
