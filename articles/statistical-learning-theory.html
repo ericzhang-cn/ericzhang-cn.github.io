@@ -105,6 +105,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 </li>
 </ul>
 </li>
+<li><a href="#5-%E5%81%87%E8%AE%BE%E7%A9%BA%E9%97%B4%E5%BA%A6%E9%87%8F">5 假设空间度量</a></li>
 </ul>
 <!-- toc stop -->
 
@@ -359,6 +360,33 @@ $$</p>
 <hr>
 <p>如果考察上面的表示，发现在$f$固定的情况下，$R(f)$是$L$的期望，而$R_{emp}(f)$是$L$的样本均值，因此根据大数定律可以直接得出结论：<strong>在$f$固定时，$R_{emp}(f)$依概率收敛到$R(f)$</strong>。</p>
 <h3 id="432-一致收敛（uniform-convergence）">4.3.2 一致收敛（Uniform Convergence）</h3>
+<p>通过以上分析可以看到，如果是单一函数，经验风险是依概率收敛到真实风险的，而当$F$中有多个函数时，由于$f_n$是一个依赖于样本集的非固定函数，因此大数定律失效。</p>
+<p>那么有没有办法将大数定律推广到假设空间是多函数情况的呢，考虑下面定义：
+$$
+\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|
+$$
+这个式子表示$F$中所有函数真实风险和经验风险误差的上界。由于是上界，我们显然有：
+$$
+|R(f)-R_{emp}(f)|\le\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)| \\
+P(|R(f_n)-R_{emp}(f_n)|\ge\epsilon)\le P(\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|\ge\epsilon)
+$$
+显然如果上式子右边依概率收敛，则左边也依概率收敛。下面将上式和$F$的一致性关联起来：
+$$
+\begin{align}
+|R(f_n)-R(f_F)| &= R(f_n)-R(f_F) \\
+&= R(f_n) +(-R_{emp}(f_n)+R_{emp}(f_n)-R_{emp}(f_F)+R_{emp}(f_F)) -R(f_F) \\
+&amp;\le (R(f_n)-R_{emp}(f_n))+(R(f_F)-R_{emp}(f_F)) \\
+&amp;\le 2\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|
+\end{align}
+$$
+综上可得：
+$$
+P(|R(f_n)-R(f_F)|\ge\epsilon)\le P(\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|\ge\epsilon/2)
+$$
+如果右边依概率收敛，则左边必然依概率收敛，而左边依概率收敛，则意味着一致。</p>
+<p>如果随着$n\rightarrow\infty$，$P(\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|\ge\epsilon)\rightarrow 0$，我们说假设空间$F$是一致收敛（Uniform convergence）的。</p>
+<p>由上，我们得出重要结论：<strong>如果假设空间$F$一致收敛，则ERM学习在$F$上是一致的</strong>。</p>
+<h1 id="5-假设空间度量">5 假设空间度量</h1>
 <p>TBD</p>
 
         </div>
