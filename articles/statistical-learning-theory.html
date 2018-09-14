@@ -110,6 +110,8 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <li><a href="#52-%E6%97%A0%E9%99%90%E5%81%87%E8%AE%BE%E7%A9%BA%E9%97%B4">5.2 无限假设空间</a><ul>
 <li><a href="#521-symmetrization">5.2.1 Symmetrization</a></li>
 <li><a href="#522-shattering-coefficient">5.2.2 Shattering Coefficient</a></li>
+<li><a href="#523-%E4%B8%80%E8%87%B4%E6%94%B6%E6%95%9B%E4%B8%8A%E7%95%8C">5.2.3 一致收敛上界</a></li>
+<li><a href="#524-vc%E7%BB%B4">5.2.4 VC维</a></li>
 </ul>
 </li>
 </ul>
@@ -433,6 +435,47 @@ $$
 \mathcal{N}(F,n)=\text{当样本数为n时，F所能产生的不同分类结果的数量}
 $$
 这个函数我们称为$F$的shattering coefficient，下面举例子直观说明一下它的含义。</p>
+<blockquote>
+<p>例7：设一个输入空间在$[0,1]$上的二分类问题。有这样一个模型：它选择一个点$\theta\in [0,1]$，将区间分为$[0,\theta]$和$(\theta,1]$两部分，然后将两个部分分别作为一个类别。这个模型的shattering coefficient是什么？</p>
+</blockquote>
+<p>简单来说，这个模型就是将输入空间一分为二，一边赋值为0，一边赋值为1，因为$\theta$有无数种选择，所以$F$是一个无限集合。</p>
+<p>另外可以看出，基于上面模型分类时，能输出几种分类结果，仅与样本点的标签和相对排布有关，与具体位置无关。当有n个二值样本点时，在一维空间里有$2^n$种排布方式。显然在$n\le 2$时，是可以完美分开的，所以$\mathcal{N}(F,1)=2$，$\mathcal{N}(F,2)=4$。现在考察$n\gt 2$的情况：</p>
+<ul>
+<li>当$n=3$时，有8种排布方式，其中ooo，oox，oxx，xxx，xxo，xoo可以由$F$输出，但是oxo和xox两种情况是无法输出的，因此$$\mathcal{N}(F,3)=6$$</li>
+<li>当$n=4$时，有16种排布方式，其中oooo，ooox，ooxx，oxxx，xxxx，xxxo，xxoo，xooo可以由$F$输出，其他情况无法输出的，因此$$\mathcal{N}(F,4)=8$$</li>
+</ul>
+<p>我们一般化考虑一下，当样本个数为n时，有$2^n$中排布可能，但是$F$中假设函数可以输出的排布，一定是可以找到某一点，左边全是x，右边全是o；或者左边全是o，右边全是x。可以这样思考有多少可能：</p>
+<ol>
+<li>首先n个样本全是oo...o，这是一个输出可能</li>
+<li>从右边开始，依次将每个位置的样本由o变为x，经过n次，变为xx..x，这是n种可能输出</li>
+<li>再从右边开始，依次将x变成o，经过n次，变为oo..o，也是n种输出可能，但是由于全是o的情况在上面已经提到了，所以这里有n-1种新的输出可能</li>
+<li>将上面可能输出相加$1+n+n-1=2n$</li>
+</ol>
+<p>因此我们可得，对于例7的模型，$\mathcal{N}(F,n)=2n$</p>
+<h3 id="523-一致收敛上界">5.2.3 一致收敛上界</h3>
+<p>有了上面的铺垫，我们可以推导一般情况下ERM一致收敛的条件了。
+$$
+\begin{align}
+&amp;P(\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|\gt\epsilon) \\
+&amp;\le 2P(\mathop{sup}_{f\in F}|R_{emp}(f)-R_{emp}&#39;(f)|\gt\epsilon/2) \\
+&= 2P(\mathop{sup}_{f\in F_{2^{2n}}}|R_{emp}(f)-R_{emp}&#39;(f)|\gt\epsilon/2) \\
+&amp;\le 2\mathcal{N}(F,2n)exp(-n\epsilon^2/4)
+\end{align} \\
+$$</p>
+<p>这个推导稍微有点复杂，下面说明一下：</p>
+<ol>
+<li>第一步推导是上面提到的Symmetrization</li>
+<li>第二部推导是基于在两个容量为n的样本集上，其经验风险差值的输出只有$2^{2n}$种可能，将$F$等价为一个容量为$2^{2n}$的有限假设空间</li>
+<li>第三步推论基于有限假设空间的Chernoff bound给出</li>
+</ol>
+<p>至此，我们得到了ERM一致的一个一般性上界条件：<strong>若随着$n\rightarrow \infty$，$2\mathcal{N}(F,2n)exp(-n\epsilon^2/4)\rightarrow 0$，则ERM是一致的</strong>。</p>
+<p>看几个例子：</p>
+<ul>
+<li>上面提到例7中，$\mathcal{N}(F,2n)=4n$，代入上界，得到$8nexp(-n\epsilon^2/4)$，显然这个是收敛到0的，所以例7在ERM下是一致的</li>
+<li>考虑$\mathcal{N}(F,n)\le (2n)^k$，其中$k$是常数。此时，上界为$2exp(klog(2n)-n\epsilon^2/4)$，显然是收敛到0的。所以<strong>如果$\mathcal{N}(F,2n)$随着n的增长呈多项式级别增长，则ERM是一致的</strong></li>
+<li>考虑$F$可以任意取函数，也就是$\mathcal{N}(F,2n)=2^{2n}$，此时上界为$2exp(n(2log(2)-\epsilon^2/4)$，这个上界并不收敛到0。但是此时不能贸然说这个$F$就不一致，因为上界收敛只是一致的充分条件，而不是必要条件。如果用更多的数学技巧，我们可以得出一致的一个必要条件：$log\mathcal{N}(F,n/)/n\rightarrow 0$，由于$log(2^n)/n=nlog2/n=log2$不收敛到0，所以如果$F$取全体可能的假设时，ERM是不一致的</li>
+</ul>
+<h3 id="524-vc维">5.2.4 VC维</h3>
 <p>TBD</p>
 
         </div>
