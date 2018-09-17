@@ -4,8 +4,580 @@
         <title>CodingLabs</title>
         <link>http://blog.codinglabs.org</link>
         <description>keep coding, keep foolish</description>
-        <lastBuildDate>Fri, 22 Dec 2017 15:59:51 +0800</lastBuildDate>
+        <lastBuildDate>Sat, 15 Sep 2018 16:59:52 +0800</lastBuildDate>
         <language>zh-cn</language>
+        
+        <item> 
+            <title>统计学习理论的数理基础</title> 
+            <link>http://blog.codinglabs.org/articles/statistical-learning-theory.html?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=rss</link> 
+            <guid>http://blog.codinglabs.org/articles/statistical-learning-theory.html</guid> 
+            <author>ericzhang.buaa@gmail.com 张洋</author> 
+            <pubDate>Sat, 15 Sep 2018 00:00:00 +0800</pubDate> 
+            <description>&lt;p&gt;统计学习（Statistical learning）是目前人工智能领域最为活跃的一个分支，其理论基础是统计学习理论（Statistical learning theory，以下有时会简称SLT）：一种以数理统计为数学基础，研究是否可以以及如何从经验数据中学习普遍概念的理论。&lt;/p&gt;
+&lt;p&gt;目前诸多机器学习相关的初级书籍中，重点都放在了对各种模型的探讨，而对统计学习理论部分，要么是不涉及，要么是简要几页草草描述一下，这种不成体系的论述无法令读者尤其是机器学习的初学者对统计学习的基础理论形成系统化认知。&lt;/p&gt;
+&lt;p&gt;所以我阅读了一些SLT相关的论文，并对SLT的基础部分进行了一个系统化学习，这篇文章是我对SLT数理基础的整理和总结。&lt;/p&gt;
+&lt;p&gt;这篇文章目标是对于统计学习理论进行一个概述，在这个概述中，将始终保持简洁及易读，并尽量将SLT基础部分的系统脉络梳理清楚，给出SLT的一些基础但十分重要的结论。&lt;/p&gt;
+&lt;p&gt;虽然不希望数学公式成为各位阅读本文的障碍，但是想要完全抛弃数学语言，又可以明确阐述SLT是不可能的，因此文章中会不可避免存在一些相对严格的数学描述、公式及证明。读者只要具有本科工科的数学水平，即可以无障碍阅读此文。&lt;/p&gt;
+&lt;!-- toc --&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#1-%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0%E7%9A%84%E5%AE%9A%E4%B9%89%E5%8F%8A%E6%A1%86%E6%9E%B6&quot;&gt;1 统计学习的定义及框架&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#11-%E7%9B%AE%E6%A0%87&quot;&gt;1.1 目标&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#12-%E6%9C%80%E4%BC%98%E8%A7%A3%E7%A4%BA%E4%BE%8B&quot;&gt;1.2 最优解示例&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#13-%E9%80%9A%E7%94%A8%E6%9C%80%E4%BC%98%E8%A7%A3&quot;&gt;1.3 通用最优解&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#131-%E5%9B%9E%E5%BD%92%E9%97%AE%E9%A2%98%E7%9A%84%E6%9C%80%E4%BC%98%E8%A7%A3&quot;&gt;1.3.1 回归问题的最优解&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#132-%E4%BA%8C%E5%88%86%E7%B1%BB%E9%97%AE%E9%A2%98%E7%9A%84%E6%9C%80%E4%BC%98%E8%A7%A3&quot;&gt;1.3.2 二分类问题的最优解&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#14-%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0&quot;&gt;1.4 统计学习&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#2-%E4%B8%80%E8%87%B4%E6%80%A7&quot;&gt;2 一致性&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#21-%E5%AF%B9%E5%81%87%E8%AE%BE%E7%A9%BA%E9%97%B4%E7%9A%84%E6%80%9D%E8%80%83&quot;&gt;2.1 对假设空间的思考&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#22-%E5%81%8F%E5%B7%AE-%E6%96%B9%E5%B7%AE%E5%9D%87%E8%A1%A1&quot;&gt;2.2 偏差-方差均衡&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#23-%E4%B8%80%E8%87%B4%E6%80%A7&quot;&gt;2.3 一致性&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#3-%E5%85%A8%E5%B1%80%E4%B8%80%E8%87%B4%E7%AE%97%E6%B3%95&quot;&gt;3 全局一致算法&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#31-k-nearest-neighbor%E7%AE%97%E6%B3%95%E5%AE%9A%E4%B9%89&quot;&gt;3.1 K-nearest neighbor算法定义&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#32-knn%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7&quot;&gt;3.2 kNN的一致性&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#4-%E7%BB%8F%E9%AA%8C%E9%A3%8E%E9%99%A9%E6%9C%80%E5%B0%8F%E5%8C%96&quot;&gt;4 经验风险最小化&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#41-%E5%AE%9A%E4%B9%89&quot;&gt;4.1 定义&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#42-%E5%AF%B9erm%E4%B8%80%E8%87%B4%E6%80%A7%E7%9A%84%E5%88%9D%E6%AD%A5%E6%8E%A2%E8%AE%A8&quot;&gt;4.2 对ERM一致性的初步探讨&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#43-%E5%81%87%E8%AE%BE%E7%A9%BA%E9%97%B4%E4%B8%8E%E4%B8%80%E8%87%B4%E6%94%B6%E6%95%9B&quot;&gt;4.3 假设空间与一致收敛&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#431-%E5%8D%95%E4%B8%80%E5%87%BD%E6%95%B0%E5%81%87%E8%AE%BE%E7%A9%BA%E9%97%B4%E4%B8%8E%E5%A4%A7%E6%95%B0%E5%AE%9A%E5%BE%8B&quot;&gt;4.3.1 单一函数假设空间与大数定律&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#432-%E4%B8%80%E8%87%B4%E6%94%B6%E6%95%9Buniform-convergence&quot;&gt;4.3.2 一致收敛（Uniform Convergence）&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#5-%E5%81%87%E8%AE%BE%E7%A9%BA%E9%97%B4%E5%BA%A6%E9%87%8F&quot;&gt;5 假设空间度量&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#51-%E6%9C%89%E9%99%90%E5%81%87%E8%AE%BE%E7%A9%BA%E9%97%B4&quot;&gt;5.1 有限假设空间&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#52-%E6%97%A0%E9%99%90%E5%81%87%E8%AE%BE%E7%A9%BA%E9%97%B4&quot;&gt;5.2 无限假设空间&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#521-symmetrization&quot;&gt;5.2.1 Symmetrization&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#522-shattering-coefficient&quot;&gt;5.2.2 Shattering Coefficient&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#523-%E4%B8%80%E8%87%B4%E6%94%B6%E6%95%9B%E4%B8%8A%E7%95%8C&quot;&gt;5.2.3 一致收敛上界&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#524-vc%E7%BB%B4&quot;&gt;5.2.4 VC维&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#53-%E8%B4%9D%E5%8F%B6%E6%96%AF%E4%B8%80%E8%87%B4&quot;&gt;5.3 贝叶斯一致&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#6-%E5%A4%A9%E4%B8%8B%E6%B2%A1%E6%9C%89%E5%85%8D%E8%B4%B9%E5%8D%88%E9%A4%90%E5%AE%9A%E7%90%86&quot;&gt;6 天下没有免费午餐定理&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#7-%E7%89%B9%E5%AE%9A%E5%88%86%E5%B8%83%E5%BD%A2%E5%BC%8F%E4%B8%8B%E7%9A%84%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6&quot;&gt;7 特定分布形式下的学习框架&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#71-%E9%A2%91%E7%8E%87%E5%AD%A6%E6%B4%BEvs%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%AD%A6%E6%B4%BE&quot;&gt;7.1 频率学派vs贝叶斯学派&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#72-%E9%A2%91%E7%8E%87%E5%AD%A6%E6%B4%BE%E4%B8%8E%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1&quot;&gt;7.2 频率学派与最大似然估计&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#73-%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%AD%A6%E6%B4%BE%E4%B8%8E%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%AD%A6%E4%B9%A0&quot;&gt;7.3 贝叶斯学派与贝叶斯学习&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#74-%E5%AF%B9%E4%B8%A4%E7%A7%8D%E6%96%B9%E6%B3%95%E7%9A%84%E6%AF%94%E8%BE%83&quot;&gt;7.4 对两种方法的比较&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#8-%E6%80%BB%E7%BB%93&quot;&gt;8 总结&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- toc stop --&gt;
+
+
+&lt;h1 id=&quot;1-统计学习的定义及框架&quot;&gt;1 统计学习的定义及框架&lt;/h1&gt;
+&lt;h2 id=&quot;11-目标&quot;&gt;1.1 目标&lt;/h2&gt;
+&lt;p&gt;我们先来相对严格的描述，统计学习的目标是什么。&lt;/p&gt;
+&lt;p&gt;现设存在以下实体：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;集合$X$，称为输入空间，集合$Y$，称为输出空间&lt;/li&gt;
+&lt;li&gt;$X$与$Y$的联合概率分布$P(X,Y)$&lt;/li&gt;
+&lt;li&gt;$X$到$Y$的映射，$f(x)=y$，其中$x\in X, y\in Y$&lt;/li&gt;
+&lt;li&gt;定义在$X$，$Y$及$f$上的函数$L(x,y,f)\rightarrow \mathbb{R}$，其中$\mathbb{R}$表示实数集合&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;统计学习的终极目标是&lt;strong&gt;找一个映射$f$，使得$L$的期望最小&lt;/strong&gt;。所以，统计学习本质上是一个最优化问题，用数学语言描述，统计学习的目标找到下面的映射：
+$$
+f^\star=\mathop{\arg\min}_{f}{E(L(x,y,f))}
+$$&lt;/p&gt;
+&lt;h2 id=&quot;12-最优解示例&quot;&gt;1.2 最优解示例&lt;/h2&gt;
+&lt;p&gt;注意假设我们知道$X$，$Y$，$P$和$L$的具体形式，那么统计学习则是根本不必要的，因为这本身变成了一个数学上的最优化问题，我们先忽略这个问题，并通过几个例子，建立对这个理论目标的直观认识。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例1：$L$为常数函数$L(x,y,f)=0$&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;根据期望的定义可知，此情况下$L$的期望$E(L(x,y,f))$亦退化为常函数恒等于0，因此问题变得十分trivial，只要随便取一个映射，如$f(x)=0$，即是目标映射&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例2：$X=\mathbb{R}$，$Y=\mathbb{R}$，$L(x,y,f)=(y-f(x))^2$，且已知对于任意$x\in X$有$y=x^2$&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;此时，输入和输出之间的关系是完全确定的，不存在随机性。由$L$的定义可知$L\ge0$，因此只要取$f(x)=x^2$即可令$L$处处为0，因此期望也自然是0。此时$f(x)=x^2$就是最优解。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例3：$X=\mathbb{R}$，$Y=\mathbb{R}$，$L(x,y,f)=(y-f(x))^2$，且已知对于任意$x\in X$有$y=x^2+\epsilon$，其中$\epsilon\sim N(\mu,\sigma^2)$，即$\epsilon$服从均值为$\mu$，方差为$\sigma^2$的正态分布&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这里和例2唯一的不同是，输出中多了一个随机变量。此时：
+$$
+E(L(x,y,f))=E((y-f(x))^2)
+$$
+取$f(x)=x^2+\mu$，则：
+$$
+\begin{align}
+E(L(x,y,f)) &amp;= E((x^2+\epsilon-x^2-\mu)^2) \\
+&amp;= E((\epsilon-\mu)^2) \\
+&amp;= E(\epsilon^2+\mu^2-2\mu\epsilon) \\
+&amp;= E(\epsilon^2)+E(\mu^2)-2E(\mu)E(\epsilon) \\
+&amp;= E^2(\epsilon)+Var(\epsilon) + \mu^2 - 2\mu^2 \\
+&amp;= \mu^2+\sigma^2+\mu^2-2\mu^2 \\
+&amp;= \sigma^2
+\end{align}
+$$
+可以证明这是$E(L(x,y,f))$的最小值，所以$f(x)=x^2+\mu$是此时的最优解。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例4：$X=\{0,1\}$，$Y=\{0,1\}$，当$f(x)=y$，$L(x,y,f)=0$，否则$L(x,y,f)=1$，联合概率分布$P$取值如下：$P(X=0,Y=0)=0.1$，$P(X=0,Y=1)=0.3$，$P(X=1,Y=0)=0.4$，$P(X=1,Y=1)=0.2$&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;这是一个离散情况，我们现在不经证明给出起最优映射为$f(x)=1-x$，此时$L$的期望为：
+$$
+E(L(x,y,f))=0.1\times1+0.3\times0+0.4\times0+0.2\times1=0.3
+$$&lt;/p&gt;
+&lt;h2 id=&quot;13-通用最优解&quot;&gt;1.3 通用最优解&lt;/h2&gt;
+&lt;p&gt;上面举了几个在各项条件已知的情况下，最优映射的例子，可以看到，随着$X$，$Y$，$L$，$P$的不同，最优解的形式也各不相同。那么我们自然会有一个疑问：是否存在一个通用最优解公式，对于任意的$X$，$Y$，$L$，$P$，均可以套用公式得到最优解？答案是存在。&lt;/p&gt;
+&lt;p&gt;但是直接在如此抽象的定义域上讨论通用最优解，会使得整个推理过于抽象，所以我们对定义域进行一定的限制，将重点放在以下两类常见的统计学习问题：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;回归问题（Regression）：$X=\mathbb{R}^m$，$Y=\mathbb{R}$，$L(x,y,f)=(y-f(x))^2$&lt;/li&gt;
+&lt;li&gt;二分类问题（Binary Classification）：$X=\mathbb{R}^m$，$Y=\{0,1\}$，$L(x,y,f)=|y-f(x)|$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;下面分别分析两类问题的最优解。&lt;/p&gt;
+&lt;h3 id=&quot;131-回归问题的最优解&quot;&gt;1.3.1 回归问题的最优解&lt;/h3&gt;
+&lt;p&gt;在上述回归问题中，我们要求解的目标变成了：
+$$
+f^\star=\mathop{\arg\min}_f{E(L(x,y,f))}=\mathop{\arg\min}_f\int_Y\int_X(y-f(x))^2P(x,y)dxdy
+$$
+具体导出最优解的数学过程有点繁琐，所以这里我们用一个非严格但相对直观的方式，推导一下最优解。对严格数学推导过程感兴趣的同学可以自行推导，或参考资料。&lt;/p&gt;
+&lt;p&gt;首先，由上述公式可以看出，这里的期望值是一个大于等于0的值，且显然$(y-f(x))^2\ge0$。因此我们直观上能感受到，最优解$f^\star$应该使得$f^\star(x)$在任何地方都尽量接近$y$，这样才能让$(y-f(x))^2$尽可能小。&lt;/p&gt;
+&lt;p&gt;但是由于一般情况下我们认为$y$对$x$不是确定函数（否则这个函数就直接是最优解了），所以我们用条件概率刻画这个关系，任意给定一对$x\in X$，其对应的$y$服从：
+$$
+y\sim P(Y|X=x)
+$$
+而这个条件概率，可以对联合概率边缘化导出：
+$$
+P(Y|X=x)=P(x,Y)
+$$
+而要想令$(y-f(x))^2$尽可能小，直觉上我们可以让$f^\star(x)$取$X=x$是$y$的条件期望（实际上数学严格证明结论也是如此）：
+$$
+f^\star(x)=E_{Y|X}(Y|X=x)=\int_YyP(y|X=x)dy
+$$
+也就是说&lt;strong&gt;回归问题的最优解是输入值的条件期望&lt;/strong&gt;。&lt;/p&gt;
+&lt;h3 id=&quot;132-二分类问题的最优解&quot;&gt;1.3.2 二分类问题的最优解&lt;/h3&gt;
+&lt;p&gt;二分类问题的最优解分析与回归问题类似，但是要简单很多，这得益于二分类问题的输出空间要更简单一些。下面具体看一下：&lt;/p&gt;
+&lt;p&gt;与分析回归类似，我们先代入已知条件，写出优化目标：
+$$
+f^\star=\mathop{\arg\min}_f{E(L(x,y,f))}=\mathop{\arg\min}_f\{\int_X|0-f(x)|P(x,0)dx+\int_X|1-f(x)|P(x,1)dx\}
+$$
+上面的期望可以将联合概率分布改写为条件概率分布形式：
+$$
+E(L(x,y,f))=\int_X|0-f(x)|P(Y=0|x)P(x)dx+\int_X|1-f(x)|P(Y=1|x)P(x)dx
+$$&lt;/p&gt;
+&lt;p&gt;同样我们来非严格的分析一下这个式子如何取最小值。注意这里$f(x)$可能的取值只有0和1，所以$|0-f(x)|$和$|1-f(x)|$的取值一定是一个0一个1，所以按直觉来说一个合理的推断是无论何时，我们希望让被积函数部分尽可能小，具体来说：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;如果$P(Y=0|x)P(x) &gt; P(Y=1|x)P(x)$，我们希望$|0-f(x)|=0$且$|1-f(x)|=1$，即令$f(x)=0$&lt;/li&gt;
+&lt;li&gt;如果$P(Y=0|x)P(x) &lt; P(Y=1|x)P(x)$，我们希望$|0-f(x)|=1$且$|1-f(x)|=0$，即令$f(x)=1$&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;另外我们注意到$P(x)$是一个大于等于0的常数，所以我们只要在$P(Y=0|x)$与$P(Y=1|x)$选择较大的即可，即：
+$$
+f^\star(x)=\mathop{\arg\max}_y{P(Y=y|X=x)}
+$$
+&lt;strong&gt;以上最优解叫做贝叶斯分类器，是二分类问题的理论最优分类器，也是平均意义下统计学习所能达到的分类器上限&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2 id=&quot;14-统计学习&quot;&gt;1.4 统计学习&lt;/h2&gt;
+&lt;p&gt;下面我们严格定义统计学习。为了简单起见，从现在起，我们所有的讨论都围绕二分类问题展开，所得到的各种结论，理论上都可以推广到一般化的问题，但是在这里就不再从一般意义上进行推导，而是默认将问题限定在二分类问题。&lt;/p&gt;
+&lt;p&gt;首先，我们给上面到处都用到的那个期望$E(L(x,y,f))$起一个名字：风险，用$R$表示。注意在其他条件已知的情形下，$R$是$f$的函数，即：
+$$
+R(f)=E(L(x,y,f))
+$$
+因此我们上述目标可以简化成：
+$$
+f^\star=\mathop{\arg\min}_{f}R(f)
+$$
+上文可以知道，如果我们知道联合概率分布$P(X,Y)$，则可以通过数学计算直接导出最优解：贝叶斯分类器。因此也就不需要统计学习什么的了，但是现实情况是，我们往往不知道，也无法通过什么方法观测到$P(X,Y)$，而只可以观测到一个可数但无穷（现实中往往是又穷的，但这里我们暂时放宽这个条件）的&lt;strong&gt;独立无偏&lt;/strong&gt;样本：$D_n=\{(x_1,y_1),(x_2,y_2),...,(x_n,y_n)\},n\rightarrow\infty$，我们是否有某种可靠的方式，去得到或逼近贝叶斯分类器。&lt;/p&gt;
+&lt;p&gt;严格来说，（二分类）统计学习是这样一个问题：&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;统计学习&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;已知输入空间$X=\mathbb{R}^m$，输出空间$Y=\{0,1\}$，损失函数$L(x,y,f)=|y-f(x)|$。另存在一固定但未知且不可直接观测联合概率分布$P(X,Y)$，以及可数但任意大的iid（独立同分布）抽样$D_n=\{(x_1,y_1),(x_2,y_2),...,(x_n,y_n)\},n\rightarrow\infty$。设$f_b$为$P$下的贝叶斯分类器。&lt;/p&gt;
+&lt;p&gt;现给出一个函数空间$F$（称为假设空间），和从$F$中选择分类器算法，使得当$n\rightarrow\infty$时，算法从$F$中选择的分类器的风险依概率收敛到贝叶斯分类器的风险，即对于任意$\epsilon&gt;0$，由算法选择的$f\in F$满足：
+$$
+P(|R(f)-R(f_b)|&gt;\epsilon)\rightarrow0,\text{when }n\rightarrow\infty
+$$&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;注意，以上定义是一个非常严苛的定义，在此顶一下，我们要求我们的算法在样本无限多时能以任意大的概率和任意小的差距逼近最优分类器且对联合概率分布没有任何假设。这是我们最理想的统计学习，但实际中，由于达到这个目标非常困难，所以我们可能会退而求其次寻求一些更宽松的目标。&lt;/p&gt;
+&lt;p&gt;这一章节，我们通过数学方式严格定义了统计学习，并给出了最理想的情况。下一章节，我们进一步统计学习的一些细节问题。&lt;/p&gt;
+&lt;h1 id=&quot;2-一致性&quot;&gt;2 一致性&lt;/h1&gt;
+&lt;h2 id=&quot;21-对假设空间的思考&quot;&gt;2.1 对假设空间的思考&lt;/h2&gt;
+&lt;p&gt;上面说道，我们的算法是从一个假设空间$F$中选择一个假设（函数），由此引出一个问题，不同的假设空间，对于是否能达到上述目标是有影响的。考虑下图中的两个假设空间：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;../uploads/pictures/statistical-learning-theory/slt01.png&quot; alt=&quot;slt01&quot;&gt;&lt;/p&gt;
+&lt;p&gt;其中All sapce是所有可能的分类器集合，橙色的分类器是贝叶斯分类器。可以看到，假设空间1包含了贝叶斯分类器，而假设空间2没有包含。那么，理论上任何算法都不可能从假设空间2中学到贝叶斯分类器（假设不存在与贝叶斯分类器的等效分类器），所以，如果我们不能保证所采用的假设空间包含贝叶斯分类器，就不可能达到上述的学习目标。&lt;/p&gt;
+&lt;p&gt;同时，由于我们对联合概率分布$P$一无所知，现实中很难有办法保证我们选择的假设空间一定包含$f_b$。&lt;/p&gt;
+&lt;p&gt;那么我们换个思路，能不能直接用All space作为假设空间。理论上是可以的，而且也确实有这种算法（例如KNN）。这样做虽然可以理论上直接以$f_b$为优化目标，但只有在样本真的是无限的情况下才可能，而且想要尽可能逼近$f_b$，对样本量的需求和对计算量的需求都会膨胀的十分迅速，因此实践中受现实条件所限，有可能无法使用。&lt;/p&gt;
+&lt;h2 id=&quot;22-偏差-方差均衡&quot;&gt;2.2 偏差-方差均衡&lt;/h2&gt;
+&lt;p&gt;另一类实践中更常用的方法是经验风险最小化（Empirical Risk Minimization，以下简称ERM），下面会有对ERM的单独讨论。这里只是简单说一下，ERM中存在偏差-方差均衡问题。为了解释这个，我们看下面的图：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;../uploads/pictures/statistical-learning-theory/slt02.png&quot; alt=&quot;slt02&quot;&gt;&lt;/p&gt;
+&lt;p&gt;橙色点是贝叶斯分类器$f_b$，绿色点是我们的假设空间中最优的分类器$f_F$，其数学定义为：
+$$
+f_F=\mathop{\arg\min}_{f\in F}(R(f_b)-R(f))
+$$
+灰色点是我们的学习算法在观察了$n$个样本后得到的分类器$f_n$，这里假设$f_b\notin F$。此时相较于最优分类器，我们的整体差距为：
+$$
+R(f_b)-R(f_n)=(R(f_n)-R(f_F))+(R(f_F)-R(f_b))
+$$
+其中前一部分叫做方差（Variance），含义是我们学到的分类器和假设空间中最优分类器的差距，后者叫做偏差（Bias），表示假设空间中最优分类器与贝叶斯分类器的差距。&lt;/p&gt;
+&lt;p&gt;我们当然希望两者可以同时被优化，但是后面的量化分析会提到，在ERM学习框架下，两者是矛盾的，为了缩小偏差，我们需要一个更大的假设空间，而更大的假设空间则意味着更大的偏差，甚至有可能导致ERM的学习过程不收敛（理论上不管多少样本也无法学到$f_F$），因此为了更小的方差，ERM希望有个一小的$F$，而这又往往意味着大的偏差。&lt;/p&gt;
+&lt;p&gt;总而言之，ERM框架下，一般来说实践中无法同时将方差和偏差无限优化，需要在两者间做一个权衡（样本无限时理论上偏差和方差可以同时收敛到0，但实践中往往不可能拥有无限样本）。&lt;/p&gt;
+&lt;p&gt;这里先简要给出这样一个结论，后面对ERM框架的定量分析会说明为什么会存在这个问题。&lt;/p&gt;
+&lt;h2 id=&quot;23-一致性&quot;&gt;2.3 一致性&lt;/h2&gt;
+&lt;p&gt;有了上述内容，现在我们可以定义一致性了，对一致性的严格描述是后续具体算法定量分析的基础。这里我们直接给出三种一致性的定义：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;一致（Consistent）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在假设空间$F$和联合概率分布$P(X,Y)$固定的情况下，如果随着$n$趋向于无穷大，$f_n$依概率收敛于$f_F$，即对于任意$\epsilon&gt;0$：
+$$
+P(R(f_n)-R(f_F)&gt;\epsilon)\rightarrow 0,\text{when }n\rightarrow\infty
+$$
+则称学习算法一致。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;贝叶斯一致（Bayes-consistent）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在假设空间$F$和联合概率分布$P(X,Y)$固定的情况下，如果随着$n$趋向于无穷大，$f_n$依概率收敛于$f_b$，即对于任意$\epsilon&gt;0$：
+$$
+P(R(f_n)-R(f_b)&gt;\epsilon)\rightarrow 0,\text{when }n\rightarrow\infty
+$$
+则称学习算法贝叶斯一致。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;全局一致（Universally consistent）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;在给定假设空间$F$的情况下，若不论联合概率分布$P(X,Y)$是什么分布，学习算法均贝叶斯一致，则称此算法全局一致。&lt;/p&gt;
+&lt;p&gt;可以看到，三种一致从上到下是越来越苛刻的，所以也越来越难达到。我们在1.4中给出的统计学习定义，是按照全局一致来定义的，这是最理想的情况。在实践中，很多时候并无法达到全局一致，所以实际中能达到贝叶斯一致甚至仅仅能做到一致的算法，也是十分有用的（同时也更加简单且节省资源）。&lt;/p&gt;
+&lt;h1 id=&quot;3-全局一致算法&quot;&gt;3 全局一致算法&lt;/h1&gt;
+&lt;p&gt;长期以来，人们并不知道是否存在全局一致的统计学习算法。直到1977年，有人从数学上证明了K-nearest neighbor（kNN）算法（服从某些条件时）是全局一致的。&lt;/p&gt;
+&lt;p&gt;我们现在来讨论kNN和其一致性问题。&lt;/p&gt;
+&lt;h2 id=&quot;31-k-nearest-neighbor算法定义&quot;&gt;3.1 K-nearest neighbor算法定义&lt;/h2&gt;
+&lt;p&gt;对于二分类问题，kNN可以这样描述：&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;K-nearest neighbor算法（用于二分类的）&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;设$d$是定义在$X$空间上的距离函数，其满足如下条件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;任一点到自己的距离为零，即$d(x,x)=0$&lt;/li&gt;
+&lt;li&gt;$d$的取值非负&lt;/li&gt;
+&lt;li&gt;满足三角不等式，即：$d(x_1,x_2)\le d(x_1,x_3)+d(x_3,x_2)$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;kNN这样做分类：&lt;/p&gt;
+&lt;p&gt;对于待分类点$x\in X$，取$D_n$中与$x$距离最小的k个点的类别$Y_k=\{y_1,y_2,...,y_k\}$，以$Y_k$的众数（mode）为$x$的取值。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;用白话说，就是找到$x$最近的k个样本，看这k个样本多数是0还是1，然后用多数表决的方式，为$x$分类。&lt;/p&gt;
+&lt;p&gt;不难证明，kNN是在忽略联合分布的情况下，直接去逼近贝叶斯分类器的方法。那么这是否说明kNN一定是全局一致呢？&lt;/p&gt;
+&lt;h2 id=&quot;32-knn的一致性&quot;&gt;3.2 kNN的一致性&lt;/h2&gt;
+&lt;p&gt;我们先考虑最简单k=1的情况。考虑下面的例子：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例5：设输入空间$X\sim Uni(0,1)$，即在0到1的区间服从均匀分布，$Y$是一个与$X$独立的随机变量，且取0的概率为0.1，取1的概率为0.9。使用1NN分类器进行分类，使用欧氏距离为距离函数，求贝叶斯分类器及1NN分类器的风险各是多少。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;先来考虑贝叶斯风险，由于$Y$独立于$X$，且取值1的概率更大，因此贝叶斯分类器为$f_b(x)=1$，此时贝叶斯风险为：
+$$
+R(f_b)=1\times0.1+0\times0.9=0.1
+$$
+而使用1NN分类器时，不管样本多大，离$x$最近的样本也服从取0的概率为0.1，取1的概率为0.9，我们设离$x$最近的样本为$x_d$因此，1NN分类器的风险为：
+$$
+R(f_{1nn})=P(y=0)\times P(x_d=1)+P(y=1)\times P(x_d=0)=0.1\times 0.9 + 0.9\times 0.1=0.18
+$$
+这个风险与样本集的数量无关。因此，1NN分类器在此情况下，不一致。&lt;/p&gt;
+&lt;p&gt;使用同样的思路，我们可以证明，&lt;strong&gt;对于任意的有限的k，kNN算法均不一致&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;至此我们得到了一个kNN必要条件：若要kNN分类器一致，一个必要条件是$k\rightarrow\infty$。&lt;/p&gt;
+&lt;p&gt;那么这个条件是否也是一个充分条件呢？并不是。Stone在1977年关于kNN全局一致证明的论文中，给出了如下充要条件：&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;kNN算法全局一致，当且仅当，随着$n\rightarrow \infty$，$k\rightarrow \infty$，且$k/n\rightarrow 0$&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;由此可以看成，kNN虽然是一个理论上全局一致的算法，但是实际中受限于训练样本的数量，其实很难做到适用于各种场景的万金油。否则，我们也不用研究其他算法，全都用kNN就好了。&lt;/p&gt;
+&lt;p&gt;同时可以从上面看到，如果想要kNN发挥较好的效果，除了样本量$n$要足够大外，$k$的选择也尤为重要，根据理论分析，较好的选择是$k\sim log(n)$。如果k过小，例如1NN，此时方差很大，模型很容易过拟合，但如果k特别大，例如极端情况，$k=n$，此时分类器对于所有新样本均预测为同样的值（样本集的多数），导致欠拟合。&lt;/p&gt;
+&lt;h1 id=&quot;4-经验风险最小化&quot;&gt;4 经验风险最小化&lt;/h1&gt;
+&lt;p&gt;从上面分析可以看出，kNN算法虽然理论上可以达到全局一致，但是受限于现实中样本数量，并不是处处通用。下面讨论另一种统计学习准则：经验风险最小化。&lt;/p&gt;
+&lt;h2 id=&quot;41-定义&quot;&gt;4.1 定义&lt;/h2&gt;
+&lt;p&gt;所谓经验风险最小化（Empirical Risk Minimization，简称ERM），就是选择分类器$f_n$，使得分类结果在训练样本集上风险最小。为了形式化定义ERM，我们先定义经验风险：&lt;/p&gt;
+&lt;p&gt;设有样本集$D_n=\{(x_1,y_1),(x_2,y_2),...,(x_n,y_n)\}$，分类器$f$的经验风险定义为：
+$$
+R_{emp}(f)=\frac{1}{n}\sum_{i=1}^n{L(x_i,y_i,f)}
+$$
+经验风险最小化就是选择$f_n$，使得：
+$$
+f_n=\mathop{\arg\min}_{f\in F}R_{emp}(f)
+$$
+直觉上这是很合理的，如果训练样本来自总体的无偏独立抽样，那么感觉只要最小化经验风险，应该也可以得到一个总体风险很小的分类器。但这毕竟是直觉，下面我们从数学上严格的分析一下ERM是否能真的如我们所愿。&lt;/p&gt;
+&lt;h2 id=&quot;42-对erm一致性的初步探讨&quot;&gt;4.2 对ERM一致性的初步探讨&lt;/h2&gt;
+&lt;p&gt;首先我们来考察ERM的一致性，这里我们先不要求全局一致或贝叶斯一致，只要求最宽松的一致性，即在样本无限多的情况下，ERM是否能无限逼近$F$中风险最小的分类器$f_F$。&lt;/p&gt;
+&lt;p&gt;考虑下面的例子：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例6：设输入空间$X\sim Uni(0,1)$，即在0到1的区间服从均匀分布，，其中当$X\le0.5$时，$Y=0$；当$X\gt 0.5$时，$Y=1$。现有iid样本集$D_n$，$F$不限制范围。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;注意由于例6中输入和输出是确定关系，因此：
+$$
+f_b(x)=f_F(x)=
+\begin{cases}
+    0       &amp; \quad \text{if } x \le 0.5\\
+    1  &amp; \quad \text{if } x \gt 0.5
+\end{cases}
+$$
+全局风险$R$为0。&lt;/p&gt;
+&lt;p&gt;同时我们构建这样一个分类器：
+$$
+f_n(x)=
+\begin{cases}
+    y_i &amp; \quad \text{if } x \in D_n \text{ and } x=x_i\\
+    1  &amp; \quad \text{otherwise}
+\end{cases}
+$$
+也就是说，如果待分类样本$x$出现在样本集，就按样本中那个样本的标签分类，否则分类为1。很明显，这个分类器可以做到$R_{emp}$为0，但是，当放到全部$X$上时，由于$D_n$的大小相对$X$是可以忽略不计的（用测度论的语言来说，$D_n$是一个零测集），所以我们可以认为$f_n$始终输出1，因此$R(f_n)=0.5$。由于$D_n$是可数集合，所以其测度始终为0，因此就算$D_n$无限多，$f_n$也不会收敛到$f_F$，所以，在这个分类器下，ERM不一致。&lt;/p&gt;
+&lt;p&gt;通过这个反例，我们可以得出结论：&lt;strong&gt;ERM在不加任何限制条件的情况下，不一致&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2 id=&quot;43-假设空间与一致收敛&quot;&gt;4.3 假设空间与一致收敛&lt;/h2&gt;
+&lt;p&gt;上面得出结论，ERM不能在不加任何限制的情况下保证一致。那么是否有什么方法，可以限制ERM的某些方面，让ERM一致呢。一个直观感觉是，ERM所面对的假设空间$F$太大了，由于有太多假设可以选择，选择方式过于自由，导致ERM可以直接去拟合样本集。那么如果限制假设空间，会有什么效果吗？&lt;/p&gt;
+&lt;h3 id=&quot;431-单一函数假设空间与大数定律&quot;&gt;4.3.1 单一函数假设空间与大数定律&lt;/h3&gt;
+&lt;p&gt;我们先可以考虑一个最极端的情况，如果$F$中仅有一个函数$f$，此时，任何学习算法都显然一致，因为此时假设空间中只有一个选择，所以无论何时$f_n=f_F=f$。虽然这样一个假设空间看起来毫无作用，但是我们可以借此分析一个问题：当$n\rightarrow\infty$时，$R_{emp}(f)\rightarrow R(f)$吗？换言之，当样本增多时，$f$的经验风险是否可以无限逼近真实风险？&lt;/p&gt;
+&lt;p&gt;为了回答这个问题，先引入统计学中一个重要的定理：大数定律。&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;大数定律&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;设有随机变量$\xi$，以及$\xi$的iid抽样$D_n=\{\xi_1,\xi_2,...,\xi_n\}$。当$n\rightarrow \infty$时，样本均值依概率收敛于$\xi$的期望，用数学语言表述就是，对于任意$\epsilon \gt 0$：
+$$
+P(|\frac{1}{n}\sum_{i=1}^n{\xi_i}-E(\xi)|&gt;\epsilon)\rightarrow 0, \text{ when } n\rightarrow \infty
+$$&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;如果考察上面的表示，发现在$f$固定的情况下，$R(f)$是$L$的期望，而$R_{emp}(f)$是$L$的样本均值，因此根据大数定律可以直接得出结论：&lt;strong&gt;在$f$固定时，$R_{emp}(f)$依概率收敛到$R(f)$&lt;/strong&gt;。&lt;/p&gt;
+&lt;h3 id=&quot;432-一致收敛（uniform-convergence）&quot;&gt;4.3.2 一致收敛（Uniform Convergence）&lt;/h3&gt;
+&lt;p&gt;通过以上分析可以看到，如果是单一函数，经验风险是依概率收敛到真实风险的，而当$F$中有多个函数时，由于$f_n$是一个依赖于样本集的非固定函数，因此大数定律失效。&lt;/p&gt;
+&lt;p&gt;那么有没有办法将大数定律推广到假设空间是多函数情况的呢，考虑下面定义：
+$$
+\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|
+$$
+这个式子表示$F$中所有函数真实风险和经验风险误差的上界。由于是上界，我们显然有：
+$$
+|R(f)-R_{emp}(f)|\le\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)| \\
+P(|R(f_n)-R_{emp}(f_n)|\ge\epsilon)\le P(\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|\ge\epsilon)
+$$
+显然如果上式子右边依概率收敛，则左边也依概率收敛。下面将上式和$F$的一致性关联起来：
+$$
+\begin{align}
+|R(f_n)-R(f_F)| &amp;= R(f_n)-R(f_F) \\
+&amp;= R(f_n) +(-R_{emp}(f_n)+R_{emp}(f_n)-R_{emp}(f_F)+R_{emp}(f_F)) -R(f_F) \\
+&amp;\le (R(f_n)-R_{emp}(f_n))+(R(f_F)-R_{emp}(f_F)) \\
+&amp;\le 2\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|
+\end{align}
+$$
+综上可得：
+$$
+P(|R(f_n)-R(f_F)|\ge\epsilon)\le P(\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|\ge\epsilon/2)
+$$
+如果右边依概率收敛，则左边必然依概率收敛，而左边依概率收敛，则意味着一致。&lt;/p&gt;
+&lt;p&gt;如果随着$n\rightarrow\infty$，$P(\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|\ge\epsilon)\rightarrow 0$，我们说假设空间$F$是一致收敛（Uniform convergence）的。&lt;/p&gt;
+&lt;p&gt;由上，我们得出重要结论：&lt;strong&gt;如果假设空间$F$一致收敛，则ERM学习在$F$上是一致的&lt;/strong&gt;。&lt;/p&gt;
+&lt;h1 id=&quot;5-假设空间度量&quot;&gt;5 假设空间度量&lt;/h1&gt;
+&lt;p&gt;从上面分析我们可以知道，若要使用ERM，则必须保证假设空间$F$一致收敛，否则无法保证ERM的一致性。那么现在我们面对的问题就变成了，如何选择或从数学上证明一个假设空间是一致收敛的呢？&lt;/p&gt;
+&lt;h2 id=&quot;51-有限假设空间&quot;&gt;5.1 有限假设空间&lt;/h2&gt;
+&lt;p&gt;我们先讨论假设空间有限的情况。设$F=\{f_1,f_2,...,f_m\}$是一个具有$m$个假设函数的有限假设空间。这：
+$$
+P(\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|\ge \epsilon)\le\sum_{i=1}^mP(|R(f_i)-R_{emp}(f_i)|\ge \epsilon)
+$$
+以上式子的意义是，由于$F$中任意一个假设的经验风险与实际风险的误差大于$\epsilon$就会导致$F$的误差上限大于$\epsilon$，所以右侧是比左侧更可能的发生的事件，所以右侧的概率大于左侧。&lt;/p&gt;
+&lt;p&gt;我们现在不加证明给出一个定理：Chernoff bound：&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Chernoff bound&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;如果$\xi$是一个随机变量，且取值范围为$[0,1]$，则对于$\xi$的iid样本集$\{\xi_1,\xi_2,...,\xi_n\}$，有下面不等式：
+$$
+P(|\frac{1}{n}\sum_{i=1}^n\xi_i-E(\xi)|\ge\epsilon)\le2\exp(-2n\epsilon^2)
+$$&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;Chernoff bound相比大数定律给出了一个定量的上界。由Chernoff bound可以得出：
+$$
+P(\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|\ge \epsilon)\le\sum_{i=1}^mP(|R(f_i)-R_{emp}(f_i)|\ge \epsilon) \le 2m\ exp(-2n\epsilon^2)
+$$
+和明显，当$n\rightarrow\infty$时，右侧收敛到0，这蕴含着$F$一致收敛，因此：&lt;strong&gt;有限的假设空间上，ERM是一致的&lt;/strong&gt;。&lt;/p&gt;
+&lt;h2 id=&quot;52-无限假设空间&quot;&gt;5.2 无限假设空间&lt;/h2&gt;
+&lt;p&gt;一般来说，我们现实中很少会使用有限假设空间，因此，我们需要继续分析假设空间无限的情况，有什么方法可以保证其一致收敛。&lt;/p&gt;
+&lt;h3 id=&quot;521-symmetrization&quot;&gt;5.2.1 Symmetrization&lt;/h3&gt;
+&lt;p&gt;在继续分析之前，我们先来处理一个十分讨厌的问题。如果仔细看上面的分析就会发现，我们一直带着一个很烦人的东西$R(f)$，为什么这东西烦人呢，因为由于实际中我们无法知道联合概率分布，所以自然也无法计算出真实风险$R(f)$，所以如果继续带着这么一个无法观测的东西，总觉得是颗雷。所以我们先把这东西用什么可以观测的量代替掉。&lt;/p&gt;
+&lt;p&gt;这个还真可以做到，需要通过一个叫Symmetrization的技巧。简单来说，Symmetrization的意思是，如果我们除了$D_n$，还有一组独立于$D_n$且同样大小的iid抽样$D_n&#39;$，我们定义其上的经验风险是$R_{emp}&#39;(f)$，则有如下定理：&lt;/p&gt;
+&lt;p&gt;若$m\epsilon^2\gt 2$，则：
+$$
+P(\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|\gt\epsilon)\le2P(\mathop{sup}_{f\in F}|R_{emp}(f)-R_{emp}&#39;(f)|\gt\epsilon/2)
+$$
+由于证明比较繁琐，我们不去证明这个不等式。但是我们可以看出上式的价值，就是我们不再依赖不可观测的$R(f)$了，而只依赖可以观测的经验风险。所以如果我们能找出什么条件使得$\mathop{sup}_{f\in F}{|R_{emp}(f)-R_{emp}&#39;(f)|}$依概率收敛，则大功告成。现在我们进行这一步。&lt;/p&gt;
+&lt;h3 id=&quot;522-shattering-coefficient&quot;&gt;5.2.2 Shattering Coefficient&lt;/h3&gt;
+&lt;p&gt;为什么只依赖经验风险是非常重要的呢，因为我们需要注意这样一个非常重要的事实：&lt;strong&gt;即使$F$是无限的，但是对于特定的$n$，经验风险的取值是有限的&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;什么意思呢，考虑一个二分类问题，给出一个有n个样本的样本集，不论你的$F$中有多少函数，最终输出最多只能有$2^n$种可能（每个样本输出要么0，要么1），所以，如果只考虑经验风险，任何$F$在面对n个样本时，在ERM评价下其等价于一个&lt;strong&gt;最多&lt;/strong&gt;有$2^n$个假设函数的有限假设空间。&lt;/p&gt;
+&lt;p&gt;我们量化一下这个度量，对于假设空间$F$，我们定义一个函数：
+$$
+\mathcal{N}(F,n)=\text{当样本数为n时，F所能产生的不同分类结果的数量}
+$$
+这个函数我们称为$F$的shattering coefficient，下面举例子直观说明一下它的含义。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例7：设一个输入空间在$[0,1]$上的二分类问题。有这样一个模型：它选择一个点$\theta\in [0,1]$，将区间分为$[0,\theta]$和$(\theta,1]$两部分，然后将两个部分分别作为一个类别。这个模型的shattering coefficient是什么？&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;简单来说，这个模型就是将输入空间一分为二，一边赋值为0，一边赋值为1，因为$\theta$有无数种选择，所以$F$是一个无限集合。&lt;/p&gt;
+&lt;p&gt;另外可以看出，基于上面模型分类时，能输出几种分类结果，仅与样本点的标签和相对排布有关，与具体位置无关。当有n个二值样本点时，在一维空间里有$2^n$种排布方式。显然在$n\le 2$时，是可以完美分开的，所以$\mathcal{N}(F,1)=2$，$\mathcal{N}(F,2)=4$。现在考察$n\gt 2$的情况：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;当$n=3$时，有8种排布方式，其中ooo，oox，oxx，xxx，xxo，xoo可以由$F$输出，但是oxo和xox两种情况是无法输出的，因此$$\mathcal{N}(F,3)=6$$&lt;/li&gt;
+&lt;li&gt;当$n=4$时，有16种排布方式，其中oooo，ooox，ooxx，oxxx，xxxx，xxxo，xxoo，xooo可以由$F$输出，其他情况无法输出的，因此$$\mathcal{N}(F,4)=8$$&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;我们一般化考虑一下，当样本个数为n时，有$2^n$中排布可能，但是$F$中假设函数可以输出的排布，一定是可以找到某一点，左边全是x，右边全是o；或者左边全是o，右边全是x。可以这样思考有多少可能：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;首先n个样本全是oo...o，这是一个输出可能&lt;/li&gt;
+&lt;li&gt;从右边开始，依次将每个位置的样本由o变为x，经过n次，变为xx..x，这是n种可能输出&lt;/li&gt;
+&lt;li&gt;再从右边开始，依次将x变成o，经过n次，变为oo..o，也是n种输出可能，但是由于全是o的情况在上面已经提到了，所以这里有n-1种新的输出可能&lt;/li&gt;
+&lt;li&gt;将上面可能输出相加$1+n+n-1=2n$&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;因此我们可得，对于例7的模型，$\mathcal{N}(F,n)=2n$&lt;/p&gt;
+&lt;h3 id=&quot;523-一致收敛上界&quot;&gt;5.2.3 一致收敛上界&lt;/h3&gt;
+&lt;p&gt;有了上面的铺垫，我们可以推导一般情况下ERM一致收敛的条件了。
+$$
+\begin{align}
+&amp;P(\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|\gt\epsilon) \\
+&amp;\le 2P(\mathop{sup}_{f\in F}|R_{emp}(f)-R_{emp}&#39;(f)|\gt\epsilon/2) \\
+&amp;= 2P(\mathop{sup}_{f\in F_{2^{2n}}}|R_{emp}(f)-R_{emp}&#39;(f)|\gt\epsilon/2) \\
+&amp;\le 2\mathcal{N}(F,2n)exp(-n\epsilon^2/4)
+\end{align} \\
+$$&lt;/p&gt;
+&lt;p&gt;这个推导稍微有点复杂，下面说明一下：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;第一步推导是上面提到的Symmetrization&lt;/li&gt;
+&lt;li&gt;第二部推导是基于在两个容量为n的样本集上，其经验风险差值的输出只有$2^{2n}$种可能，将$F$等价为一个容量为$2^{2n}$的有限假设空间&lt;/li&gt;
+&lt;li&gt;第三步推论基于有限假设空间的Chernoff bound给出&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;至此，我们得到了ERM一致的一个一般性上界条件：&lt;strong&gt;若随着$n\rightarrow \infty$，$2\mathcal{N}(F,2n)exp(-n\epsilon^2/4)\rightarrow 0$，则ERM是一致的&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;看几个例子：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;上面提到例7中，$\mathcal{N}(F,2n)=4n$，代入上界，得到$8nexp(-n\epsilon^2/4)$，显然这个是收敛到0的，所以例7在ERM下是一致的&lt;/li&gt;
+&lt;li&gt;考虑$\mathcal{N}(F,n)\le (2n)^k$，其中$k$是常数。此时，上界为$2exp(klog(2n)-n\epsilon^2/4)$，显然是收敛到0的。所以&lt;strong&gt;如果$\mathcal{N}(F,2n)$随着n的增长呈多项式级别增长，则ERM是一致的&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;考虑$F$可以任意取函数，也就是$\mathcal{N}(F,2n)=2^{2n}$，此时上界为$2exp(n(2log(2)-\epsilon^2/4)$，这个上界并不收敛到0。但是此时不能贸然说这个$F$就不一致，因为上界收敛只是一致的充分条件，而不是必要条件。如果用更多的数学技巧，我们可以得出一致的一个必要条件：$log\mathcal{N}(F,n/)/n\rightarrow 0$，由于$log(2^n)/n=nlog2/n=log2$不收敛到0，所以如果$F$取全体可能的假设时，ERM是不一致的&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&quot;524-vc维&quot;&gt;5.2.4 VC维&lt;/h3&gt;
+&lt;p&gt;上面的shattering coefficient可以看成对假设空间容量的一种度量，除了shattering coefficient外，还有一些其他的度量方式，可以给出ERM一致的充分条件。我们这里介绍其中最知名的一个，叫做VC维（VC Dimension）。&lt;/p&gt;
+&lt;p&gt;简单来说，一个假设空间的$F$的VC维是一个非负整数整数$d$，其意义是，我们可以构造一个容量为$d$的样本，使得$F$中的函数可以输出$2^d$种不同结果，但是无法构造一个容量为$d+1$的样本，使得$F$中的函数可以输出$2^{d+1}$种不同结果。&lt;/p&gt;
+&lt;p&gt;举个例子。考虑二维空间的线性分类器，当样本容量为3时，我们可以这样排布样本，使得8种情况都可以被分开：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;../uploads/pictures/statistical-learning-theory/slt03.png&quot; alt=&quot;slt03&quot;&gt;&lt;/p&gt;
+&lt;p&gt;注意，这里我们不需要对于所有容量为3的样本都可以完全分开（若三个样本共线，则存在线性分类器分不开的情况），我们只需要存在这样一组样本即可。&lt;/p&gt;
+&lt;p&gt;但是，当样本容量为4时，则无法构造一个排布令16种情况都可以被分开，因为无论如何排不，都会遇到类似如下的情况：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;../uploads/pictures/statistical-learning-theory/slt04.png&quot; alt=&quot;slt04&quot;&gt;&lt;/p&gt;
+&lt;p&gt;无法被一条线分开。&lt;/p&gt;
+&lt;p&gt;所以，二维平面上线性分类器的VC维为3。&lt;/p&gt;
+&lt;p&gt;基于VC维，我们可以给出这样一个ERM一致的充分必要条件：&lt;strong&gt;ERM对于假设空间$F$一致，当且仅当$F$的VC维有限&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;由于是充要条件，VC维往往可以用来判断一个ERM是否有效。例如可以证明，对于任何有限的维数，线性分类器的VC维都是有限的，所以线性分类器总是ERM一致。这就为我们使用ERM准则训练线性模型做分类找到了理论依据。例如，逻辑回归就是一种线性分类器，其训练准则就是ERM。&lt;/p&gt;
+&lt;h2 id=&quot;53-贝叶斯一致&quot;&gt;5.3 贝叶斯一致&lt;/h2&gt;
+&lt;p&gt;到目前为止，我们都在讨论$F$内的一致性，即ERM是否可以逼近$f_F$，但是一直没有涉及贝叶斯一致。实践中，贝叶斯一致不是那么受关注，因为一般统计学习中，我们更注重方差的收敛，只要能找到假设空间中的最优函数，就可以接受。而要达到贝叶斯一致，势必要使用更大的假设空间，而上面分析可以看到，一旦假设空间太大，很容易就不一致，就算一致，也要冒着方差变大的风险，有时得不偿失。&lt;/p&gt;
+&lt;p&gt;所以这一小节，我们简单讨论一下达到贝叶斯一致的理论，但是不会像上文讨论$F$内一致那么细致。&lt;/p&gt;
+&lt;p&gt;从直觉上可以知道，如果要实现贝叶斯一致，需要同时满足一下两个条件：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;不能使用固定的$F$（除非有什么办法保证$f_b\in F$），随着样本数的增多，$F$要不断扩大，使其无限一定会包含$f_b$&lt;/li&gt;
+&lt;li&gt;$F$的扩张速度不能太快，或者说，不能导致$F$内本身不一致&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;下面给出一个基于VC维定义的贝叶斯一致定理：&lt;/p&gt;
+&lt;p&gt;设有一个扩张假设空间序列：$F_1\subset F_2\subset ... \subset F_n \subset ...$，$f_1,f_2,...,f_n,...$是假设空间中经验风险最小化准则下的最优解，如果随着$n\rightarrow \infty$，满足如下两个条件：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;$VC(F_n)logn/n\rightarrow 0$&lt;/li&gt;
+&lt;li&gt;$R(f_n)\rightarrow R(f_b)$&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;则$f_n$贝叶斯一致。&lt;/p&gt;
+&lt;p&gt;我们不再详细分析这个定理，有兴趣的同学可以自行查找相关资料。&lt;/p&gt;
+&lt;p&gt;一般在实践中，我们无法根据上述准则准确调整$F$使得ERM下贝叶斯一致，更常用的方法是使用正则化（Regularization）。&lt;/p&gt;
+&lt;p&gt;所谓正则化，就是我们定义如下风险：&lt;/p&gt;
+&lt;p&gt;$$
+R_{reg}(f)=R{emp}(f)+\lambda\Omega(f)
+$$&lt;/p&gt;
+&lt;p&gt;其中$\lambda$是一个非负数，用于控制正则化的作用，$\Omega(f)$是一个函数的函数，用于评价函数的复杂性。&lt;/p&gt;
+&lt;p&gt;上述风险叫做结构风险，相应的，最小化上述风险就叫做结构风险最小化。&lt;/p&gt;
+&lt;p&gt;为了使得正则化能起到促进贝叶斯一致的作用，理论上我们要小心调整$\lambda$，使得随着n的增大，$\lambda$逐渐收敛为0。但在实际中使用正则化时，往往是使用经验进行调整，而非如此精细的量化分析。&lt;/p&gt;
+&lt;h1 id=&quot;6-天下没有免费午餐定理&quot;&gt;6 天下没有免费午餐定理&lt;/h1&gt;
+&lt;p&gt;通过以上分析，我们似乎得到了一个非常乐观的结论：不论底层联合分布$P(X,Y)$如何，只要我们按上文分析控制$F$的规模，则总可以通过ERM准则学习到一些东西（一致）。那么现实真的如此美好吗？&lt;/p&gt;
+&lt;p&gt;考虑你通过ERM学习出一个你认为的最好分类器$f$，那么我一定可以构造一个集合$\{(x_1,y_1),(x_2,y_2),...,(x_n,y_n)\}$，使得你的分类器在这个样本集上经验风险为0，只要我按你的分类器给出的输出为每个样本复制就可以了，同样的，我也可以构造一个集合让你的分类器风险任意大，只要我给出一个足够大的n，并且对其中每个样本根据你的分类器反向赋值就好了。&lt;/p&gt;
+&lt;p&gt;由此推断，&lt;strong&gt;在你给定我一个分类器$f$后，我总有办法构造一个样本集，让你的分类器的经验风险是任何值&lt;/strong&gt;。&lt;/p&gt;
+&lt;p&gt;思考一下为什么会出现这个问题？这个和上面说的一致性是否矛盾呢？实际上不矛盾，因为我们上面所有一致性分析都基于一个假设：训练样本可以无限大，但是，现实中样本集总是有限的。&lt;/p&gt;
+&lt;p&gt;基于以上分析，我们可以得到这样一个结论：对于任意统计学习方法，我们总可以构造一个联合分布，使得基于这个分布的iid有限大小抽样所学习到的分类器在其上的效果与随机猜测无异。一个形式化的表述为：&lt;/p&gt;
+&lt;p&gt;给定$\epsilon\gt0$，对于任意$n\in \mathbb{N}$和分类器$f_n$，我们总可以构造一个联合概率分布$P$，使得$P$的贝叶斯风险为0，且$f_n$的期望风险大于$\frac{1}{2}-\epsilon$&lt;/p&gt;
+&lt;p&gt;以上定理称为天下没有免费的午餐定理（No free launch theorem，以下简称NFL定理）。&lt;/p&gt;
+&lt;p&gt;NFL定理可以说是SLT重最重要的定理，没有之一。根据NFL定理，我们可以得出如下重要推论：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;如果不对底层联合概率分布做任何假设，则统计学习无法从理论上保证学到任何东西&lt;/li&gt;
+&lt;li&gt;没有一个分类器天生比另一个分类器更优，平均来说所有分类器都是一样的，只有当对底层联合分布有假设后，才能判定分类器的优劣&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;之所以说NFL重要，因为它同时说明了如下统计学习的本质：&lt;strong&gt;统计学习不是个纯粹的数学问题，数学不能保证统计学习是有效的，更不能从数学上分析出普遍意义上一个模型比另一个模型更好。统计学习只有结合业务经验才能起作用，没有业务经验对底层联合分布的预设判断，统计学习就没有意义。这也意味着，不存在独立于业务经验的纯数学意义的模型优劣的判定，也不可能独立于业务经验，仅靠对训练样本的数学分析全自动进行统计学习&lt;/strong&gt;。&lt;/p&gt;
+&lt;h1 id=&quot;7-特定分布形式下的学习框架&quot;&gt;7 特定分布形式下的学习框架&lt;/h1&gt;
+&lt;p&gt;上面的分析是基于不假设$P$的形式进行的，最后我们到处了NFL定理，说明若对$P$无任何假设，则统计学习不可能。&lt;/p&gt;
+&lt;p&gt;所以，现实中的统计学习，往往是首先假设$P(X,Y)$的分布形式，而认为不确定的仅仅是$P(X,Y)$的参数。进一步，如果我们仅仅是需要得到判别结果，我们并不需要去估计$P(X,Y)$，而只要得到以下条件概率的估计就好了：&lt;/p&gt;
+&lt;p&gt;$$
+P(Y|X=x;\theta)
+$$&lt;/p&gt;
+&lt;p&gt;其中$p(x;\theta)$是$x$已知时$Y$的概率分布函数，我们假设这个分布形式已知，$\theta$是这个分布的参数向量。例如假设$p(x;\theta)$是一个高斯分布，则$\theta=(\mu,\sigma^2)$。如果能估计出上述分布，我们只要按照：&lt;/p&gt;
+&lt;p&gt;$$
+\mathop{\arg\max}_{y\in Y}{P(y|X=x;\theta)}
+$$&lt;/p&gt;
+&lt;p&gt;就可以得到$y$的判别结果。所以现在问题变成了，如何通过样本集估计$\theta$。&lt;/p&gt;
+&lt;p&gt;从不同视角出发，这个问题可以有不同解法，下面我们先探讨数理统计的两个流派：频率学派和贝叶斯学派，以及他们对于这个问题视角的差异。然后，分别给出两个流派解决这个问题的框架。&lt;/p&gt;
+&lt;h2 id=&quot;71-频率学派vs贝叶斯学派&quot;&gt;7.1 频率学派vs贝叶斯学派&lt;/h2&gt;
+&lt;p&gt;频率学派与贝叶斯学派是数理统计中的两个重要派别，两者主要的区别在于对于随机这一概念的视角不同。具体来说：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;频率学派认为随机的系统客观而本质存在的属性，决定随机变量分布的参数虽然我们无法直接观测到，但参数是客观确定的&lt;/li&gt;
+&lt;li&gt;贝叶斯学派认为随机是主观的，不是系统固有的属性，之所以存在随机，是因为掌握的信息量不足以完全消除不确定定性，概率分布的参数不是固定不变的，而是随着观察者掌握的信息量不同而不同&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;举个抛硬币的例子，对于硬币有时正面有时反面这一随机性，频率学派会说这是由于硬币和抛硬币的人以及抛硬币所在环境组成的整个系统存在随机性，且出现正面反面的概率是确定的；而贝叶斯学派则认为，客观不存在随机性，之所以看起来随机，是因为我们掌握的信息不够，如果我们能观察到方方面面的信息，如硬币的密度分布、抛起的初速度、抛起时的形态、自身的角动量、空气的温度、湿度、空气密度、气流气压等等，那么我们理论上可以通过动力学和流体力学方程精确预测硬币落下时是哪一面，因此就不存在随机性了。但是由于我们无法掌握这些信息，所以只能认为存在随机，同时，贝叶斯学派认为，既然并不存在什么客观随机，也就不存在什么确定的概率分布的参数了，他们同时考虑所有可能的参数，也就是说，认为概率分布的参数也是服从一个分布的，但这不是因为存在客观随机，而是因为信息不够，我们只能这样认为。&lt;/p&gt;
+&lt;p&gt;可能上面还是比较抽象，那么下面我们通过一个例子，来详细看看两个学派对于同一个问题是分别如何思考的。&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;例8：我们面前有一个赌博机，屏幕每次会随机显示一个o或一个x，但我们并不知道显示o和x的概率，但是我们知道每次显示什么是独立事件。现在经过5次观察，显示分别为xxoxo，我们应该如何预测下一次显示o还是x？&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2 id=&quot;72-频率学派与最大似然估计&quot;&gt;7.2 频率学派与最大似然估计&lt;/h2&gt;
+&lt;p&gt;频率学派解决这个问题的方法是最大似然估计（Maximum likelihood estimation，以下简称MLE）。频率学派是这么思考这个问题的：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;设赌博机显示o的概率为$p$，这可以看成是我们要估计的参数，同时，显示x的概率为$1-p$。&lt;/li&gt;
+&lt;li&gt;将观察到的五次事件看成一个联合事件，由于是独立事件，这个联合事件发生的概率是$(1-p)(1-p)p(1-p)p=p^2(1-p)^3$。&lt;/li&gt;
+&lt;li&gt;现在我们找一个$p$，让上面的概率最大，也就是我们认为最好的参数选择应该是让已观察到的事件发生的概率最大，由于连乘不好求解，于是我们取个对数（对数和原函数取最大值在同一位置）变成：$2log(p)+3log(1-p)$。&lt;/li&gt;
+&lt;li&gt;为了求最大值，对$p$求导得$2/p-3/(1-p)$，令导函数等于0，解出$p=2/5$。这就是我们对$p$的估计。&lt;/li&gt;
+&lt;li&gt;因此，我们认为下次显示o的概率是$2/5$，显示x的概率是$3/5$，因此预测下次出x。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;下面定义最大似然估计的通用框架：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;给定iid样本集$D_n=(X_1,X_2,...,X_n)$，其中每个样本服从形式已知但参数未知的分布$P(X;\theta)$&lt;/li&gt;
+&lt;li&gt;所以样本集出现的概率为$\Pi_{i=1}^nP(X_i;\theta)$，这个函数成为似然（Likelihood）&lt;/li&gt;
+&lt;li&gt;我们取令似然最大的参数$\theta$作为估计参数，为了方便计算，我们通常利用对数函数与原函数在同一位置取相同最大值的的特性，将似然取对数，将连乘变成连加方便计算&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;最大似然估计在实践中是经常被使用的方法，例如我们常用的交叉熵损失(Cross-entropy Loss)，也叫对数损失（Log Loss），其本质就是最大似然估计（最小化对数似然的负数，相当于最大化似然函数）。&lt;/p&gt;
+&lt;h2 id=&quot;73-贝叶斯学派与贝叶斯学习&quot;&gt;7.3 贝叶斯学派与贝叶斯学习&lt;/h2&gt;
+&lt;p&gt;贝叶斯学派是这么考虑这个问题的：我不认为赌博机显示o的概率$p$是一个固定的值，理论上如果我把赌博机的电路、程序以及赌博机的随机数生成算法仔细分析一遍，可以精确预测下一次显示的是o还是x。&lt;/p&gt;
+&lt;p&gt;但是现在并不允许我这么做，所以我应该利用先验知识+观测结果，共同得出结论，且这个结论不应该是一个固定的$p$，而是在先验知识+观测结果提供的信息下，给出一个$p$的概率分布，且随着观测结果增加，可以更新这个分布。&lt;/p&gt;
+&lt;p&gt;具体到例8，贝叶斯学派会这样解这个问题：&lt;/p&gt;
+&lt;p&gt;我们猜测$p$可能是0到1之间的任意值，但是经验告诉我们赌博机没有理由偏向于任何一方，因为如果有偏向，那么赌徒可以获取一个正向的收益期望，这样长期赌场会亏本，所以我们强烈怀疑赌博机$p$的值为$0.5$，但是我们不排除任何其他可能，而是给出一个$p$的先验分布，这里我们认为$P(p)\sim Beta(10,10)$。我们先不要纠结为什么这里我们用$Beta(10,10)$作为先验分布，后面会详细讨论，这里只需知道$Beta(10,10)$表示我们认为$p$最可能的取值为$0.5$，且越接近边缘（0或1），越不可能。下图是先验分布P(p)的概率密度函数图形：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;../uploads/pictures/statistical-learning-theory/slt05.png&quot; alt=&quot;slt05&quot;&gt;&lt;/p&gt;
+&lt;p&gt;根据观测到的”xxoxo“，我们更新先验分布到后验分布，更新公式是贝叶斯公式：
+$$
+P(p|D_n)=\frac{P(D_n|p)P(p)}{P(D_n)}
+$$
+如果按上述公式算起来，还挺麻烦的。但是由于已经知道，$Beta(\alpha,\beta)$分布在这个场景下，有一个特别简单的更新公式：&lt;/p&gt;
+&lt;p&gt;$$
+P(p|D_n)\sim Beta(\alpha+\text{出现o的次数},\beta+\text{出现x的次数})=Beta(12,13)
+$$&lt;/p&gt;
+&lt;p&gt;之所以会有上述简单更新公式，是因为$Beta$分布是我们这个问题的共轭先验分布，这里对这个话题先不展开。&lt;/p&gt;
+&lt;p&gt;于是更新后后验分布的图形如下：&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;../uploads/pictures/statistical-learning-theory/slt06.png&quot; alt=&quot;slt06&quot;&gt;&lt;/p&gt;
+&lt;p&gt;可以看到这个图形相比先验分布，这个图形更”瘦“了，另外向左侧略有偏斜（肉眼可能看不出来），这表示，虽然我们对$p$的倾向略有倾斜，但是，总体却更笃定它应该集中在0.5附近。&lt;/p&gt;
+&lt;p&gt;此时我们可以用$E(p)$作为$p$的估计：
+$$
+E(Beta(12,13))=\frac{12}{12+13}=0.48
+$$
+因此我们认为下次出o的概率为0.48，出x的概率为0.52。于是选择$x$。&lt;/p&gt;
+&lt;p&gt;以上过程叫做贝叶斯学习。&lt;/p&gt;
+&lt;h2 id=&quot;74-对两种方法的比较&quot;&gt;7.4 对两种方法的比较&lt;/h2&gt;
+&lt;p&gt;首先简单总结一下上面两种方法的核心思想：&lt;/p&gt;
+&lt;p&gt;最大似然估计的估计方法是：
+$$
+\hat{\theta}=\mathop{\arg\max}_\theta{P(D_n|\theta)}
+$$
+也就是最大化似然函数。&lt;/p&gt;
+&lt;p&gt;贝叶斯学习的估计方法是：
+$$
+\hat{\theta}=\mathop{\arg\max}_\theta P(\theta|D_n)\propto P(D_n|\theta)P(\theta)
+$$&lt;/p&gt;
+&lt;p&gt;也就是最大化后验概率。&lt;/p&gt;
+&lt;p&gt;这里不能直接说孰优孰劣，但是可以看成两者有一定的区别：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;从实现角度来看，MLE更简单，只要求解似然函数的最大值，而贝叶斯学习需要计算后验概率分布，如果是做判别，则后验概率分布正比与先验概率分布和似然的乘积，计算较为复杂&lt;/li&gt;
+&lt;li&gt;贝叶斯学习中，为了计算方便，需要针对不同模型，选择合适的共轭先验分布，所谓共轭先验分布就是先验分布和后验分布具有相同的分布函数，例如上面问题中，先验分布和后验分布都是$Beta$分布&lt;/li&gt;
+&lt;li&gt;MLE只考虑样本集，样本集完全决定了参数估计结果；而贝叶斯学习通过先验分布，可以将一定的先验知识”编码“进去，从而在某些现实中更贴合。从上面的例子可以看出，虽然两者都预测$p$的值小于0.5，但是MLE直接用样本集频率认为$p$是0.4，而同样的样本，贝叶斯学习认为$p$是0.48，这是因为我们在贝叶斯学习中使用的先验分布具有一定的偏执，可以防止少数样本的偶然结果得出不合常理的结论。&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;关于上面第3点，这里可以再举一个例子辅助理解。假设一个足球队来了一个新的球员，教练想估计他踢点球的成功率，踢了三次，都进了，根据MLE，应该认为他点球成功率100%，这显然不合常理，因为地球上没有一个球员能保证100%的点球成功率。那么教练可以用经验知识，先确定一个这名新球员点球成功率的先验分布，然后根据观察，更新这个分布，这样就避免了上面的情况。而且根据不同的经验，可以设置不同的先验分布参数，这既可以决定先验分布的强弱（先验分布越强，则需要更多的样本才能撼动这个分布）。&lt;/p&gt;
+&lt;h1 id=&quot;8-总结&quot;&gt;8 总结&lt;/h1&gt;
+&lt;p&gt;最后我们总结一下这篇文章的主要内容。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;第一节我们从数学角度定义了统计学习的目标：从假设空间中找出风险最小的假设函数，并导出了如果联合分布$P(X,Y)$已知，回归和二分类问题的通用最优解，并给出了统计学习的严格定义。&lt;/li&gt;
+&lt;li&gt;第二节讨论了在无法知道$P(X,Y)$的情况下，统计学习的一致性问题。我们首先讨论了统计学习的两种误差：偏差和方差。同时从假设空间大小的角度，说明了两者很难同时进行优化，最后给出了三种一致性的严格定义。&lt;/li&gt;
+&lt;li&gt;第三节讨论了一种全局一致算法kNN，并讨论了kNN全局一致的条件及现实中遇到的限制。&lt;/li&gt;
+&lt;li&gt;第四节讨论了现实中经常使用的学习准则：经验风险最小化。并通过一个反例证明了如果假设空间不加限制，则ERM不一致。接着，我们导出了ERM一致的条件：假设空间一致收敛。&lt;/li&gt;
+&lt;li&gt;第五节接着第四节的内容，详细推导出假设空间一致收敛的条件，给出了Shattering Coefficient和VC维的定义，并基于两者给出了ERM一致的充分必要条件，在这一节末尾简单讨论了贝叶斯一致的条件。&lt;/li&gt;
+&lt;li&gt;第六节讨论了SLT中最重要的定理：天下没有免费的午餐定理。这个定理给出了SLT中的重要推论：如果不对$P(X,Y)$最任何假设，则在任意大的有限样本集下，都不能保证统计学习能学到任何东西。所以统计学习必须和业务经验结合才有意义。&lt;/li&gt;
+&lt;li&gt;第七节讨论了限定$P(X,Y)$分布形式下的参数估计方法，探讨了频率学派和贝叶斯学派观念的差异，并给出了两个学派解决参数估计问题的主要思路：MLE和贝叶斯学习。最后对两种方法进行了比较。&lt;/li&gt;
+&lt;/ul&gt;
+</description> 
+        </item> 
         
         <item> 
             <title>对论文《A Mathematical Theory of Communication》的简要解读</title> 
@@ -63,7 +635,7 @@
 &lt;p&gt;相比于可表示状态数，不确定性的量化稍微困难一些。具体来说，我们是要做这么一件事：对于一个有N种结果的随机变量X，在概率分布函数$P(X)$已知的情况下，寻找一个泛函$H(X)$（不要纠结于这个名词，这里可以简单理解为以函数为变量的函数），使得$H(X)$满足如下条件：&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;如果X是确定性事件（即X的结果是固定的），则$H(X)=0$&lt;/li&gt;
-&lt;li&gt;$P(X)$越随机，$H(P)$越大&lt;/li&gt;
+&lt;li&gt;$P(X)$越随机，$H(P)​$越大&lt;/li&gt;
 &lt;li&gt;$H(X)$最大为1，此时随机变量随机性最大&lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;在论文中，香农给出了这样一个函数：
@@ -187,11 +759,50 @@ $$
 &lt;p&gt;这篇文章通过实现一个简单的malloc来描述malloc背后的机制。当然与现有C的标准库实现（例如glibc）相比，我们实现的malloc并不是特别高效，但是这个实现比目前真实的malloc实现要简单很多，因此易于理解。重要的是，这个实现和真实实现在基本原理上是一致的。&lt;/p&gt;
 &lt;p&gt;这篇文章将首先介绍一些所需的基本知识，如操作系统对进程的内存管理以及相关的系统调用，然后逐步实现一个简单的malloc。为了简单起见，这篇文章将只考虑x86_64体系结构，操作系统为Linux。&lt;/p&gt;
 &lt;!-- toc --&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#1-%E4%BB%80%E4%B9%88%E6%98%AFmalloc&quot;&gt;1 什么是malloc&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#2-%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86&quot;&gt;2 预备知识&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#21-linux%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86&quot;&gt;2.1 Linux内存管理&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#211-%E8%99%9A%E6%8B%9F%E5%86%85%E5%AD%98%E5%9C%B0%E5%9D%80%E4%B8%8E%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E5%9C%B0%E5%9D%80&quot;&gt;2.1.1 虚拟内存地址与物理内存地址&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#212-%E9%A1%B5%E4%B8%8E%E5%9C%B0%E5%9D%80%E6%9E%84%E6%88%90&quot;&gt;2.1.2 页与地址构成&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#213-%E5%86%85%E5%AD%98%E9%A1%B5%E4%B8%8E%E7%A3%81%E7%9B%98%E9%A1%B5&quot;&gt;2.1.3 内存页与磁盘页&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#22-linux%E8%BF%9B%E7%A8%8B%E7%BA%A7%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86&quot;&gt;2.2 Linux进程级内存管理&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#221-%E5%86%85%E5%AD%98%E6%8E%92%E5%B8%83&quot;&gt;2.2.1 内存排布&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#222-heap%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B&quot;&gt;2.2.2 Heap内存模型&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#223-brk%E4%B8%8Esbrk&quot;&gt;2.2.3 brk与sbrk&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#224-%E8%B5%84%E6%BA%90%E9%99%90%E5%88%B6%E4%B8%8Erlimit&quot;&gt;2.2.4 资源限制与rlimit&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#3-%E5%AE%9E%E7%8E%B0malloc&quot;&gt;3 实现malloc&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#31-%E7%8E%A9%E5%85%B7%E5%AE%9E%E7%8E%B0&quot;&gt;3.1 玩具实现&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#32-%E6%AD%A3%E5%BC%8F%E5%AE%9E%E7%8E%B0&quot;&gt;3.2 正式实现&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#321-%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84&quot;&gt;3.2.1 数据结构&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#322-%E5%AF%BB%E6%89%BE%E5%90%88%E9%80%82%E7%9A%84block&quot;&gt;3.2.2 寻找合适的block&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#323-%E5%BC%80%E8%BE%9F%E6%96%B0%E7%9A%84block&quot;&gt;3.2.3 开辟新的block&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#324-%E5%88%86%E8%A3%82block&quot;&gt;3.2.4 分裂block&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#325-malloc%E7%9A%84%E5%AE%9E%E7%8E%B0&quot;&gt;3.2.5 malloc的实现&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#326-calloc%E7%9A%84%E5%AE%9E%E7%8E%B0&quot;&gt;3.2.6 calloc的实现&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#327-free%E7%9A%84%E5%AE%9E%E7%8E%B0&quot;&gt;3.2.7 free的实现&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#328-realloc%E7%9A%84%E5%AE%9E%E7%8E%B0&quot;&gt;3.2.8 realloc的实现&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#33-%E9%81%97%E7%95%99%E9%97%AE%E9%A2%98%E5%92%8C%E4%BC%98%E5%8C%96&quot;&gt;3.3 遗留问题和优化&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#4-%E5%85%B6%E5%AE%83%E5%8F%82%E8%80%83&quot;&gt;4 其它参考&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- toc stop --&gt;
+
+
 &lt;h1 id=&quot;1-什么是malloc&quot;&gt;1 什么是malloc&lt;/h1&gt;
 &lt;p&gt;在实现malloc之前，先要相对正式地对malloc做一个定义。&lt;/p&gt;
 &lt;p&gt;根据标准C库函数的定义，malloc具有如下原型：&lt;/p&gt;
-&lt;pre class=&quot;prettyprint linenums lang-c&quot;&gt;void* malloc(size_t size);
-&lt;/pre&gt;
+&lt;pre class=&quot;prettyprint linenums lang-c&quot;&gt;void* malloc(size_t size);&lt;/pre&gt;
 &lt;p&gt;这个函数要实现的功能是在系统中分配一段连续的可用的内存，具体有如下要求：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;malloc分配的内存大小&lt;strong&gt;至少&lt;/strong&gt;为size参数所指定的字节数&lt;/li&gt;
@@ -201,8 +812,7 @@ $$
 &lt;li&gt;实现malloc时应同时实现内存大小调整和内存释放函数（即realloc和free）&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;对于malloc更多的说明可以在命令行中键入以下命令查看：&lt;/p&gt;
-&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;man malloc
-&lt;/pre&gt;
+&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;man malloc&lt;/pre&gt;
 &lt;h1 id=&quot;2-预备知识&quot;&gt;2 预备知识&lt;/h1&gt;
 &lt;p&gt;在实现malloc之前，需要先解释一些Linux系统内存相关的知识。&lt;/p&gt;
 &lt;h2 id=&quot;21-linux内存管理&quot;&gt;2.1 Linux内存管理&lt;/h2&gt;
@@ -245,8 +855,7 @@ $$
 &lt;h3 id=&quot;223-brk与sbrk&quot;&gt;2.2.3 brk与sbrk&lt;/h3&gt;
 &lt;p&gt;由上文知道，要增加一个进程实际的可用堆大小，就需要将break指针向高地址移动。Linux通过brk和sbrk系统调用操作break指针。两个系统调用的原型如下：&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-c&quot;&gt;int brk(void *addr);
-void *sbrk(intptr_t increment);
-&lt;/pre&gt;
+void *sbrk(intptr_t increment);&lt;/pre&gt;
 &lt;p&gt;brk将break指针直接设置为某个地址，而sbrk将break从当前位置移动increment所指定的增量。brk在执行成功时返回0，否则返回-1并设置errno为ENOMEM；sbrk成功时返回break移动之前所指向的地址，否则返回(void *)-1。&lt;/p&gt;
 &lt;p&gt;一个小技巧是，如果将increment设置为0，则可以获得当前break的地址。&lt;/p&gt;
 &lt;p&gt;另外需要注意的是，由于Linux是按页进行内存映射的，所以如果break被设置为没有按页大小对齐，则系统实际上会在最后映射一个完整的页，从而实际已映射的内存空间比break指向的地方要大一些。但是使用break之后的地址是很危险的（尽管也许break之后确实有一小块可用内存地址）。&lt;/p&gt;
@@ -256,14 +865,12 @@ void *sbrk(intptr_t increment);
     struct rlimit *limit = (struct rlimit *)malloc(sizeof(struct rlimit));
     getrlimit(RLIMIT_AS, limit);
     printf(&quot;soft limit: %ld, hard limit: %ld\n&quot;, limit-&gt;rlim_cur, limit-&gt;rlim_max);
-}
-&lt;/pre&gt;
+}&lt;/pre&gt;
 &lt;p&gt;其中rlimit是一个结构体：&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-c&quot;&gt;struct rlimit {
     rlim_t rlim_cur;  /* Soft limit */
     rlim_t rlim_max;  /* Hard limit (ceiling for rlim_cur) */
-};
-&lt;/pre&gt;
+};&lt;/pre&gt;
 &lt;p&gt;每种资源有软限制和硬限制，并且可以通过setrlimit对rlimit进行有条件设置。其中硬限制作为软限制的上限，非特权进程只能设置软限制，且不能超过硬限制。&lt;/p&gt;
 &lt;h1 id=&quot;3-实现malloc&quot;&gt;3 实现malloc&lt;/h1&gt;
 &lt;h2 id=&quot;31-玩具实现&quot;&gt;3.1 玩具实现&lt;/h2&gt;
@@ -278,8 +885,7 @@ void *malloc(size_t size)
     if (sbrk(size) == (void *)-1)
         return NULL;
     return p;
-}
-&lt;/pre&gt;
+}&lt;/pre&gt;
 &lt;p&gt;这个malloc每次都在当前break的基础上增加size所指定的字节数，并将之前break的地址返回。这个malloc由于对所分配的内存缺乏记录，不便于内存释放，所以无法用于真实场景。&lt;/p&gt;
 &lt;h2 id=&quot;32-正式实现&quot;&gt;3.2 正式实现&lt;/h2&gt;
 &lt;p&gt;下面严肃点讨论malloc的实现方案。&lt;/p&gt;
@@ -293,8 +899,7 @@ struct s_block {
     int free;     /* 是否是空闲块 */
     int padding;  /* 填充4字节，保证meta块长度为8的倍数 */
     char data[1]  /* 这是一个虚拟字段，表示数据块的第一个字节，长度不应计入meta */
-};
-&lt;/pre&gt;
+};&lt;/pre&gt;
 &lt;p&gt;由于我们只考虑64位机器，为了方便，我们在结构体最后填充一个int，使得结构体本身的长度为8的倍数，以便内存对齐。示意图如下：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;http://blog-codinglabs-org.qiniudn.com/image/a-malloc-tutorial-06.png&quot; alt=&quot;Block结构&quot;&gt;&lt;/p&gt;
 &lt;h3 id=&quot;322-寻找合适的block&quot;&gt;3.2.2 寻找合适的block&lt;/h3&gt;
@@ -312,8 +917,7 @@ t_block find_block(t_block *last, size_t size) {
         b = b-&gt;next;
     }
     return b;
-}
-&lt;/pre&gt;
+}&lt;/pre&gt;
 &lt;p&gt;find_block从frist_block开始，查找第一个符合要求的block并返回block起始地址，如果找不到这返回NULL。这里在遍历时会更新一个叫last的指针，这个指针始终指向当前遍历的block。这是为了如果找不到合适的block而开辟新block使用的，具体会在接下来的一节用到。&lt;/p&gt;
 &lt;h3 id=&quot;323-开辟新的block&quot;&gt;3.2.3 开辟新的block&lt;/h3&gt;
 &lt;p&gt;如果现有block都不能满足size的要求，则需要在链表最后开辟一个新的block。这里关键是如何只使用sbrk创建一个struct：&lt;/p&gt;
@@ -330,8 +934,7 @@ t_block extend_heap(t_block last, size_t s) {
         last-&gt;next = b;
     b-&gt;free = 0;
     return b;
-}
-&lt;/pre&gt;
+}&lt;/pre&gt;
 &lt;h3 id=&quot;324-分裂block&quot;&gt;3.2.4 分裂block&lt;/h3&gt;
 &lt;p&gt;First fit有一个比较致命的缺点，就是可能会让很小的size占据很大的一块block，此时，为了提高payload，应该在剩余数据区足够大的情况下，将其分裂为一个新的block，示意如下：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;http://blog-codinglabs-org.qiniudn.com/image/a-malloc-tutorial-07.png&quot; alt=&quot;分裂block&quot;&gt;&lt;/p&gt;
@@ -344,8 +947,7 @@ t_block extend_heap(t_block last, size_t s) {
     new-&gt;free = 1;
     b-&gt;size = s;
     b-&gt;next = new;
-}
-&lt;/pre&gt;
+}&lt;/pre&gt;
 &lt;h3 id=&quot;325-malloc的实现&quot;&gt;3.2.5 malloc的实现&lt;/h3&gt;
 &lt;p&gt;有了上面的代码，我们可以利用它们整合成一个简单但初步可用的malloc。注意首先我们要定义个block链表的头first_block，初始化为NULL；另外，我们需要剩余空间至少有BLOCK_SIZE + 8才执行分裂操作。&lt;/p&gt;
 &lt;p&gt;由于我们希望malloc分配的数据区是按8字节对齐，所以在size不为8的倍数时，我们需要将size调整为大于size的最小的8的倍数：&lt;/p&gt;
@@ -353,8 +955,7 @@ t_block extend_heap(t_block last, size_t s) {
     if(s &amp; 0x7 == 0)
         return s;
     return ((s &gt;&gt; 3) + 1) &lt;&lt; 3;
-}
-&lt;/pre&gt;
+}&lt;/pre&gt;
 &lt;pre class=&quot;prettyprint linenums lang-c&quot;&gt;#define BLOCK_SIZE 24
 void *first_block=NULL;
 
@@ -387,8 +988,7 @@ void *malloc(size_t size) {
         first_block = b;
     }
     return b-&gt;data;
-}
-&lt;/pre&gt;
+}&lt;/pre&gt;
 &lt;h3 id=&quot;326-calloc的实现&quot;&gt;3.2.6 calloc的实现&lt;/h3&gt;
 &lt;p&gt;有了malloc，实现calloc只要两步：&lt;/p&gt;
 &lt;ol&gt;
@@ -406,8 +1006,7 @@ void *malloc(size_t size) {
             new[i] = 0;
     }
     return new;
-}
-&lt;/pre&gt;
+}&lt;/pre&gt;
 &lt;h3 id=&quot;327-free的实现&quot;&gt;3.2.7 free的实现&lt;/h3&gt;
 &lt;p&gt;free的实现并不像看上去那么简单，这里我们要解决两个关键问题：&lt;/p&gt;
 &lt;ol&gt;
@@ -429,8 +1028,7 @@ struct s_block {
     int padding;  /* 填充4字节，保证meta块长度为8的倍数 */
     void *ptr;    /* Magic pointer，指向data */
     char data[1]  /* 这是一个虚拟字段，表示数据块的第一个字节，长度不应计入meta */
-};
-&lt;/pre&gt;
+};&lt;/pre&gt;
 &lt;p&gt;然后我们定义检查地址合法性的函数：&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-c&quot;&gt;t_block get_block(void *p) {
     char *tmp;  
@@ -445,8 +1043,7 @@ int valid_addr(void *p) {
         }
     }
     return 0;
-}
-&lt;/pre&gt;
+}&lt;/pre&gt;
 &lt;p&gt;当多次malloc和free后，整个内存池可能会产生很多碎片block，这些block很小，经常无法使用，甚至出现许多碎片连在一起，虽然总体能满足某此malloc要求，但是由于分割成了多个小block而无法fit，这就是碎片问题。&lt;/p&gt;
 &lt;p&gt;一个简单的解决方式时当free某个block时，如果发现它相邻的block也是free的，则将block和相邻block合并。为了满足这个实现，需要将s_block改为双向链表。修改后的block结构如下：&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-c&quot;&gt;typedef struct s_block *t_block;
@@ -458,8 +1055,7 @@ struct s_block {
     int padding;  /* 填充4字节，保证meta块长度为8的倍数 */
     void *ptr;    /* Magic pointer，指向data */
     char data[1]  /* 这是一个虚拟字段，表示数据块的第一个字节，长度不应计入meta */
-};
-&lt;/pre&gt;
+};&lt;/pre&gt;
 &lt;p&gt;合并方法如下：&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-c&quot;&gt;t_block fusion(t_block b) {
     if (b-&gt;next &amp;&amp; b-&gt;next-&gt;free) {
@@ -469,8 +1065,7 @@ struct s_block {
             b-&gt;next-&gt;prev = b;
     }
     return b;
-}
-&lt;/pre&gt;
+}&lt;/pre&gt;
 &lt;p&gt;有了上述方法，free的实现思路就比较清晰了：首先检查参数地址的合法性，如果不合法则不做任何事；否则，将此block的free标为1，并且在可以的情况下与后面的block进行合并。如果当前是最后一个block，则回退break指针释放进程内存，如果当前block是最后一个block，则回退break指针并设置first_block为NULL。实现如下：&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-c&quot;&gt;void free(void *p) {
     t_block b;
@@ -489,8 +1084,7 @@ struct s_block {
             brk(b);
         }
     }
-}
-&lt;/pre&gt;
+}&lt;/pre&gt;
 &lt;h3 id=&quot;328-realloc的实现&quot;&gt;3.2.8 realloc的实现&lt;/h3&gt;
 &lt;p&gt;为了实现realloc，我们首先要实现一个内存复制方法。如同calloc一样，为了效率，我们以8字节为单位进行复制：&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-c&quot;&gt;void copy_block(t_block src, t_block dst) {
@@ -500,8 +1094,7 @@ struct s_block {
     ddata = dst-&gt;ptr;
     for(i = 0; (i * 8) &lt; src-&gt;size &amp;&amp; (i * 8) &lt; dst-&gt;size; i++)
         ddata[i] = sdata[i];
-}
-&lt;/pre&gt;
+}&lt;/pre&gt;
 &lt;p&gt;然后我们开始实现realloc。一个简单（但是低效）的方法是malloc一段内存，然后将数据复制过去。但是我们可以做的更高效，具体可以考虑以下几个方面：&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;如果当前block的数据区大于等于realloc所要求的size，则不做任何操作&lt;/li&gt;
@@ -543,8 +1136,7 @@ struct s_block {
         return (p);
     }
     return NULL;
-}
-&lt;/pre&gt;
+}&lt;/pre&gt;
 &lt;h2 id=&quot;33-遗留问题和优化&quot;&gt;3.3 遗留问题和优化&lt;/h2&gt;
 &lt;p&gt;以上是一个较为简陋，但是初步可用的malloc实现。还有很多遗留的可能优化点，例如：&lt;/p&gt;
 &lt;ul&gt;
@@ -573,13 +1165,40 @@ struct s_block {
             <pubDate>Sat, 14 Jun 2014 00:00:00 +0800</pubDate> 
             <description>&lt;p&gt;生成随机数是程序设计里常见的需求。一般的编程语言都会自带一个随机数生成函数，用于生成服从均匀分布的随机数。不过有时需要生成服从其它分布的随机数，例如高斯分布或指数分布等。有些编程语言已经有比较完善的实现，例如Python的NumPy。这篇文章介绍如何通过均匀分布随机数生成函数生成符合特定概率分布的随机数，主要介绍Inverse Ttransform和Acceptance-Rejection两种基础算法以及一些相关的衍生方法。下文我们均假设已经拥有一个可以生成0到1之间均匀分布的随机数生成函数，关于如何生成均匀分布等更底层的随机数生成理论，请参考其它资料，本文不做讨论。&lt;/p&gt;
 &lt;!-- toc --&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95&quot;&gt;基础算法&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#inverse-transform-method&quot;&gt;Inverse Transform Method&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#itm%E7%AE%97%E6%B3%95%E6%8F%8F%E8%BF%B0&quot;&gt;ITM算法描述&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#itm%E7%AE%97%E6%B3%95%E8%AF%B4%E6%98%8E&quot;&gt;ITM算法说明&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#itm%E5%AE%9E%E7%8E%B0%E7%A4%BA%E4%BE%8B&quot;&gt;ITM实现示例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#acceptance-rejection-method&quot;&gt;Acceptance-Rejection Method&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#arm%E7%AE%97%E6%B3%95%E6%8F%8F%E8%BF%B0&quot;&gt;ARM算法描述&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#arm%E7%AE%97%E6%B3%95%E8%AF%B4%E6%98%8E&quot;&gt;ARM算法说明&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#arm%E5%AE%9E%E7%8E%B0%E7%A4%BA%E4%BE%8B&quot;&gt;ARM实现示例&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#%E8%A1%8D%E7%94%9F%E7%AE%97%E6%B3%95&quot;&gt;衍生算法&lt;/a&gt;&lt;ul&gt;
+&lt;li&gt;&lt;a href=&quot;#%E7%BB%84%E5%90%88%E7%AE%97%E6%B3%95&quot;&gt;组合算法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#%E7%94%9F%E6%88%90%E5%85%B7%E6%9C%89%E7%9B%B8%E5%85%B3%E6%80%A7%E7%9A%84%E9%9A%8F%E6%9C%BA%E6%95%B0&quot;&gt;生成具有相关性的随机数&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;a href=&quot;#%E6%9B%B4%E5%A4%9A%E5%8F%82%E8%80%83&quot;&gt;更多参考&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;!-- toc stop --&gt;
+
+
 &lt;h1 id=&quot;基础算法&quot;&gt;基础算法&lt;/h1&gt;
 &lt;h2 id=&quot;inverse-transform-method&quot;&gt;Inverse Transform Method&lt;/h2&gt;
 &lt;p&gt;最简单的生成算法是Inverse Transform Method（下文简称ITM）。如果我们可以给出概率分布的累积分布函数（下文简称CDF）及其逆函数的解析表达式，则可以非常简单便捷的生成指定分布随机数。&lt;/p&gt;
 &lt;h3 id=&quot;itm算法描述&quot;&gt;ITM算法描述&lt;/h3&gt;
 &lt;blockquote&gt;
 &lt;ol&gt;
-&lt;li&gt;生成一个服从均匀分布的随机数\(U \sim Uni(0,1)\)&lt;/li&gt;
+&lt;li&gt;生成一个服从均匀分布的随机数\(U \\sim Uni(0,1)\)&lt;/li&gt;
 &lt;li&gt;设\(F(X)\)为指定分布的CDF，\(F^{-1}(Y)\)是其逆函数。返回\(X=F^{-1}(U)\)作为结果&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/blockquote&gt;
@@ -597,11 +1216,11 @@ struct s_block {
 &lt;h3 id=&quot;itm实现示例&quot;&gt;ITM实现示例&lt;/h3&gt;
 &lt;p&gt;下面以&lt;a href=&quot;http://en.wikipedia.org/wiki/Exponential_distribution&quot;&gt;指数分布&lt;/a&gt;为例说明如何应用ITM。&lt;/p&gt;
 &lt;p&gt;首先我们需要求解CDF的逆函数。我们知道指数分布的CDF为&lt;/p&gt;
-&lt;p&gt;\[F(X)=1-e^{-\lambda X}\]&lt;/p&gt;
+&lt;p&gt;\[F(X)=1-e^{-\\lambda X}\]&lt;/p&gt;
 &lt;p&gt;通过简单的代数运算，可以得到其逆函数为&lt;/p&gt;
-&lt;p&gt;\[F^{-1}(Y)=-\frac{1}{\lambda}\ln(1-Y)\]&lt;/p&gt;
+&lt;p&gt;\[F^{-1}(Y)=-\\frac{1}{\\lambda}\\ln(1-Y)\]&lt;/p&gt;
 &lt;p&gt;由于\(U\)服从从0到1的均匀分布蕴含着\(1-U\)服从同样的分布，因此在实际实现时可以用\(Y\)代替\(1-Y\)，得到：&lt;/p&gt;
-&lt;p&gt;\[F^{-1}(Y)=-\frac{1}{\lambda}\ln(Y)\]&lt;/p&gt;
+&lt;p&gt;\[F^{-1}(Y)=-\\frac{1}{\\lambda}\\ln(Y)\]&lt;/p&gt;
 &lt;p&gt;下面给出一个Python的实现示例程序。&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-python&quot;&gt;import random
 import math
@@ -609,17 +1228,16 @@ def exponential_rand(lam):
     if lam &lt;= 0:
         return -1
     U = random.uniform(0.0, 1.0)
-    return (-1.0 / lam) * math.log(U)
-&lt;/pre&gt;
+    return (-1.0 / lam) * math.log(U)&lt;/pre&gt;
 &lt;h2 id=&quot;acceptance-rejection-method&quot;&gt;Acceptance-Rejection Method&lt;/h2&gt;
 &lt;p&gt;一般来说ITM是一种很好的算法，简单且高效，如果可以使用的话，是第一选择。但是ITM有自身的局限性，就是要求必须能给出CDF逆函数的解析表达式，有些时候要做到这点比较困难，这限制了ITM的适用范围。&lt;/p&gt;
 &lt;p&gt;当无法给出CDF逆函数的解析表达式时，Acceptance-Rejection Method（下文简称ARM）是另外的选择。ARM的适用范围比ITM要大，只要给出概率密度函数（下文简称PDF）的解析表达式即可，而大多数常用分布的PDF是可以查到的。&lt;/p&gt;
 &lt;h3 id=&quot;arm算法描述&quot;&gt;ARM算法描述&lt;/h3&gt;
 &lt;blockquote&gt;
 &lt;ol&gt;
-&lt;li&gt;设PDF为\(f(x)\)。首先生成一个均匀分布随机数\(X \sim Uni(x_{min},x_{max})\)&lt;/li&gt;
-&lt;li&gt;独立的生成另一个均匀分布随机数\(Y \sim Uni(y_{min},y_{max})\)&lt;/li&gt;
-&lt;li&gt;如果\(Y \leq f(X)\)，则返回\(X\)，否则回到第1步&lt;/li&gt;
+&lt;li&gt;设PDF为\(f(x)\)。首先生成一个均匀分布随机数\(X \\sim Uni(x_{min},x_{max})\)&lt;/li&gt;
+&lt;li&gt;独立的生成另一个均匀分布随机数\(Y \\sim Uni(y_{min},y_{max})\)&lt;/li&gt;
+&lt;li&gt;如果\(Y \\leq f(X)\)，则返回\(X\)，否则回到第1步&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/blockquote&gt;
 &lt;h3 id=&quot;arm算法说明&quot;&gt;ARM算法说明&lt;/h3&gt;
@@ -631,7 +1249,7 @@ def exponential_rand(lam):
 &lt;h3 id=&quot;arm实现示例&quot;&gt;ARM实现示例&lt;/h3&gt;
 &lt;p&gt;下面使用ARM实现一个能产生&lt;a href=&quot;http://en.wikipedia.org/wiki/Gauss_distribution&quot;&gt;标准正态分布&lt;/a&gt;的随机数生成函数。&lt;/p&gt;
 &lt;p&gt;首先我们要得到标准正态分布的PDF，其数学表示为：&lt;/p&gt;
-&lt;p&gt;\[f(x)=\frac{1}{\sqrt{2\pi}}e^{-\frac{x^2}{2}}\]&lt;/p&gt;
+&lt;p&gt;\[f(x)=\\frac{1}{\\sqrt{2\\pi}}e^{-\\frac{x^2}{2}}\]&lt;/p&gt;
 &lt;p&gt;为了方便，这里我会直接使用&lt;a href=&quot;http://www.scipy.org/&quot;&gt;SciPy&lt;/a&gt;来计算其PDF。&lt;/p&gt;
 &lt;p&gt;程序如下。&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-python&quot;&gt;import random
@@ -642,39 +1260,38 @@ def standard_normal_rand():
         X = random.uniform(-3.0,3.0)
         Y = random.uniform(0.0, 0.5)
         if Y &lt; ss.norm.pdf(X):
-            return X
-&lt;/pre&gt;
-&lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt;：标准正态分布的x取值范围从理论上说是\((-\infty,\infty)\)，但是当离开均值点很远后，其概率密度可忽略不计。这里只取\((-3.0,3.0)\)，实际使用时可以根据具体需要扩大这个取值范围。&lt;/p&gt;
+            return X&lt;/pre&gt;
+&lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt;：标准正态分布的x取值范围从理论上说是\((-\\infty,\\infty)\)，但是当离开均值点很远后，其概率密度可忽略不计。这里只取\((-3.0,3.0)\)，实际使用时可以根据具体需要扩大这个取值范围。&lt;/p&gt;
 &lt;h1 id=&quot;衍生算法&quot;&gt;衍生算法&lt;/h1&gt;
 &lt;h2 id=&quot;组合算法&quot;&gt;组合算法&lt;/h2&gt;
 &lt;p&gt;当目标分布可以用其它分布经过四则运算表示时，可以使用组合算法生成对应随机数。&lt;/p&gt;
 &lt;p&gt;最常见的就是某分布可以表示成多个独立同分布（下文简称IID）随机变量之和。例如二项分布可以表示成多个0-1分布之和，&lt;a href=&quot;http://en.wikipedia.org/wiki/Erlang_distribution&quot;&gt;Erlang分布&lt;/a&gt;可以由多个IID的指数分布得出。&lt;/p&gt;
 &lt;p&gt;以Erlang分布为例说明如何生成这类随机数。&lt;/p&gt;
-&lt;p&gt;设\(X_1,X_2,\cdots,X_k\)为服从0到1均匀分布的IID随机数，则\(-\frac{1}{\lambda}lnX_1,-\frac{1}{\lambda}lnX_2,\cdots,-\frac{1}{\lambda}lnX_k\)为服从指数分布的IID随机数，因此&lt;/p&gt;
-&lt;p&gt;\[X=-\frac{1}{\lambda}lnX_1-\frac{1}{\lambda}lnX_2-\cdots-\frac{1}{\lambda}lnX_k=-\frac{1}{\lambda}ln\prod_{i=1}^k{X_i}\sim Erl(k,\lambda)\]&lt;/p&gt;
+&lt;p&gt;设\(X_1,X_2,\\cdots,X_k\)为服从0到1均匀分布的IID随机数，则\(-\\frac{1}{\\lambda}lnX_1,-\\frac{1}{\\lambda}lnX_2,\\cdots,-\\frac{1}{\\lambda}lnX_k\)为服从指数分布的IID随机数，因此&lt;/p&gt;
+&lt;p&gt;\[X=-\\frac{1}{\\lambda}lnX_1-\\frac{1}{\\lambda}lnX_2-\\cdots-\\frac{1}{\\lambda}lnX_k=-\\frac{1}{\\lambda}ln\\prod_{i=1}^k{X_i}\\sim Erl(k,\\lambda)\]&lt;/p&gt;
 &lt;p&gt;所以生成Erlang分布随机数的算法如下：&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;ol&gt;
-&lt;li&gt;生成\(X_1,X_2,\cdots,X_k\sim Uni(0,1)\)&lt;/li&gt;
-&lt;li&gt;返回\(-\frac{1}{\lambda}ln\prod_{i=1}^k{X_i}\)&lt;/li&gt;
+&lt;li&gt;生成\(X_1,X_2,\\cdots,X_k\\sim Uni(0,1)\)&lt;/li&gt;
+&lt;li&gt;返回\(-\\frac{1}{\\lambda}ln\\prod_{i=1}^k{X_i}\)&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;这类分布的随机数生成算法很直观，就是先生成相关的n个IID随机数，然后带入简单求和公式或其它四则公式得出最终随机数。其数学理论基础是&lt;a href=&quot;http://en.wikipedia.org/wiki/Convolution&quot;&gt;卷积理论&lt;/a&gt;，稍微有些复杂，这里不再讨论，有兴趣的同学可以查阅相关资料。&lt;/p&gt;
 &lt;h2 id=&quot;生成具有相关性的随机数&quot;&gt;生成具有相关性的随机数&lt;/h2&gt;
 &lt;p&gt;现在考虑生成多维随机数，以最简单的二维随机数为例。&lt;/p&gt;
 &lt;p&gt;如果两个维度的随机数是相互独立的，那么只要分别生成两个列就可以了。但是如果要求两列具有一定的相关系数，则需要做一些特殊处理。&lt;/p&gt;
-&lt;p&gt;下列算法可以生成两列具有相关系数\(\rho\)的随机数。&lt;/p&gt;
+&lt;p&gt;下列算法可以生成两列具有相关系数\(\\rho\)的随机数。&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;ol&gt;
 &lt;li&gt;生成IID随机变量\(X\)和\(Y\)&lt;/li&gt;
-&lt;li&gt;计算\(X&#39;=\rho X+\sqrt{1-\rho^2}Y\)&lt;/li&gt;
+&lt;li&gt;计算\(X&#39;=\\rho X+\\sqrt{1-\\rho^2}Y\)&lt;/li&gt;
 &lt;li&gt;返回\((X,X&#39;)\)&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;可以这样验证其正确性：&lt;/p&gt;
-&lt;p&gt;\[corr(X,X&#39;)=\rho corr(X,X)+\sqrt{1-\rho^2}corr(X,Y)=\rho\]&lt;/p&gt;
+&lt;p&gt;\[corr(X,X&#39;)=\\rho corr(X,X)+\\sqrt{1-\\rho^2}corr(X,Y)=\\rho\]&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt;：\(corr(X,X)=1\)，\(corr(X,Y)=0\)。&lt;/p&gt;
-&lt;p&gt;因此\(X\)和\(X&#39;\)确实具有相关系数\(\rho\)。&lt;/p&gt;
+&lt;p&gt;因此\(X\)和\(X&#39;\)确实具有相关系数\(\\rho\)。&lt;/p&gt;
 &lt;h1 id=&quot;更多参考&quot;&gt;更多参考&lt;/h1&gt;
 &lt;p&gt;这篇文章讨论了生成指定分布随机数的基本方法。这篇文章只打算讨论基础方法，所以还有很多有趣的内容，本文没有深入的探讨。这里给出一些扩展阅读资料，供有兴趣的朋友深入学习。首先是一篇&lt;a href=&quot;http://ftp.arl.mil/random/random.pdf&quot;&gt;非常好的文档&lt;/a&gt;，这篇文章来自美国陆军实验室，对计算机生成指定分布随机数的方方面面进行了全面深入描述，是不可多得的好资料。&lt;/p&gt;
 &lt;p&gt;在实现方面，可以参考&lt;a href=&quot;https://github.com/numpy/numpy/blob/master/numpy/random/mtrand/distributions.c&quot;&gt;NumPy中关于random的实现&lt;/a&gt;以及我开发的&lt;a href=&quot;https://github.com/ericzhang-cn/random.js&quot;&gt;JavaScript实现&lt;/a&gt;。另外我做过一个&lt;a href=&quot;http://blog.codinglabs.org/demo/distributions.html&quot;&gt;不同概率分布的可视化页面&lt;/a&gt;，可以帮助你直观理解不同分布及PDF参数对分布的影响。&lt;/p&gt;
@@ -747,16 +1364,21 @@ def standard_normal_rand():
 &lt;p&gt;Alpha-beta算法可以看成变种的Minimax，基本方法是从根节点开始采用深度优先的方式构造格局树，在构造每个节点时，都会读取此节点的alpha和beta两个值，其中alpha表示搜索到当前节点时已知的最好选择的下界，而beta表示从这个节点往下搜索最坏结局的上界。由于我们假设对手会将局势引入最坏结局之一，因此当beta小于alpha时，表示从此处开始不论最终结局是哪一个，其上限价值也要低于已知的最优解，也就是说已经不可能此处向下找到更好的解，所以就会剪枝。&lt;/p&gt;
 &lt;p&gt;下面同样以上述示例介绍Alpha-beta剪枝算法的工作原理。我们从根节点开始，详述使用Alpha-beta的每一个步骤：&lt;/p&gt;
 &lt;ol&gt;
-&lt;li&gt;根节点的alpha和beta分别被初始化为\(-\infty\)，和\(+\infty\)。&lt;/li&gt;
-&lt;li&gt;深度优先搜索第一个孩子，不是叶子节点，所以alpha和beta继承自父节点，分别为\(-\infty\)，和\(+\infty\)&lt;/li&gt;
-&lt;li&gt;搜索第三层的第一个孩子，同上。&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;根节点的alpha和beta分别被初始化为\(-\\infty\)，和\(+\\infty\)。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;深度优先搜索第一个孩子，不是叶子节点，所以alpha和beta继承自父节点，分别为\(-\\infty\)，和\(+\\infty\)&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;搜索第三层的第一个孩子，同上。&lt;/p&gt;
+&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;搜索第四层，到达叶子节点，采用评价函数得到此节点的评价值为1。&lt;/p&gt;
 &lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/2048-ai-analysis/05.png&quot;/&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;&lt;p&gt;此叶节点的父节点为max节点，因此更新其alpha值为1，表示此节点取值的下界为1。&lt;/p&gt;
 &lt;/li&gt;
-&lt;li&gt;再看另外一个子节点，值为20，大于当前alpha值，因此将alpha值更新为20。&lt;/li&gt;
-&lt;li&gt;此时第三层最左节点所有子树搜索完毕，作为max节点，更新其真实值为当前alpha值：20。&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;再看另外一个子节点，值为20，大于当前alpha值，因此将alpha值更新为20。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;此时第三层最左节点所有子树搜索完毕，作为max节点，更新其真实值为当前alpha值：20。&lt;/p&gt;
+&lt;/li&gt;
 &lt;li&gt;&lt;p&gt;由于其父节点（第二层最左节点）为min节点，因此更新其父节点beta值为20，表示这个节点取值最多为20。&lt;/p&gt;
 &lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/2048-ai-analysis/06.png&quot;/&gt;&lt;/p&gt;
 &lt;/li&gt;
@@ -820,8 +1442,7 @@ AI.prototype.eval = function() {
         + this.grid.monotonicity2() * mono2Weight
         + Math.log(emptyCells) * emptyWeight
         + this.grid.maxValue() * maxWeight;
-};
-&lt;/pre&gt;
+};&lt;/pre&gt;
 &lt;p&gt;有兴趣的同学可以调整一下权重看看有什么效果。&lt;/p&gt;
 &lt;h2 id=&quot;对对方选择的剪枝&quot;&gt;对对方选择的剪枝&lt;/h2&gt;
 &lt;p&gt;在这个程序中，除了采用Alpha-beta剪枝外，在min节点还采用了另一种剪枝，即只考虑对方走出让格局最差的那一步（而实际2048中计算机的选择是随机的），而不是搜索全部对方可能的走法。这是因为对方所有可能的选择为“空格数×2”，如果全部搜索的话会严重限制搜索深度。&lt;/p&gt;
@@ -850,8 +1471,7 @@ for (var value in scores) { // 2 and 4
             candidates.push( { position: cells[i], value: parseInt(value, 10) } );
         }
     }
-}
-&lt;/pre&gt;
+}&lt;/pre&gt;
 &lt;h2 id=&quot;搜索深度&quot;&gt;搜索深度&lt;/h2&gt;
 &lt;p&gt;在2048-AI的实现中，并没有限制搜索的最大深度，而是限制每次“思考”的时间。这里设定了一个超时时间，默认为100ms，在这个时间内，会从1开始，搜索到所能达到的深度。相关代码：&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-js&quot;&gt;// performs iterative deepening over the alpha-beta search
@@ -908,14 +1528,11 @@ AI.prototype.iterativeDeep = function() {
 &lt;p&gt;Calibre的下载地址是&lt;a href=&quot;http://calibre-ebook.com/download&quot;&gt;http://calibre-ebook.com/download&lt;/a&gt;，可以根据自己的操作系统下载相应的安装程序。&lt;/p&gt;
 &lt;p&gt;如果是Linux操作系统，还可以通过软件仓库安装：&lt;/p&gt;
 &lt;p&gt;Archlinux：&lt;/p&gt;
-&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;pacman -S calibre
-&lt;/pre&gt;
+&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;pacman -S calibre&lt;/pre&gt;
 &lt;p&gt;Debian/Ubuntu：&lt;/p&gt;
-&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;apt-get install calibre
-&lt;/pre&gt;
+&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;apt-get install calibre&lt;/pre&gt;
 &lt;p&gt;RedHat/Fedora/CentOS：&lt;/p&gt;
-&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;yum -y install calibre
-&lt;/pre&gt;
+&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;yum -y install calibre&lt;/pre&gt;
 &lt;p&gt;注意，如果你使用OSX，需要单独安装&lt;a href=&quot;http://manual.calibre-ebook.com/cli/cli-index.html&quot;&gt;Command Line Tool&lt;/a&gt;。&lt;/p&gt;
 &lt;h1 id=&quot;抓取网页生成电子书&quot;&gt;抓取网页生成电子书&lt;/h1&gt;
 &lt;p&gt;下面以&lt;a href=&quot;http://chimera.labs.oreilly.com/books/1230000000561&quot;&gt;Git Pocket Guide&lt;/a&gt;为例，说明如何通过calibre从网页生成电子书。&lt;/p&gt;
@@ -959,8 +1576,7 @@ class Git_Pocket_Guide(BasicNewsRecipe):
 
         ans = [(&#39;Git_Pocket_Guide&#39;, articles)]
 
-        return ans
-&lt;/pre&gt;
+        return ans&lt;/pre&gt;
 &lt;p&gt;下面分别解释代码中不同部分。&lt;/p&gt;
 &lt;h3 id=&quot;总体结构&quot;&gt;总体结构&lt;/h3&gt;
 &lt;p&gt;总体来看，一个recipes就是一个python class，只不过这个class必须继承calibre.web.feeds.recipes.BasicNewsRecipe。&lt;/p&gt;
@@ -974,8 +1590,7 @@ cover_url = &#39;http://akamaicovers.oreilly.com/images/0636920024972/lrg.jpg&#3
 
 url_prefix = &#39;http://chimera.labs.oreilly.com/books/1230000000561/&#39;
 no_stylesheets = True
-keep_only_tags = [{ &#39;class&#39;: &#39;chapter&#39; }]
-&lt;/pre&gt;
+keep_only_tags = [{ &#39;class&#39;: &#39;chapter&#39; }]&lt;/pre&gt;
 &lt;ul&gt;
 &lt;li&gt;title：电子书标题&lt;/li&gt;
 &lt;li&gt;description：电子书描述&lt;/li&gt;
@@ -996,8 +1611,7 @@ keep_only_tags = [{ &#39;class&#39;: &#39;chapter&#39; }]
 &lt;p&gt;上面是最基本的recipes，想了解更多的使用方法，可以参考&lt;a href=&quot;http://manual.calibre-ebook.com/news_recipe.html&quot;&gt;API文档&lt;/a&gt;。&lt;/p&gt;
 &lt;h2 id=&quot;生成mobi&quot;&gt;生成mobi&lt;/h2&gt;
 &lt;p&gt;编写好recipes后，在命令行下通过如下命令即可生成电子书：&lt;/p&gt;
-&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;ebook-convert Git_Pocket_Guide.recipe Git_Pocket_Guide.mobi
-&lt;/pre&gt;
+&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;ebook-convert Git_Pocket_Guide.recipe Git_Pocket_Guide.mobi&lt;/pre&gt;
 &lt;p&gt;即可生成mobi格式的电子书。ebook-convert会根据recipes代码自行抓取相关内容并组织结构。&lt;/p&gt;
 &lt;h1 id=&quot;最终效果&quot;&gt;最终效果&lt;/h1&gt;
 &lt;p&gt;下面是在kindle上看到的效果。&lt;/p&gt;
@@ -1036,8 +1650,7 @@ keep_only_tags = [{ &#39;class&#39;: &#39;chapter&#39; }]
 &lt;h3 id=&quot;安装terminator&quot;&gt;安装terminator&lt;/h3&gt;
 &lt;p&gt;Ubuntu自带的终端是gnome-terminal，虽然也还不错，但是不能支持屏幕分割、选择复制等功能让我很不爽，于是我换用terminator作为终端，terminator可以支持屏幕分割，并且默认快捷键和gnome-terminal无异，熟悉gnome-terminal的话可以快速上手。&lt;/p&gt;
 &lt;p&gt;Ubuntu下可以这样安装terminator：&lt;/p&gt;
-&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;sudo apt-get install terminator
-&lt;/pre&gt;
+&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;sudo apt-get install terminator&lt;/pre&gt;
 &lt;h3 id=&quot;terminator常用快捷键&quot;&gt;terminator常用快捷键&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;Ctrl-Shift-c 拷贝&lt;/li&gt;
@@ -1052,8 +1665,7 @@ keep_only_tags = [{ &#39;class&#39;: &#39;chapter&#39; }]
 &lt;h3 id=&quot;使用terminator-solarized&quot;&gt;使用terminator-solarized&lt;/h3&gt;
 &lt;p&gt;maximum-awesome所使用的&lt;a href=&quot;http://ethanschoonover.com/solarized&quot;&gt;solarized&lt;/a&gt;配色是相当不错的，所以自然希望继续使用。针对terminator的solarized配色已经有人专门做好了：&lt;a href=&quot;https://github.com/ghuntley/terminator-solarized&quot;&gt;terminator-solarized&lt;/a&gt;，只要按如下操作就可以使用：&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;mkdir -p ~/.config/terminator/
-curl https://raw.github.com/ghuntley/terminator-solarized/master/config &gt; ~/.config/terminator/config
-&lt;/pre&gt;
+curl https://raw.github.com/ghuntley/terminator-solarized/master/config &gt; ~/.config/terminator/config&lt;/pre&gt;
 &lt;p&gt;然后重新打开terminator就已经是solarized配色了。&lt;/p&gt;
 &lt;h3 id=&quot;对terminator更多的配置&quot;&gt;对terminator更多的配置&lt;/h3&gt;
 &lt;p&gt;接下来，可以在terminator-solarized配置文件的基础上进行更多的配置，例如背景透明、启用选择复制等。&lt;/p&gt;
@@ -1097,13 +1709,11 @@ curl https://raw.github.com/ghuntley/terminator-solarized/master/config &gt; ~/.
         [[[window0]]]
             type = Window
             parent = &quot;&quot;
-[plugins]
-&lt;/pre&gt;
+[plugins]&lt;/pre&gt;
 &lt;h3 id=&quot;配置dircolors&quot;&gt;配置dircolors&lt;/h3&gt;
 &lt;p&gt;完成上述配置后，你会发现用ls命令查看目录和文件时是一片灰色。这是因为默认情况下solarized各种bright方案基本都是灰色，而系统默认显示目录和文件时多用bright色，此时需要配置dircolors才能显示出彩色的文件和目录。&lt;/p&gt;
 &lt;p&gt;&lt;a href=&quot;https://github.com/seebi/dircolors-solarized&quot;&gt;dircolors-solarized&lt;/a&gt;项目提供了适合于solarized的dircolors配色方案，只要选择合适的方案使用就可以了。例如我是用的solarized dark配色，所以可以选择适合这个配色的dircolors.ansi-dark：&lt;/p&gt;
-&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;curl https://raw.github.com/seebi/dircolors-solarized/master/dircolors.ansi-dark &gt; ~/.dircolors
-&lt;/pre&gt;
+&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;curl https://raw.github.com/seebi/dircolors-solarized/master/dircolors.ansi-dark &gt; ~/.dircolors&lt;/pre&gt;
 &lt;p&gt;然后在~/.bashrc中加入如下配置：&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;# enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -1120,11 +1730,9 @@ fi
 # some more ls aliases
 alias ll=&#39;ls -alF&#39;
 alias la=&#39;ls -A&#39;
-alias l=&#39;ls -CF&#39;
-&lt;/pre&gt;
+alias l=&#39;ls -CF&#39;&lt;/pre&gt;
 &lt;p&gt;执行&lt;/p&gt;
-&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;source ~/.bashrc
-&lt;/pre&gt;
+&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;source ~/.bashrc&lt;/pre&gt;
 &lt;p&gt;后，再执行ls或ll就可以看到彩色的目录或文件了。&lt;/p&gt;
 &lt;p&gt;配置完的terminator效果如下：&lt;/p&gt;
 &lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/getting-started-with-ubuntu/01.png&quot;/&gt;&lt;/p&gt;
@@ -1143,8 +1751,7 @@ alias l=&#39;ls -CF&#39;
 &lt;h3 id=&quot;自动配置工具&quot;&gt;自动配置工具&lt;/h3&gt;
 &lt;p&gt;整个配置过程过于繁琐不再赘述，我已经将配置过程写成了一个自动配置脚本并放到了github：&lt;a href=&quot;https://github.com/ericzhang-cn/vim-conf&quot;&gt;https://github.com/ericzhang-cn/vim-conf&lt;/a&gt;，需要的朋友只要clone下来并运行init.sh脚本就可以自动完成整个配置：&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;git clone https://github.com/ericzhang-cn/vim-conf.git
-cd vim-conf &amp;&amp; ./init.sh
-&lt;/pre&gt;
+cd vim-conf &amp;&amp; ./init.sh&lt;/pre&gt;
 &lt;p&gt;最终配置效果如下：&lt;/p&gt;
 &lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/getting-started-with-ubuntu/02.png&quot;/&gt;&lt;/p&gt;
 
@@ -1159,31 +1766,26 @@ cd vim-conf &amp;&amp; ./init.sh
 &lt;h1 id=&quot;常用工具&quot;&gt;常用工具&lt;/h1&gt;
 &lt;h2 id=&quot;浏览器&quot;&gt;浏览器&lt;/h2&gt;
 &lt;p&gt;Ubuntu自带的是Firefox，我平常使用的是Chromium，这点在Ubuntu下没任何问题，可以直接安装：&lt;/p&gt;
-&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;sudo apt-get install chromium-browser
-&lt;/pre&gt;
+&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;sudo apt-get install chromium-browser&lt;/pre&gt;
 &lt;p&gt;用Google账号登录后，书签、插件等会自动同步，非常方便。&lt;/p&gt;
 &lt;h2 id=&quot;搜狗输入法-amp-谷歌输入法&quot;&gt;搜狗输入法&amp;谷歌输入法&lt;/h2&gt;
 &lt;p&gt;Mac下有搜狗输入法或百度输入法。不过目前搜狗也基于fcitx做了linux版的搜狗输入法。&lt;/p&gt;
 &lt;p&gt;Ubuntu自带的ibus直接卸掉，然后安装&lt;a href=&quot;https://fcitx-im.org/wiki/Fcitx&quot;&gt;fcitx&lt;/a&gt;：&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;sudo add-apt-repository ppa:fcitx-team/nightly &amp;&amp; sudo apt-get update
-sudo apt-get install fcitx-sogoupinyin
-&lt;/pre&gt;
+sudo apt-get install fcitx-sogoupinyin&lt;/pre&gt;
 &lt;p&gt;当然谷歌拼音也不错：&lt;/p&gt;
-&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;sudo apt-get install fcitx-googlepinyin
-&lt;/pre&gt;
+&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;sudo apt-get install fcitx-googlepinyin&lt;/pre&gt;
 &lt;h2 id=&quot;邮件&quot;&gt;邮件&lt;/h2&gt;
 &lt;p&gt;Mac下是使用Foxmail for Mac，linux下可以选择ThunderBird，用起来很顺手。&lt;/p&gt;
 &lt;h2 id=&quot;dropbox&quot;&gt;Dropbox&lt;/h2&gt;
 &lt;p&gt;Dropbox有官方linux客户端，可以到其官网下载安装。不过安装后也许会发现dropbox的icon没有出现在上面的indicator上，可以这样修复：&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;sudo apt-get install libappindicator1
-dropbox stop &amp;&amp; dropbox start
-&lt;/pre&gt;
+dropbox stop &amp;&amp; dropbox start&lt;/pre&gt;
 &lt;h2 id=&quot;evernote&quot;&gt;Evernote&lt;/h2&gt;
 &lt;p&gt;很不幸，我平常用来做笔记的evernote没有linux官方客户端，不过可以选择使用web版，或者安装第三方linux客户端everpad：&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;sudo add-apt-repository ppa:nvbn-rm/ppa
 sudo apt-get update
-sudo apt-get install everpad
-&lt;/pre&gt;
+sudo apt-get install everpad&lt;/pre&gt;
 &lt;p&gt;当然功能和美观程度都没法和Mac下官方的客户端相比，不过日常使用还是足够了。&lt;/p&gt;
 &lt;h2 id=&quot;办公office&quot;&gt;办公Office&lt;/h2&gt;
 &lt;p&gt;Ubuntu自带的LibreOffice可以很好的满足需求，试用了WPS for linux，无法正常打开Office 2010的文件，故而弃用之。LibreOffice打开Office 2010的文件没有问题。&lt;/p&gt;
@@ -1192,16 +1794,13 @@ sudo apt-get install everpad
 &lt;h2 id=&quot;绘图及图像处理&quot;&gt;绘图及图像处理&lt;/h2&gt;
 &lt;p&gt;平常工程文档做图一般用&lt;a href=&quot;http://www.yworks.com/en/products_yed_about.html&quot;&gt;yEd&lt;/a&gt;，是java开发的，所以在linux下可以直接使用。&lt;/p&gt;
 &lt;p&gt;图像处理可以用gimp：&lt;/p&gt;
-&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;sudo apt-get install gimp
-&lt;/pre&gt;
+&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;sudo apt-get install gimp&lt;/pre&gt;
 &lt;h2 id=&quot;影音播放&quot;&gt;影音播放&lt;/h2&gt;
 &lt;p&gt;平常很少离线看视频，如果需要的话，vlc应该够了：&lt;/p&gt;
-&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;sudo apt-get install vlc
-&lt;/pre&gt;
+&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;sudo apt-get install vlc&lt;/pre&gt;
 &lt;h2 id=&quot;截图工具&quot;&gt;截图工具&lt;/h2&gt;
 &lt;p&gt;截图工具非shutter莫属：&lt;/p&gt;
-&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;sudo apt-get install shutter
-&lt;/pre&gt;
+&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;sudo apt-get install shutter&lt;/pre&gt;
 &lt;h2 id=&quot;阿里旺旺&quot;&gt;阿里旺旺&lt;/h2&gt;
 &lt;p&gt;因为工作关系，平常必须使用旺旺交流。Mac下有非常好用的官方版，linux下并没有官方旺旺，有个内部版本巨烂无比。不过之前参加活动获赠一个&lt;a href=&quot;http://www.codeweavers.com/products/&quot;&gt;CrossOver&lt;/a&gt;正版授权序列号。&lt;/p&gt;
 &lt;p&gt;目前CrossOver运行阿里旺旺2013非常流畅。&lt;/p&gt;
@@ -1211,8 +1810,7 @@ sudo apt-get install everpad
 &lt;p&gt;其它常用软件特别是如R或Octave等专业软件，本身就有linux版，所以可以按需安装。如Git等开发工具本来就是linux下的软件，当然更不在话下。&lt;/p&gt;
 &lt;p&gt;目前已经用Ubuntu工作了一段时间，总体来说从Mac转过来肯定需要一点适应，不过目前感觉没有遇到特别大的问题，毕竟同属Unix系，对码农来说大多数使用习惯几乎是无缝切换。&lt;/p&gt;
 &lt;p&gt;另外，重新回到OSS的感觉不错！最后上张图吧：&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/getting-started-with-ubuntu/03.png&quot;/&gt;&lt;/p&gt;
-</description> 
+&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/getting-started-with-ubuntu/03.png&quot;/&gt;&lt;/p&gt;</description> 
         </item> 
         
         <item> 
@@ -1434,14 +2032,12 @@ sudo apt-get install everpad
 &lt;h2 id=&quot;安装数据库&quot;&gt;安装数据库&lt;/h2&gt;
 &lt;p&gt;首先需要安装一个支持ICP的MariaDB或MySQL数据库。我使用的是MariaDB 5.5.34，如果是使用MySQL则需要5.6版本以上。&lt;/p&gt;
 &lt;p&gt;Mac环境下可以通过brew安装：&lt;/p&gt;
-&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;brew install mairadb
-&lt;/pre&gt;
+&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;brew install mairadb&lt;/pre&gt;
 &lt;p&gt;其它环境下的安装请参考&lt;a href=&quot;https://www.mariadb.com/kb/en/getting-installing-and-upgrading-mariadb/&quot;&gt;MariaDB官网关于下载安装的文档&lt;/a&gt;。&lt;/p&gt;
 &lt;h2 id=&quot;导入示例数据&quot;&gt;导入示例数据&lt;/h2&gt;
 &lt;p&gt;与前文一样，我们使用&lt;a href=&quot;https://launchpad.net/test-db/&quot;&gt;Employees Sample Database&lt;/a&gt;，作为示例数据库。完整示例数据库的下载地址为：&lt;a href=&quot;https://launchpad.net/test-db/employees-db-1/1.0.6/+download/employees_db-full-1.0.6.tar.bz2&quot;&gt;https://launchpad.net/test-db/employees-db-1/1.0.6/+download/employees_db-full-1.0.6.tar.bz2&lt;/a&gt;。&lt;/p&gt;
 &lt;p&gt;将下载的压缩包解压后，会看到一系列的文件，其中employees.sql就是导入数据的命令文件。执行&lt;/p&gt;
-&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;mysql -h[host] -u[user] -p &lt; employees.sql
-&lt;/pre&gt;
+&lt;pre class=&quot;prettyprint linenums lang-bash&quot;&gt;mysql -h[host] -u[user] -p &lt; employees.sql&lt;/pre&gt;
 &lt;p&gt;就可以完成建库、建表和load数据等一系列操作。此时数据库中会多一个叫做employees的数据库。库中的表如下：&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-sql&quot;&gt;MariaDB [employees]&gt; SHOW TABLES;
 +---------------------+
@@ -1454,8 +2050,7 @@ sudo apt-get install everpad
 | salaries            |
 | titles              |
 +---------------------+
-6 rows in set (0.00 sec)
-&lt;/pre&gt;
+6 rows in set (0.00 sec)&lt;/pre&gt;
 &lt;p&gt;我们将使用employees表做实验。&lt;/p&gt;
 &lt;h2 id=&quot;建立联合索引&quot;&gt;建立联合索引&lt;/h2&gt;
 &lt;p&gt;employees表包含雇员的基本信息，表结构如下：&lt;/p&gt;
@@ -1470,18 +2065,15 @@ sudo apt-get install everpad
 | gender     | enum(&#39;M&#39;,&#39;F&#39;) | NO   |     | NULL    |       |
 | hire_date  | date          | NO   |     | NULL    |       |
 +------------+---------------+------+-----+---------+-------+
-6 rows in set (0.01 sec)
-&lt;/pre&gt;
+6 rows in set (0.01 sec)&lt;/pre&gt;
 &lt;p&gt;这个表默认只有一个主索引，因为ICP只能作用于二级索引，所以我们建立一个二级索引：&lt;/p&gt;
-&lt;pre class=&quot;prettyprint linenums lang-sql&quot;&gt;ALTER TABLE employees.employees ADD INDEX first_name_last_name (first_name, last_name);
-&lt;/pre&gt;
+&lt;pre class=&quot;prettyprint linenums lang-sql&quot;&gt;ALTER TABLE employees.employees ADD INDEX first_name_last_name (first_name, last_name);&lt;/pre&gt;
 &lt;p&gt;这样就建立了一个first_name和last_name的联合索引。&lt;/p&gt;
 &lt;h2 id=&quot;查询&quot;&gt;查询&lt;/h2&gt;
 &lt;p&gt;为了明确看到查询性能，我们启用profiling并关闭query cache：&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-sql&quot;&gt;SET profiling = 1;
 SET query_cache_type = 0;
-SET GLOBAL query_cache_size = 0;
-&lt;/pre&gt;
+SET GLOBAL query_cache_size = 0;&lt;/pre&gt;
 &lt;p&gt;然后我们看下面这个查询：&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-sql&quot;&gt;MariaDB [employees]&gt; SELECT * FROM employees WHERE first_name=&#39;Mary&#39; AND last_name LIKE &#39;%man&#39;;
 +--------+------------+------------+-----------+--------+------------+
@@ -1493,8 +2085,7 @@ SET GLOBAL query_cache_size = 0;
 | 217707 | 1962-09-05 | Mary       | Lichtman  | F      | 1987-11-20 |
 | 486361 | 1957-10-15 | Mary       | Oberman   | M      | 1988-09-06 |
 | 457469 | 1959-07-15 | Mary       | Weedman   | M      | 1996-11-21 |
-+--------+------------+------------+-----------+--------+------------+
-&lt;/pre&gt;
++--------+------------+------------+-----------+--------+------------+&lt;/pre&gt;
 &lt;p&gt;根据MySQL索引的前缀匹配原则，两者对索引的使用是一致的，即只有first_name采用索引，last_name由于使用了模糊前缀，没法使用索引进行匹配。我将查询联系执行三次，结果如下：&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-sql&quot;&gt;+----------+------------+---------------------------------------------------------------------------+
 | Query_ID | Duration   | Query                                                                     |
@@ -1502,11 +2093,9 @@ SET GLOBAL query_cache_size = 0;
 |       38 | 0.00084400 | SELECT * FROM employees WHERE first_name=&#39;Mary&#39; AND last_name LIKE &#39;%man&#39; |
 |       39 | 0.00071800 | SELECT * FROM employees WHERE first_name=&#39;Mary&#39; AND last_name LIKE &#39;%man&#39; |
 |       40 | 0.00089600 | SELECT * FROM employees WHERE first_name=&#39;Mary&#39; AND last_name LIKE &#39;%man&#39; |
-+----------+------------+---------------------------------------------------------------------------+
-&lt;/pre&gt;
++----------+------------+---------------------------------------------------------------------------+&lt;/pre&gt;
 &lt;p&gt;然后我们关闭ICP：&lt;/p&gt;
-&lt;pre class=&quot;prettyprint linenums lang-sql&quot;&gt;SET optimizer_switch=&#39;index_condition_pushdown=off&#39;;
-&lt;/pre&gt;
+&lt;pre class=&quot;prettyprint linenums lang-sql&quot;&gt;SET optimizer_switch=&#39;index_condition_pushdown=off&#39;;&lt;/pre&gt;
 &lt;p&gt;在运行三次相同的查询，结果如下：&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-sql&quot;&gt;+----------+------------+---------------------------------------------------------------------------+
 | Query_ID | Duration   | Query                                                                     |
@@ -1514,8 +2103,7 @@ SET GLOBAL query_cache_size = 0;
 |       42 | 0.00264400 | SELECT * FROM employees WHERE first_name=&#39;Mary&#39; AND last_name LIKE &#39;%man&#39; |
 |       43 | 0.01418900 | SELECT * FROM employees WHERE first_name=&#39;Mary&#39; AND last_name LIKE &#39;%man&#39; |
 |       44 | 0.00234200 | SELECT * FROM employees WHERE first_name=&#39;Mary&#39; AND last_name LIKE &#39;%man&#39; |
-+----------+------------+---------------------------------------------------------------------------+
-&lt;/pre&gt;
++----------+------------+---------------------------------------------------------------------------+&lt;/pre&gt;
 &lt;p&gt;有意思的事情发生了，关闭ICP后，同样的查询，耗时是之前的三倍以上。下面我们用explain看看两者有什么区别：&lt;/p&gt;
 &lt;pre class=&quot;prettyprint linenums lang-sql&quot;&gt;MariaDB [employees]&gt; EXPLAIN SELECT * FROM employees WHERE first_name=&#39;Mary&#39; AND last_name LIKE &#39;%man&#39;;
 +------+-------------+-----------+------+----------------------+----------------------+---------+-------+------+-----------------------+
@@ -1523,16 +2111,14 @@ SET GLOBAL query_cache_size = 0;
 +------+-------------+-----------+------+----------------------+----------------------+---------+-------+------+-----------------------+
 |    1 | SIMPLE      | employees | ref  | first_name_last_name | first_name_last_name | 44      | const |  224 | Using index condition |
 +------+-------------+-----------+------+----------------------+----------------------+---------+-------+------+-----------------------+
-1 row in set (0.00 sec)
-&lt;/pre&gt;
+1 row in set (0.00 sec)&lt;/pre&gt;
 &lt;pre class=&quot;prettyprint linenums lang-sql&quot;&gt;MariaDB [employees]&gt; EXPLAIN SELECT * FROM employees WHERE first_name=&#39;Mary&#39; AND last_name LIKE &#39;%man&#39;;
 +------+-------------+-----------+------+----------------------+----------------------+---------+-------+------+-------------+
 | id   | select_type | table     | type | possible_keys        | key                  | key_len | ref   | rows | Extra       |
 +------+-------------+-----------+------+----------------------+----------------------+---------+-------+------+-------------+
 |    1 | SIMPLE      | employees | ref  | first_name_last_name | first_name_last_name | 44      | const |  224 | Using where |
 +------+-------------+-----------+------+----------------------+----------------------+---------+-------+------+-------------+
-1 row in set (0.00 sec)
-&lt;/pre&gt;
+1 row in set (0.00 sec)&lt;/pre&gt;
 &lt;p&gt;前者是开启ICP，后者是关闭ICP。可以看到区别在于Extra，开启ICP时，用的是Using index condition；关闭ICP时，是Using where。&lt;/p&gt;
 &lt;p&gt;其中Using index condition就是ICP提高查询性能的关键。下一节说明ICP提高查询性能的原理。&lt;/p&gt;
 &lt;h1 id=&quot;原理&quot;&gt;原理&lt;/h1&gt;
@@ -1634,230 +2220,6 @@ mplayer -af scaletempo -speed 1.5 path/to/video/file
 &lt;/pre&gt;
 
 &lt;p&gt;就可以加速播放的同时保持语调不变了。&lt;/p&gt;
-</description> 
-        </item> 
-        
-        <item> 
-            <title>五种常用基数估计算法效果实验及实践建议</title> 
-            <link>http://blog.codinglabs.org/articles/cardinality-estimate-exper.html?utm_source=rss&amp;utm_medium=rss&amp;utm_campaign=rss</link> 
-            <guid>http://blog.codinglabs.org/articles/cardinality-estimate-exper.html</guid> 
-            <author>ericzhang.buaa@gmail.com 张洋</author> 
-            <pubDate>Fri, 30 Aug 2013 00:00:00 +0800</pubDate> 
-            <description>&lt;p&gt;之前我曾写过&lt;a href=&quot;http://blog.codinglabs.org/articles/algorithms-for-cardinality-estimation-part-i.html&quot;&gt;一系列关于基数估计（cardinality estimation）算法的文章&lt;/a&gt;，文中介绍了一些常用基数估计算法的原理。最近对常用的基数估计算法做了一些实验，这篇文章描述了实验结果，包括这些算法的估计效果及误差状况，主要通过图表展示。通过观察实验数据和可视化图表可以加强对各种基数估计算法理论分析的直观理解。&lt;/p&gt;
-&lt;p&gt;文章首先会对实验做一些说明，然后通过图表详细展示实验数据，最后会根据实验结果总结一些实践中有用的结论。&lt;/p&gt;
-&lt;h1 id=&quot;实验说明&quot;&gt;实验说明&lt;/h1&gt;
-&lt;h2 id=&quot;算法选择&quot;&gt;算法选择&lt;/h2&gt;
-&lt;p&gt;这次实验共选择了五种基数估计算法，分别是：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Linear Counting&lt;a href=&quot;#ref1&quot;&gt;&lt;sup&gt;1&lt;sup&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;LogLog Counting&lt;a href=&quot;#ref2&quot;&gt;&lt;sup&gt;2&lt;sup&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;Adaptive Counting&lt;a href=&quot;#ref3&quot;&gt;&lt;sup&gt;3&lt;sup&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;HyperLogLog Counting&lt;a href=&quot;#ref4&quot;&gt;&lt;sup&gt;4&lt;sup&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;HyperLogLog++ Counting&lt;a href=&quot;#ref5&quot;&gt;&lt;sup&gt;5&lt;sup&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;算法实现使用我所在部门（阿里巴巴商家数据部）的开源基数估计算法库&lt;a href=&quot;https://github.com/chaoslawful/ccard-lib&quot;&gt;ccard-lib&lt;/a&gt;。&lt;/p&gt;
-&lt;h2 id=&quot;数据准备&quot;&gt;数据准备&lt;/h2&gt;
-&lt;p&gt;哈希函数采用&lt;a href=&quot;http://en.wikipedia.org/wiki/MurmurHash&quot;&gt;murmurhash32&lt;/a&gt;（HyperLogLog++采用murmurhash64）。&lt;/p&gt;
-&lt;p&gt;因实验结果的可靠性仅与哈希值的分布均匀性有关，而根据之前相关研究&lt;a href=&quot;http://programmers.stackexchange.com/questions/49550/which-hashing-algorithm-is-best-for-uniqueness-and-speed&quot;&gt;murmurhash对于顺序型数据具有良好的均匀性&lt;/a&gt;。因此为了简化实验，原始数据使用&lt;em&gt;1-1,000,000无符号64bit整型的小端序表示&lt;/em&gt;。&lt;/p&gt;
-&lt;p&gt;下面将通过实验验证原始数据哈希后的均匀性。&lt;/p&gt;
-&lt;h2 id=&quot;实验过程&quot;&gt;实验过程&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;将原始数据经过murmurhash处理后，验证分桶数在\(2^{10}\)，\(2^{12}\)和\(2^{16}\)下数据的均匀性，即看各个桶的元素数量是否大致相等；同时验证各个桶中元素二进制表示的最长0前缀是否服从幂率分布。&lt;/li&gt;
-&lt;li&gt;对五种基数估计算法，分布记录\(2^{10}\)，\(2^{12}\)和\(2^{16}\)三种分桶数量下从1到1,000,000的估计值和相对误差值。取样点为100的整倍数，因此共10,000个采样点。&lt;/li&gt;
-&lt;li&gt;比较在\(2^{10}\)，\(2^{12}\)和\(2^{16}\)三种分桶数量下五种基数估计算法的误差走势。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;实验&quot;&gt;实验&lt;/h1&gt;
-&lt;h2 id=&quot;数据均匀性&quot;&gt;数据均匀性&lt;/h2&gt;
-&lt;p&gt;下面首先验证原始数据经过哈希后基本服从均匀分布，从而满足各种基数估计算法的基本前提条件。下面的结果通过murmurhash32哈希值给出，实际中采用murmurhash64得到了基本一致的结论。&lt;/p&gt;
-&lt;p&gt;对于32bit哈希值，分桶数为\(2^p\)时，用前\(p\)bit作为桶编号，剩下的\(32-p\)作为用于统计0后缀（因为均匀分布的假设，统计0后缀和0前缀是等效的，ccard-lib中除HyperLogLog++外采用统计0后缀的方式）的比特串。例如对于哈希值“01001010111010100101000000100100”，分桶数为\(2^{10}\)时，其桶编号为“0100101011”，即十进制的“555”，剩余部分为“1010100101000000100100”，零后缀长度为2。&lt;/p&gt;
-&lt;h3 id=&quot;验证分桶均匀性&quot;&gt;验证分桶均匀性&lt;/h3&gt;
-&lt;p&gt;下面通过柱状图分别给出\(2^{10}\)，\(2^{12}\)和\(2^{16}\)三种分桶下各桶元素数量的分布，在柱状图中bins的数量均为100，因此图中每个bin并不对应一个桶。&lt;/p&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;murmurhash32哈希值分布（p=10）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/murmurhash32-10-distrib.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;murmurhash32哈希值分布（p=12）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/murmurhash32-12-distrib.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;murmurhash32哈希值分布（p=16）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/murmurhash32-16-distrib.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p&gt;可以看到，三种分桶下数据均基本服从均匀分布。&lt;/p&gt;
-&lt;h3 id=&quot;0后缀长度的幂率分布性&quot;&gt;0后缀长度的幂率分布性&lt;/h3&gt;
-&lt;p&gt;按照理论预言，如果哈希均匀性足够好，哈希剩余部分的关键统计量（最长0后缀长度）应该大约服从底数为2的幂率分布。&lt;/p&gt;
-&lt;p&gt;下图中横坐标表示0后缀长度，纵坐标表示0后缀为此长度的哈希值个数。&lt;/p&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;0后缀长度分布（p=10）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/murmurhash32-10-buckets.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;0后缀长度分布（p=12）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/murmurhash32-12-buckets.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;0后缀长度分布（p=16）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/murmurhash32-16-buckets.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p&gt;可以看到在三种分桶下统计量分布符合预期。&lt;/p&gt;
-&lt;p&gt;通过以上分析可知实验数据满足基数估计算法关于均匀性的假设。&lt;/p&gt;
-&lt;h2 id=&quot;基数估计算法效果&quot;&gt;基数估计算法效果&lt;/h2&gt;
-&lt;p&gt;下面给出五种基数估计算法的估计效果和误差走势。如未特殊说明，实验分桶数均为\(2^{10}\)，\(2^{12}\)和\(2^{16}\)。&lt;/p&gt;
-&lt;h3 id=&quot;linear-counting&quot;&gt;Linear Counting&lt;/h3&gt;
-&lt;p&gt;ccard-lib中当单独使用Linear Counting时，采用bit为单位记录哈希结果。因此实际的精度为分桶数的8倍，例如\(2^{10}\)时，实际的精度为1024*8=8192。&lt;/p&gt;
-&lt;h4 id=&quot;估计效果&quot;&gt;估计效果&lt;/h4&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;Linear Counting（p=10）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/lc-10.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;Linear Counting（p=12）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/lc-12.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;Linear Counting（p=16）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/lc-16.png&quot;/&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;相对误差&quot;&gt;相对误差&lt;/h4&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;Linear Counting误差（p=10）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/lc-error-10.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;Linear Counting误差（p=12）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/lc-error-12.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;Linear Counting误差（p=16）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/lc-error-16.png&quot;/&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;结论&quot;&gt;结论&lt;/h4&gt;
-&lt;p&gt;如理论预期，由于Linear Counting的有效性取决于bitmap中存在空位置，当有位置留空时，估计效果还不错，但是当bitmap全满后，Linear Counting完全失效。Linear Counting的有效估计范围线性依赖于bitmap长度。&lt;/p&gt;
-&lt;h3 id=&quot;loglog-counting&quot;&gt;LogLog Counting&lt;/h3&gt;
-&lt;h4 id=&quot;估计效果&quot;&gt;估计效果&lt;/h4&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;LogLog Counting（p=10）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/llc-10.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;LogLog Counting（p=12）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/llc-12.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;LogLog Counting（p=16）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/llc-16.png&quot;/&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;相对误差&quot;&gt;相对误差&lt;/h4&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;LogLog Counting误差（p=10）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/llc-error-10.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;LogLog Counting误差（p=12）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/llc-error-12.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;LogLog Counting误差（p=16）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/llc-error-16.png&quot;/&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;结论&quot;&gt;结论&lt;/h4&gt;
-&lt;p&gt;LogLog Counting的表现基本与理论相符，可以看到当基数不太大的时候，LogLog Counting误差非常大，这是因为LogLog Counting在基数较小的段存在一个很大的偏差。为了明确看到这个偏差，我们截取前十分之一放大，也就是1-100,000这一段的效果图：&lt;/p&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;LogLog Counting小基数区间（p=10）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/llc-10-small-range.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;LogLog Counting小基数区间（p=12）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/llc-12-small-range.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;LogLog Counting小基数区间（p=16）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/llc-16-small-range.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p&gt;可以很明显的看到估计值严重偏离基准，而且分桶数越多这个偏差反而越明显。&lt;/p&gt;
-&lt;h3 id=&quot;adaptive-counting&quot;&gt;Adaptive Counting&lt;/h3&gt;
-&lt;h4 id=&quot;估计效果&quot;&gt;估计效果&lt;/h4&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;Adaptive Counting（p=10）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/ac-10.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;Adaptive Counting（p=12）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/ac-12.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;Adaptive Counting（p=16）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/ac-16.png&quot;/&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;相对误差&quot;&gt;相对误差&lt;/h4&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;Adaptive Counting误差（p=10）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/ac-error-10.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;Adaptive Counting误差（p=12）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/ac-error-12.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;Adaptive Counting误差（p=16）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/ac-error-16.png&quot;/&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;结论&quot;&gt;结论&lt;/h4&gt;
-&lt;p&gt;由于分别在基数较小和较大时使用Linear Counting和LogLog Counting，Adaptive Counting克服了两者的缺陷，属于比较稳定的基数估计方法。而且随着分桶数的增加，估计的偏差和方差均明显减小。&lt;/p&gt;
-&lt;h3 id=&quot;hyperloglog-counting&quot;&gt;HyperLogLog Counting&lt;/h3&gt;
-&lt;h4 id=&quot;估计效果&quot;&gt;估计效果&lt;/h4&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;HyperLogLog Counting（p=10）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/hllc-10.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;HyperLogLog Counting（p=12）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/hllc-12.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;HyperLogLog Counting（p=16）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/hllc-16.png&quot;/&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;相对误差&quot;&gt;相对误差&lt;/h4&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;HyperLogLog Counting误差（p=10）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/hllc-error-10.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;HyperLogLog Counting误差（p=12）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/hllc-error-12.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;HyperLogLog Counting误差（p=16）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/hllc-error-16.png&quot;/&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;结论&quot;&gt;结论&lt;/h4&gt;
-&lt;p&gt;HyperLogLog Counting采用调和平均数取代LogLog Counting中的几何平均数，旨在减小离群点的影响，并且对Linear Counting转折阈值做了调整。从实验效果看，在分桶数较小时，改进效果并不明显，不过在\(2^{16}\)分桶下，整体偏差和稳定程度优于Adaptive Counting。&lt;/p&gt;
-&lt;p&gt;但是从误差图中可以看到，在200,000附近出现了一个明显的脉冲。其原因在Google关于HyperLogLog++ Counting的论文中&lt;a href=&quot;#ref5&quot;&gt;&lt;sup&gt;5&lt;sup&gt;&lt;/a&gt;有分析，其主要是因为在Linear Counting刚转折后的一小段区域内存在一个偏差，HyperLogLog++ Counting的一个改进就是对这个区域的偏差进行了修正。&lt;/p&gt;
-&lt;h3 id=&quot;hyperloglog-counting&quot;&gt;HyperLogLog++ Counting&lt;/h3&gt;
-&lt;h4 id=&quot;估计效果&quot;&gt;估计效果&lt;/h4&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;HyperLogLog++ Counting（p=10）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/hllpc-10.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;HyperLogLog++ Counting（p=12）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/hllpc-12.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;HyperLogLog++ Counting（p=16）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/hllpc-16.png&quot;/&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;相对误差&quot;&gt;相对误差&lt;/h4&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;HyperLogLog++ Counting误差（p=10）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/hllpc-error-10.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;HyperLogLog++ Counting误差（p=12）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/hllpc-error-12.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;HyperLogLog++ Counting误差（p=16）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/hllpc-error-16.png&quot;/&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;结论&quot;&gt;结论&lt;/h4&gt;
-&lt;p&gt;可以看到HyperLogLog++ Counting的效果非常令人失望，按论文中说法，HyperLogLog++ Counting应该比HyperLogLog Counting更准确，但实际效果不但整体偏差和方差变大，而且偏差修正的阈值明显有问题，导致一个非常明显的误差脉冲。&lt;/p&gt;
-&lt;p&gt;究其原因，个人认为HyperLogLog++ Counting中的偏差修正和转折阈值均是通过统计方法给出，并不是数学上的解析结果，因此对于不同的数据、不同的哈希可能并不通用。&lt;/p&gt;
-&lt;h2 id=&quot;误差比较&quot;&gt;误差比较&lt;/h2&gt;
-&lt;p&gt;为了更清楚对比五种算法的误差情况，下面给出五种算法的误差曲线叠加图，仍然是采用三个分桶数。&lt;/p&gt;
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;误差对比（p=10）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/errors-10.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;误差对比（p=12）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/errors-12.png&quot;/&gt;&lt;/p&gt;
-
-&lt;p style=&quot;text-align:center&quot;&gt;&lt;strong&gt;误差对比（p=16）&lt;/strong&gt;&lt;/p&gt;
-&lt;p class=&quot;picture&quot;&gt;&lt;img alt=&quot;&quot; src=&quot;/uploads/pictures/cardinality-estimate-exper/errors-16.png&quot;/&gt;&lt;/p&gt;
-
-&lt;h1 id=&quot;实践建议&quot;&gt;实践建议&lt;/h1&gt;
-&lt;p&gt;下面根据实验结果从个人角度给出一些基数估计算法的实践性建议，当然只代表个人意见，不同人对实验结果可能有不同解读。&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Linear Counting和LogLog Counting由于分别在基数较大和基数较小（阈值可解析分析，具体方法和公式请参考后文列出的相关论文）时存在严重的失效，因此不适合在实际中单独使用。一种例外是，如果对节省存储空间要求不强烈，不要求空间复杂度为常数（Linear Counting的空间复杂度为\(O(n)\)，其它算法均为\(O(1)\)），则在保证bitmap全满概率很小的条件下，Linear Counting的效果要优于其它算法。&lt;/li&gt;
-&lt;li&gt;总体来看，不论哪种算法，提高分桶数都可以降低偏差和方差，因此总体来看基数估计算法中分桶数的选择是最重要的一个权衡——在精度和存储空间间的权衡。&lt;/li&gt;
-&lt;li&gt;实际中，Adaptive Counting或HyperLogLog Counting都是不错的选择，前者偏差较小，后者对离群点容忍性更好，方差较小。&lt;/li&gt;
-&lt;li&gt;Google的HyperLogLog Counting++算法属于实验性改进，缺乏严格的数学分析基础，通用性存疑，不宜在实际中贸然使用。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h1 id=&quot;参考文献&quot;&gt;参考文献&lt;/h1&gt;
-&lt;p&gt;&lt;a id=&quot;ref1&quot;&gt;&lt;/a&gt;
-[1] K.-Y. Whang, B. T. Vander-Zanden, and H. M. Taylor. A Linear-Time Probabilistic Counting Algorithm for Database Applications. ACM Transactions on Database Systems, 15(2):208-229, 1990.&lt;/p&gt;
-&lt;p&gt;&lt;a id=&quot;ref2&quot;&gt;&lt;/a&gt;
-[2] Marianne Durand and Philippe Flajolet. LogLog counting of large cardinalities. In ESA03, volume 2832 of LNCS, pages 605b 617, 2003.&lt;/p&gt;
-&lt;p&gt;&lt;a id=&quot;ref3&quot;&gt;&lt;/a&gt;
-[3] Min Cai, Jianping Pan, Yu K. Kwok, and Kai Hwang. Fast and accurate traffic matrix measurement using adaptive cardinality counting. In MineNet b 05: Proceedings of the 2005 ACM SIGCOMM workshop on Mining network data, pages 205b 206, New York, NY, USA, 2005. ACM.&lt;/p&gt;
-&lt;p&gt;&lt;a id=&quot;ref4&quot;&gt;&lt;/a&gt;
-[4] P. Flajolet, E. Fusy, O. Gandouet, and F. Meunier. Hyperloglog: The analysis of a near-optimal cardinality estimation algorithm. Disc. Math. and Theor. Comp. Sci., AH:127-146, 2007.&lt;/p&gt;
-&lt;p&gt;&lt;a id=&quot;ref5&quot;&gt;&lt;/a&gt;
-[5] HyperLogLog in Practice: Algorithmic Engineering of a State of The Art Cardinality Estimation Algorithm.&lt;/p&gt;
-&lt;p&gt;&lt;a id=&quot;ref6&quot;&gt;&lt;/a&gt;
-[6] Appendix to HyperLogLog in Practice: Algorithmic Engineering of a State of the Art Cardinality Estimation Algorithm.&lt;/p&gt;
 </description> 
         </item> 
         
