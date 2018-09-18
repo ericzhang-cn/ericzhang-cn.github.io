@@ -168,13 +168,13 @@ $$
 取$f(x)=x^2+\mu$，则：
 $$
 \begin{align}
-E(L(x,y,f)) &amp;= E((x^2+\epsilon-x^2-\mu)^2) \\
-&amp;= E((\epsilon-\mu)^2) \\
-&amp;= E(\epsilon^2+\mu^2-2\mu\epsilon) \\
-&amp;= E(\epsilon^2)+E(\mu^2)-2E(\mu)E(\epsilon) \\
-&amp;= E^2(\epsilon)+Var(\epsilon) + \mu^2 - 2\mu^2 \\
-&amp;= \mu^2+\sigma^2+\mu^2-2\mu^2 \\
-&amp;= \sigma^2
+E(L(x,y,f)) &= E((x^2+\epsilon-x^2-\mu)^2) \\
+&= E((\epsilon-\mu)^2) \\
+&= E(\epsilon^2+\mu^2-2\mu\epsilon) \\
+&= E(\epsilon^2)+E(\mu^2)-2E(\mu)E(\epsilon) \\
+&= E^2(\epsilon)+Var(\epsilon) + \mu^2 - 2\mu^2 \\
+&= \mu^2+\sigma^2+\mu^2-2\mu^2 \\
+&= \sigma^2
 \end{align}
 $$
 可以证明这是$E(L(x,y,f))$的最小值，所以$f(x)=x^2+\mu$是此时的最优解。</p>
@@ -206,7 +206,7 @@ y\sim P(Y|X=x)
 $$
 而这个条件概率，可以对联合概率边缘化导出：
 $$
-P(Y|X=x)=P(x,Y)
+P(Y|X=x)=\frac{P(x,Y)}{P(X=x)}
 $$
 而要想令$(y-f(x))^2$尽可能小，直觉上我们可以让$f^\star(x)$取$X=x$是$y$的条件期望（实际上数学严格证明结论也是如此）：
 $$
@@ -397,8 +397,8 @@ $$
 显然如果上式子右边依概率收敛，则左边也依概率收敛。下面将上式和$F$的一致性关联起来：
 $$
 \begin{align}
-|R(f_n)-R(f_F)| &amp;= R(f_n)-R(f_F) \\
-&amp;= R(f_n) +(-R_{emp}(f_n)+R_{emp}(f_n)-R_{emp}(f_F)+R_{emp}(f_F)) -R(f_F) \\
+|R(f_n)-R(f_F)| &= R(f_n)-R(f_F) \\
+&= R(f_n) +(-R_{emp}(f_n)+R_{emp}(f_n)-R_{emp}(f_F)+R_{emp}(f_F)) -R(f_F) \\
 &amp;\le (R(f_n)-R_{emp}(f_n))+(R(f_F)-R_{emp}(f_F)) \\
 &amp;\le 2\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|
 \end{align}
@@ -472,7 +472,7 @@ $$
 \begin{align}
 &amp;P(\mathop{sup}_{f\in F}|R(f)-R_{emp}(f)|\gt\epsilon) \\
 &amp;\le 2P(\mathop{sup}_{f\in F}|R_{emp}(f)-R_{emp}&#39;(f)|\gt\epsilon/2) \\
-&amp;= 2P(\mathop{sup}_{f\in F_{2^{2n}}}|R_{emp}(f)-R_{emp}&#39;(f)|\gt\epsilon/2) \\
+&= 2P(\mathop{sup}_{f\in F_{2^{2n}}}|R_{emp}(f)-R_{emp}&#39;(f)|\gt\epsilon/2) \\
 &amp;\le 2\mathcal{N}(F,2n)exp(-n\epsilon^2/4)
 \end{align} \\
 $$</p>
