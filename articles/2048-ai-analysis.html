@@ -127,9 +127,9 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <p>Alpha-beta算法可以看成变种的Minimax，基本方法是从根节点开始采用深度优先的方式构造格局树，在构造每个节点时，都会读取此节点的alpha和beta两个值，其中alpha表示搜索到当前节点时已知的最好选择的下界，而beta表示从这个节点往下搜索最坏结局的上界。由于我们假设对手会将局势引入最坏结局之一，因此当beta小于alpha时，表示从此处开始不论最终结局是哪一个，其上限价值也要低于已知的最优解，也就是说已经不可能此处向下找到更好的解，所以就会剪枝。</p>
 <p>下面同样以上述示例介绍Alpha-beta剪枝算法的工作原理。我们从根节点开始，详述使用Alpha-beta的每一个步骤：</p>
 <ol>
-<li><p>根节点的alpha和beta分别被初始化为\(-\\infty\)，和\(+\\infty\)。</p>
+<li><p>根节点的alpha和beta分别被初始化为\(-\infty\)，和\(+\infty\)。</p>
 </li>
-<li><p>深度优先搜索第一个孩子，不是叶子节点，所以alpha和beta继承自父节点，分别为\(-\\infty\)，和\(+\\infty\)</p>
+<li><p>深度优先搜索第一个孩子，不是叶子节点，所以alpha和beta继承自父节点，分别为\(-\infty\)，和\(+\infty\)</p>
 </li>
 <li><p>搜索第三层的第一个孩子，同上。</p>
 </li>

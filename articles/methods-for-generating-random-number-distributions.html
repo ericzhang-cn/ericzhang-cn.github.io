@@ -100,7 +100,7 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <h3 id="itm算法描述">ITM算法描述</h3>
 <blockquote>
 <ol>
-<li>生成一个服从均匀分布的随机数\(U \\sim Uni(0,1)\)</li>
+<li>生成一个服从均匀分布的随机数\(U \sim Uni(0,1)\)</li>
 <li>设\(F(X)\)为指定分布的CDF，\(F^{-1}(Y)\)是其逆函数。返回\(X=F^{-1}(U)\)作为结果</li>
 </ol>
 </blockquote>
@@ -118,11 +118,11 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <h3 id="itm实现示例">ITM实现示例</h3>
 <p>下面以<a href="http://en.wikipedia.org/wiki/Exponential_distribution">指数分布</a>为例说明如何应用ITM。</p>
 <p>首先我们需要求解CDF的逆函数。我们知道指数分布的CDF为</p>
-<p>\[F(X)=1-e^{-\\lambda X}\]</p>
+<p>\[F(X)=1-e^{-\lambda X}\]</p>
 <p>通过简单的代数运算，可以得到其逆函数为</p>
-<p>\[F^{-1}(Y)=-\\frac{1}{\\lambda}\\ln(1-Y)\]</p>
+<p>\[F^{-1}(Y)=-\frac{1}{\lambda}\ln(1-Y)\]</p>
 <p>由于\(U\)服从从0到1的均匀分布蕴含着\(1-U\)服从同样的分布，因此在实际实现时可以用\(Y\)代替\(1-Y\)，得到：</p>
-<p>\[F^{-1}(Y)=-\\frac{1}{\\lambda}\\ln(Y)\]</p>
+<p>\[F^{-1}(Y)=-\frac{1}{\lambda}\ln(Y)\]</p>
 <p>下面给出一个Python的实现示例程序。</p>
 <pre class="prettyprint linenums lang-python">import random
 import math
@@ -137,9 +137,9 @@ def exponential_rand(lam):
 <h3 id="arm算法描述">ARM算法描述</h3>
 <blockquote>
 <ol>
-<li>设PDF为\(f(x)\)。首先生成一个均匀分布随机数\(X \\sim Uni(x_{min},x_{max})\)</li>
-<li>独立的生成另一个均匀分布随机数\(Y \\sim Uni(y_{min},y_{max})\)</li>
-<li>如果\(Y \\leq f(X)\)，则返回\(X\)，否则回到第1步</li>
+<li>设PDF为\(f(x)\)。首先生成一个均匀分布随机数\(X \sim Uni(x_{min},x_{max})\)</li>
+<li>独立的生成另一个均匀分布随机数\(Y \sim Uni(y_{min},y_{max})\)</li>
+<li>如果\(Y \leq f(X)\)，则返回\(X\)，否则回到第1步</li>
 </ol>
 </blockquote>
 <h3 id="arm算法说明">ARM算法说明</h3>
@@ -151,7 +151,7 @@ def exponential_rand(lam):
 <h3 id="arm实现示例">ARM实现示例</h3>
 <p>下面使用ARM实现一个能产生<a href="http://en.wikipedia.org/wiki/Gauss_distribution">标准正态分布</a>的随机数生成函数。</p>
 <p>首先我们要得到标准正态分布的PDF，其数学表示为：</p>
-<p>\[f(x)=\\frac{1}{\\sqrt{2\\pi}}e^{-\\frac{x^2}{2}}\]</p>
+<p>\[f(x)=\frac{1}{\sqrt{2\pi}}e^{-\frac{x^2}{2}}\]</p>
 <p>为了方便，这里我会直接使用<a href="http://www.scipy.org/">SciPy</a>来计算其PDF。</p>
 <p>程序如下。</p>
 <pre class="prettyprint linenums lang-python">import random
@@ -163,37 +163,37 @@ def standard_normal_rand():
         Y = random.uniform(0.0, 0.5)
         if Y &lt; ss.norm.pdf(X):
             return X</pre>
-<p><strong>注意</strong>：标准正态分布的x取值范围从理论上说是\((-\\infty,\\infty)\)，但是当离开均值点很远后，其概率密度可忽略不计。这里只取\((-3.0,3.0)\)，实际使用时可以根据具体需要扩大这个取值范围。</p>
+<p><strong>注意</strong>：标准正态分布的x取值范围从理论上说是\((-\infty,\infty)\)，但是当离开均值点很远后，其概率密度可忽略不计。这里只取\((-3.0,3.0)\)，实际使用时可以根据具体需要扩大这个取值范围。</p>
 <h1 id="衍生算法">衍生算法</h1>
 <h2 id="组合算法">组合算法</h2>
 <p>当目标分布可以用其它分布经过四则运算表示时，可以使用组合算法生成对应随机数。</p>
 <p>最常见的就是某分布可以表示成多个独立同分布（下文简称IID）随机变量之和。例如二项分布可以表示成多个0-1分布之和，<a href="http://en.wikipedia.org/wiki/Erlang_distribution">Erlang分布</a>可以由多个IID的指数分布得出。</p>
 <p>以Erlang分布为例说明如何生成这类随机数。</p>
-<p>设\(X_1,X_2,\\cdots,X_k\)为服从0到1均匀分布的IID随机数，则\(-\\frac{1}{\\lambda}lnX_1,-\\frac{1}{\\lambda}lnX_2,\\cdots,-\\frac{1}{\\lambda}lnX_k\)为服从指数分布的IID随机数，因此</p>
-<p>\[X=-\\frac{1}{\\lambda}lnX_1-\\frac{1}{\\lambda}lnX_2-\\cdots-\\frac{1}{\\lambda}lnX_k=-\\frac{1}{\\lambda}ln\\prod_{i=1}^k{X_i}\\sim Erl(k,\\lambda)\]</p>
+<p>设\(X_1,X_2,\cdots,X_k\)为服从0到1均匀分布的IID随机数，则\(-\frac{1}{\lambda}lnX_1,-\frac{1}{\lambda}lnX_2,\cdots,-\frac{1}{\lambda}lnX_k\)为服从指数分布的IID随机数，因此</p>
+<p>\[X=-\frac{1}{\lambda}lnX_1-\frac{1}{\lambda}lnX_2-\cdots-\frac{1}{\lambda}lnX_k=-\frac{1}{\lambda}ln\prod_{i=1}^k{X_i}\sim Erl(k,\lambda)\]</p>
 <p>所以生成Erlang分布随机数的算法如下：</p>
 <blockquote>
 <ol>
-<li>生成\(X_1,X_2,\\cdots,X_k\\sim Uni(0,1)\)</li>
-<li>返回\(-\\frac{1}{\\lambda}ln\\prod_{i=1}^k{X_i}\)</li>
+<li>生成\(X_1,X_2,\cdots,X_k\sim Uni(0,1)\)</li>
+<li>返回\(-\frac{1}{\lambda}ln\prod_{i=1}^k{X_i}\)</li>
 </ol>
 </blockquote>
 <p>这类分布的随机数生成算法很直观，就是先生成相关的n个IID随机数，然后带入简单求和公式或其它四则公式得出最终随机数。其数学理论基础是<a href="http://en.wikipedia.org/wiki/Convolution">卷积理论</a>，稍微有些复杂，这里不再讨论，有兴趣的同学可以查阅相关资料。</p>
 <h2 id="生成具有相关性的随机数">生成具有相关性的随机数</h2>
 <p>现在考虑生成多维随机数，以最简单的二维随机数为例。</p>
 <p>如果两个维度的随机数是相互独立的，那么只要分别生成两个列就可以了。但是如果要求两列具有一定的相关系数，则需要做一些特殊处理。</p>
-<p>下列算法可以生成两列具有相关系数\(\\rho\)的随机数。</p>
+<p>下列算法可以生成两列具有相关系数\(\rho\)的随机数。</p>
 <blockquote>
 <ol>
 <li>生成IID随机变量\(X\)和\(Y\)</li>
-<li>计算\(X&#39;=\\rho X+\\sqrt{1-\\rho^2}Y\)</li>
+<li>计算\(X&#39;=\rho X+\sqrt{1-\rho^2}Y\)</li>
 <li>返回\((X,X&#39;)\)</li>
 </ol>
 </blockquote>
 <p>可以这样验证其正确性：</p>
-<p>\[corr(X,X&#39;)=\\rho corr(X,X)+\\sqrt{1-\\rho^2}corr(X,Y)=\\rho\]</p>
+<p>\[corr(X,X&#39;)=\rho corr(X,X)+\sqrt{1-\rho^2}corr(X,Y)=\rho\]</p>
 <p><strong>注意</strong>：\(corr(X,X)=1\)，\(corr(X,Y)=0\)。</p>
-<p>因此\(X\)和\(X&#39;\)确实具有相关系数\(\\rho\)。</p>
+<p>因此\(X\)和\(X&#39;\)确实具有相关系数\(\rho\)。</p>
 <h1 id="更多参考">更多参考</h1>
 <p>这篇文章讨论了生成指定分布随机数的基本方法。这篇文章只打算讨论基础方法，所以还有很多有趣的内容，本文没有深入的探讨。这里给出一些扩展阅读资料，供有兴趣的朋友深入学习。首先是一篇<a href="http://ftp.arl.mil/random/random.pdf">非常好的文档</a>，这篇文章来自美国陆军实验室，对计算机生成指定分布随机数的方方面面进行了全面深入描述，是不可多得的好资料。</p>
 <p>在实现方面，可以参考<a href="https://github.com/numpy/numpy/blob/master/numpy/random/mtrand/distributions.c">NumPy中关于random的实现</a>以及我开发的<a href="https://github.com/ericzhang-cn/random.js">JavaScript实现</a>。另外我做过一个<a href="http://blog.codinglabs.org/demo/distributions.html">不同概率分布的可视化页面</a>，可以帮助你直观理解不同分布及PDF参数对分布的影响。</p>

@@ -9,7 +9,7 @@ Inverse Transform Method
 最简单的生成算法是Inverse Transform Method（下文简称ITM）。如果我们可以给出概率分布的累积分布函数（下文简称CDF）及其逆函数的解析表达式，则可以非常简单便捷的生成指定分布随机数。
 
 ### ITM算法描述
-> 1. 生成一个服从均匀分布的随机数\\(U \\sim Uni(0,1)\\)
+> 1. 生成一个服从均匀分布的随机数\\(U \sim Uni(0,1)\\)
 > 2. 设\\(F(X)\\)为指定分布的CDF，\\(F^{-1}(Y)\\)是其逆函数。返回\\(X=F^{-1}(U)\\)作为结果
 
 ### ITM算法说明
@@ -36,15 +36,15 @@ Inverse Transform Method
 
 首先我们需要求解CDF的逆函数。我们知道指数分布的CDF为
 
-\\[F(X)=1-e^{-\\lambda X}\\]
+\\[F(X)=1-e^{-\lambda X}\\]
 
 通过简单的代数运算，可以得到其逆函数为
 
-\\[F^{-1}(Y)=-\\frac{1}{\\lambda}\\ln(1-Y)\\]
+\\[F^{-1}(Y)=-\frac{1}{\lambda}\ln(1-Y)\\]
 
 由于\\(U\\)服从从0到1的均匀分布蕴含着\\(1-U\\)服从同样的分布，因此在实际实现时可以用\\(Y\\)代替\\(1-Y\\)，得到：
 
-\\[F^{-1}(Y)=-\\frac{1}{\\lambda}\\ln(Y)\\]
+\\[F^{-1}(Y)=-\frac{1}{\lambda}\ln(Y)\\]
 
 下面给出一个Python的实现示例程序。
 
@@ -65,9 +65,9 @@ Acceptance-Rejection Method
 当无法给出CDF逆函数的解析表达式时，Acceptance-Rejection Method（下文简称ARM）是另外的选择。ARM的适用范围比ITM要大，只要给出概率密度函数（下文简称PDF）的解析表达式即可，而大多数常用分布的PDF是可以查到的。
 
 ### ARM算法描述
-> 1. 设PDF为\\(f(x)\\)。首先生成一个均匀分布随机数\\(X \\sim Uni(x\_{min},x\_{max})\\)
-> 2. 独立的生成另一个均匀分布随机数\\(Y \\sim Uni(y\_{min},y\_{max})\\)
-> 3. 如果\\(Y \\leq f(X)\\)，则返回\\(X\\)，否则回到第1步
+> 1. 设PDF为\\(f(x)\\)。首先生成一个均匀分布随机数\\(X \sim Uni(x\_{min},x\_{max})\\)
+> 2. 独立的生成另一个均匀分布随机数\\(Y \sim Uni(y\_{min},y\_{max})\\)
+> 3. 如果\\(Y \leq f(X)\\)，则返回\\(X\\)，否则回到第1步
 
 ### ARM算法说明
 通过一幅图可以清楚的看到ARM的工作原理。
@@ -83,7 +83,7 @@ ARM本质上是一种模拟方法，而非直接数学方法。它每次生成�
 
 首先我们要得到标准正态分布的PDF，其数学表示为：
 
-\\[f(x)=\\frac{1}{\\sqrt{2\\pi}}e^{-\\frac{x^2}{2}}\\]
+\\[f(x)=\frac{1}{\sqrt{2\pi}}e^{-\frac{x^2}{2}}\\]
 
 为了方便，这里我会直接使用[SciPy](http://www.scipy.org/)来计算其PDF。
 
@@ -101,7 +101,7 @@ def standard_normal_rand():
             return X
 ```
 
-**注意**：标准正态分布的x取值范围从理论上说是\\((-\\infty,\\infty)\\)，但是当离开均值点很远后，其概率密度可忽略不计。这里只取\\((-3.0,3.0)\\)，实际使用时可以根据具体需要扩大这个取值范围。
+**注意**：标准正态分布的x取值范围从理论上说是\\((-\infty,\infty)\\)，但是当离开均值点很远后，其概率密度可忽略不计。这里只取\\((-3.0,3.0)\\)，实际使用时可以根据具体需要扩大这个取值范围。
 
 衍生算法
 ========
@@ -113,14 +113,14 @@ def standard_normal_rand():
 
 以Erlang分布为例说明如何生成这类随机数。
 
-设\\(X\_1,X\_2,\\cdots,X\_k\\)为服从0到1均匀分布的IID随机数，则\\(-\\frac{1}{\\lambda}lnX\_1,-\\frac{1}{\\lambda}lnX\_2,\\cdots,-\\frac{1}{\\lambda}lnX\_k\\)为服从指数分布的IID随机数，因此
+设\\(X\_1,X\_2,\cdots,X\_k\\)为服从0到1均匀分布的IID随机数，则\\(-\frac{1}{\lambda}lnX\_1,-\frac{1}{\lambda}lnX\_2,\cdots,-\frac{1}{\lambda}lnX\_k\\)为服从指数分布的IID随机数，因此
 
-\\[X=-\\frac{1}{\\lambda}lnX\_1-\\frac{1}{\\lambda}lnX\_2-\\cdots-\\frac{1}{\\lambda}lnX\_k=-\\frac{1}{\\lambda}ln\\prod\_{i=1}^k{X\_i}\\sim Erl(k,\\lambda)\\]
+\\[X=-\frac{1}{\lambda}lnX\_1-\frac{1}{\lambda}lnX\_2-\cdots-\frac{1}{\lambda}lnX\_k=-\frac{1}{\lambda}ln\prod\_{i=1}^k{X\_i}\sim Erl(k,\lambda)\\]
 
 所以生成Erlang分布随机数的算法如下：
 
-> 1. 生成\\(X\_1,X\_2,\\cdots,X\_k\\sim Uni(0,1)\\)
-> 2. 返回\\(-\\frac{1}{\\lambda}ln\\prod\_{i=1}^k{X\_i}\\)
+> 1. 生成\\(X\_1,X\_2,\cdots,X\_k\sim Uni(0,1)\\)
+> 2. 返回\\(-\frac{1}{\lambda}ln\prod\_{i=1}^k{X\_i}\\)
 
 这类分布的随机数生成算法很直观，就是先生成相关的n个IID随机数，然后带入简单求和公式或其它四则公式得出最终随机数。其数学理论基础是[卷积理论](http://en.wikipedia.org/wiki/Convolution)，稍微有些复杂，这里不再讨论，有兴趣的同学可以查阅相关资料。
 
@@ -130,19 +130,19 @@ def standard_normal_rand():
 
 如果两个维度的随机数是相互独立的，那么只要分别生成两个列就可以了。但是如果要求两列具有一定的相关系数，则需要做一些特殊处理。
 
-下列算法可以生成两列具有相关系数\\(\\rho\\)的随机数。
+下列算法可以生成两列具有相关系数\\(\rho\\)的随机数。
 
 > 1. 生成IID随机变量\\(X\\)和\\(Y\\)
-> 2. 计算\\(X'=\\rho X+\\sqrt{1-\\rho^2}Y\\)
+> 2. 计算\\(X'=\rho X+\sqrt{1-\rho^2}Y\\)
 > 3. 返回\\((X,X')\\)
 
 可以这样验证其正确性：
 
-\\[corr(X,X')=\\rho corr(X,X)+\\sqrt{1-\\rho^2}corr(X,Y)=\\rho\\]
+\\[corr(X,X')=\rho corr(X,X)+\sqrt{1-\rho^2}corr(X,Y)=\rho\\]
 
 **注意**：\\(corr(X,X)=1\\)，\\(corr(X,Y)=0\\)。
 
-因此\\(X\\)和\\(X'\\)确实具有相关系数\\(\\rho\\)。
+因此\\(X\\)和\\(X'\\)确实具有相关系数\\(\rho\\)。
 
 更多参考
 ========
