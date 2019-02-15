@@ -68,23 +68,23 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
             <p>这篇文章总结了概率统计中期望、方差、协方差和相关系数的定义、性质和基本运算规则。</p>
 <h1 id="期望">期望</h1>
 <h2 id="定义">定义</h2>
-<p>设\(P(x)\)是一个离散概率分布函数，自变量的取值范围为\(\{x_1, x_2, \cdots, x_n\}\)。其期望被定义为：</p>
-<p>\[E(x)=\sum_{k=1}^n{x_kP(x_k)}\]</p>
+<p>设\(P(x)\)是一个离散概率分布函数，自变量的取值范围为\(\\{x_1, x_2, \\cdots, x_n\\}\)。其期望被定义为：</p>
+<p>\[E(x)=\\sum_{k=1}^n{x_kP(x_k)}\]</p>
 <p>设\(p(x)\)是一个连续概率密度函数。其期望为：</p>
-<p>\[E(x)=\int_{-\infty}^{+\infty}{xp(x)dx}\]</p>
+<p>\[E(x)=\\int_{-\\infty}^{+\\infty}{xp(x)dx}\]</p>
 <h2 id="性质">性质</h2>
 <p>1、线性运算规则</p>
 <p>期望服从线性性质（可以很容易从期望的定义公式中导出）。因此线性运算的期望等于期望的线性运算：</p>
 <p>\[E(ax+by+c)=aE(x)+bE(y)+c\]</p>
 <p>这个性质可以推广到任意一般情况：</p>
-<p>\[E(\sum_{k=1}^{n}{a_ix_i}+c)=\sum_{k=1}^{n}{a_iE(x_i)}+c\]</p>
+<p>\[E(\\sum_{k=1}^{n}{a_ix_i}+c)=\\sum_{k=1}^{n}{a_iE(x_i)}+c\]</p>
 <p>2、函数的期望</p>
 <p>设\(f(x)\)为x的函数，则\(f(x)\)的期望为：</p>
 <p>离散：</p>
-<p>\[E(f(x))=\sum_{k=1}^n{f(x_k)P(x_k)}\]</p>
+<p>\[E(f(x))=\\sum_{k=1}^n{f(x_k)P(x_k)}\]</p>
 <p>连续：</p>
-<p>\[E(f(x))=\int_{-\infty}^{+\infty}{f(x)p(x)dx}\]</p>
-<p>一定要注意，<strong>函数的期望不等于期望的函数</strong>，即\(E(f(x)) \ne f(E(x))\)！。</p>
+<p>\[E(f(x))=\\int_{-\\infty}^{+\\infty}{f(x)p(x)dx}\]</p>
+<p>一定要注意，<strong>函数的期望不等于期望的函数</strong>，即\(E(f(x)) \\ne f(E(x))\)！。</p>
 <p>3、乘积的期望</p>
 <p>一般来说，<strong>乘积的期望不等于期望的乘积</strong>，除非变量相互独立。因此，如果x和y相互独立，则\(E(xy)=E(x)E(y)\)。</p>
 <p>期望的运算构成了统计量的运算基础，因为<strong>方差、协方差等统计量本质上是一种特殊的期望</strong>。</p>
@@ -95,13 +95,13 @@ document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3
 <h2 id="性质">性质</h2>
 <p>1、展开表示</p>
 <p>反复利用期望的线性性质，可以算出方差的另一种表示形式：</p>
-<p>\[\begin{array}{l l l}
-Var(x) &amp; = &amp; E((x-E(x))^2) \\
-       &amp; = &amp; E(x^2-2xE(x)+(E(x))^2) \\
-       &amp; = &amp; E(x^2)-2E(x)E(x)+(E(x))^2 \\
-       &amp; = &amp; E(x^2)-2(E(x))^2+(E(x))^2 \\
+<p>\[\\begin{array}{l l l}
+Var(x) &amp; = &amp; E((x-E(x))^2) \\\\
+       &amp; = &amp; E(x^2-2xE(x)+(E(x))^2) \\\\
+       &amp; = &amp; E(x^2)-2E(x)E(x)+(E(x))^2 \\\\
+       &amp; = &amp; E(x^2)-2(E(x))^2+(E(x))^2 \\\\
        &amp; = &amp; E(x^2)-(E(x))^2
-\end{array}\]</p>
+\\end{array}\]</p>
 <p>2、常数的方差</p>
 <p>常数的方差为0，由方差的展开表示很容易推得。</p>
 <p>3、线性组合的方差</p>
@@ -122,16 +122,16 @@ Var(x) &amp; = &amp; E((x-E(x))^2) \\
 <p>独立变量的协方差为0，可以由协方差公式推导出。</p>
 <p>2、线性组合的协方差</p>
 <p>协方差最重要的性质如下：</p>
-<p>\[Cov(\sum_{i=1}^m{a_ix_i}, \sum_{j=1}^n{b_jy_j})=\sum_{i=1}^m{\sum_{j=1}^n{a_i b_j Cov(x_i, y_j)}}\]</p>
+<p>\[Cov(\\sum_{i=1}^m{a_ix_i}, \\sum_{j=1}^n{b_jy_j})=\\sum_{i=1}^m{\\sum_{j=1}^n{a_i b_j Cov(x_i, y_j)}}\]</p>
 <p>很多协方差的计算都是反复利用这个性质，而且可以导出一些列重要结论。</p>
 <p>作为一种特殊情况：</p>
 <p>\[Cov(a+bx,c+dy)=bdCov(x,y)\]</p>
 <p>另外当x=y时，可以导出方差的一般线性组合求解公式：</p>
-<p>\[Var(\sum_{k=1}^n{a_ix_i})=\sum_{i=1}^n{\sum_{j=1}^n{a_ia_jCov(x_i,x_j)}}\]</p>
+<p>\[Var(\\sum_{k=1}^n{a_ix_i})=\\sum_{i=1}^n{\\sum_{j=1}^n{a_ia_jCov(x_i,x_j)}}\]</p>
 <h1 id="相关系数">相关系数</h1>
 <h2 id="定义">定义</h2>
 <p>相关系数通过方差和协方差定义。两个随机变量的相关系数被定义为：</p>
-<p>\[Corr(x,y)=\frac{Cov(x,y)}{\sqrt{Var(x)Var(y)}}\]</p>
+<p>\[Corr(x,y)=\\frac{Cov(x,y)}{\\sqrt{Var(x)Var(y)}}\]</p>
 <h2 id="性质">性质</h2>
 <p>1、有界性</p>
 <p>相关系数的取值范围为-1到1，其可以看成是无量纲的协方差。</p>
@@ -140,12 +140,11 @@ Var(x) &amp; = &amp; E((x-E(x))^2) \\
 
         </div>
         
-
     </div>
 </div>
         <div id="footer">
             <div id="footer-inner">
-                <p id="copyright">Copyright (c) 2011-2018 CodingLabs 本博客内容采用<a href="http://creativecommons.org/licenses/by/3.0/cn/" target="_blank">知识共享署名 3.0 中国大陆许可协议</a>进行许可</p>
+                <p id="copyright">Copyright (c) 2011-2019 CodingLabs 本博客内容采用<a href="http://creativecommons.org/licenses/by/3.0/cn/" target="_blank">知识共享署名 3.0 中国大陆许可协议</a>进行许可</p>
             </div>
         </div>
         <script type="text/x-mathjax-config">
