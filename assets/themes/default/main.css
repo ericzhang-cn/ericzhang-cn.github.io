@@ -214,4 +214,9 @@ div#topnav ul li a {
 div#topnav ul li.sep {
     color: #ccc;
     margin: 0 12px;
+
+}
+div.addthis_inline_share_toolbox {
+    text-align: right;
+    margin-top: 50px;
 }
